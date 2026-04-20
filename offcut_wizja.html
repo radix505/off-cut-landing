@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OFF CUT Barbershop</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { background: #f5f3ef; color: #1a1a1a; font-family: 'Inter', sans-serif; font-weight: 300; overflow-x: hidden; }
+  ::-webkit-scrollbar { width: 2px; }
+  ::-webkit-scrollbar-track { background: #f5f3ef; }
+  ::-webkit-scrollbar-thumb { background: #ccc; }
+
+  /* LANG SPLASH */
+  #lang-splash {
+    position: fixed; inset: 0; z-index: 9999; background: #fff;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    transition: opacity 0.7s ease, visibility 0.7s ease;
+  }
+  #lang-splash.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+  .splash-brand { font-family: 'Bebas Neue', sans-serif; font-size: clamp(48px, 8vw, 96px); letter-spacing: 0.08em; color: #0a0a0a; line-height: 1; text-align: center; }
+  .splash-sub { font-size: 0.6rem; letter-spacing: 0.45em; text-transform: uppercase; color: #aaa; margin-top: 0.5rem; margin-bottom: 3.5rem; text-align: center; }
+  .splash-divider { width: 1px; height: 40px; background: #ddd; margin-bottom: 2.5rem; }
+  .splash-prompt { font-size: 0.6rem; letter-spacing: 0.3em; text-transform: uppercase; color: #bbb; margin-bottom: 1.5rem; }
+  .lang-options { display: flex; gap: 1px; border: 0.5px solid #e0e0e0; }
+  .lang-btn { font-family: 'Bebas Neue', sans-serif; font-size: 1rem; letter-spacing: 0.3em; background: transparent; border: none; padding: 1rem 2.5rem; cursor: pointer; color: #888; transition: all 0.3s; position: relative; }
+  .lang-btn::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px; background: #0a0a0a; transform: scaleX(0); transition: transform 0.3s; }
+  .lang-btn:hover { color: #0a0a0a; background: #f5f3ef; }
+  .lang-btn:hover::after { transform: scaleX(1); }
+  .lang-sep { width: 0.5px; background: #e0e0e0; align-self: stretch; }
+
+  /* NAV */
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; padding: 1.5rem 3rem; background: rgba(245,243,239,0.95); border-bottom: 0.5px solid #e8e5df; backdrop-filter: blur(8px); }
+  .nav-logo { display: flex; flex-direction: column; line-height: 1; }
+  .nav-logo-main { font-family: 'Bebas Neue', sans-serif; font-size: 1.3rem; letter-spacing: 0.25em; color: #0a0a0a; }
+  .nav-logo-sub { font-size: 0.45rem; letter-spacing: 0.4em; text-transform: uppercase; color: #bbb; margin-top: 1px; }
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+  .nav-links a { font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: #888; text-decoration: none; transition: color 0.3s; }
+  .nav-links a:hover { color: #0a0a0a; }
+  .nav-book { font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; border: 0.5px solid #bbb; padding: 0.6rem 1.4rem; color: #444; cursor: pointer; background: transparent; font-family: 'Inter', sans-serif; transition: all 0.3s; }
+  .nav-book:hover { background: #0a0a0a; color: #fff; border-color: #0a0a0a; }
+
+  /* HERO */
+  .hero { position: relative; height: 100vh; min-height: 700px; display: flex; align-items: flex-end; padding: 0 3rem 4rem; overflow: hidden; background: #fff; }
+  .hero-bg { position: absolute; inset: 0; background: radial-gradient(ellipse at 70% 40%, rgba(0,0,0,0.02) 0%, transparent 60%), #fff; }
+  .hero-grid-lines { position: absolute; inset: 0; background-image: linear-gradient(to right, rgba(0,0,0,0.04) 1px, transparent 1px), linear-gradient(to bottom, rgba(0,0,0,0.04) 1px, transparent 1px); background-size: 80px 80px; -webkit-mask-image: radial-gradient(ellipse at center, black 20%, transparent 80%); mask-image: radial-gradient(ellipse at center, black 20%, transparent 80%); }
+  .hero-year { position: absolute; top: 8rem; right: 3rem; font-size: 0.65rem; letter-spacing: 0.3em; color: #bbb; text-transform: uppercase; writing-mode: vertical-rl; }
+  .hero-scroll-hint { position: absolute; bottom: 4rem; right: 3rem; font-size: 0.6rem; letter-spacing: 0.25em; color: #bbb; text-transform: uppercase; display: flex; flex-direction: column; align-items: center; gap: 0.8rem; }
+  .scroll-line { width: 1px; height: 50px; background: linear-gradient(to bottom, #aaa, transparent); animation: scrollPulse 2s ease-in-out infinite; }
+  @keyframes scrollPulse { 0%, 100% { opacity: 0.3; transform: scaleY(1); } 50% { opacity: 1; transform: scaleY(0.6); } }
+  .hero-content { position: relative; z-index: 2; max-width: 800px; }
+  .hero-eyebrow { font-size: 0.65rem; letter-spacing: 0.35em; text-transform: uppercase; color: #aaa; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 1rem; }
+  .eyebrow-line { width: 40px; height: 1px; background: #ccc; }
+  .hero-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(80px, 12vw, 160px); line-height: 0.9; letter-spacing: 0.02em; color: #0a0a0a; overflow: hidden; }
+  .hero-title-line { display: block; transform: translateY(110%); animation: slideUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+  .hero-title-line:nth-child(1) { animation-delay: 0.1s; }
+  .hero-title-line:nth-child(2) { animation-delay: 0.25s; }
+  .hero-title-line:nth-child(3) { animation-delay: 0.4s; color: transparent; -webkit-text-stroke: 1px rgba(0,0,0,0.15); }
+  @keyframes slideUp { to { transform: translateY(0); } }
+  .hero-sub { margin-top: 2rem; font-size: 0.8rem; letter-spacing: 0.12em; color: #aaa; max-width: 320px; line-height: 1.8; text-transform: uppercase; transform: translateY(20px); opacity: 0; animation: fadeUp 1s cubic-bezier(0.16, 1, 0.3, 1) 0.6s forwards; }
+  @keyframes fadeUp { to { transform: translateY(0); opacity: 1; } }
+  .hero-cta { margin-top: 2.5rem; display: flex; gap: 1rem; opacity: 0; animation: fadeUp 1s cubic-bezier(0.16, 1, 0.3, 1) 0.75s forwards; }
+  .btn-primary { font-size: 0.65rem; letter-spacing: 0.25em; text-transform: uppercase; background: #0a0a0a; color: #fff; border: none; padding: 1rem 2.2rem; cursor: pointer; font-family: 'Inter', sans-serif; font-weight: 500; transition: all 0.3s; }
+  .btn-primary:hover { background: #333; transform: translateY(-2px); }
+  .btn-ghost { font-size: 0.65rem; letter-spacing: 0.25em; text-transform: uppercase; background: transparent; color: #888; border: 0.5px solid #ccc; padding: 1rem 2.2rem; cursor: pointer; font-family: 'Inter', sans-serif; font-weight: 400; transition: all 0.3s; }
+  .btn-ghost:hover { color: #0a0a0a; border-color: #0a0a0a; }
+
+  /* MARQUEE */
+  .marquee-section { border-top: 0.5px solid #e0ddd6; border-bottom: 0.5px solid #e0ddd6; overflow: hidden; padding: 1rem 0; background: #fff; }
+  .marquee-track { display: flex; animation: marqueeScroll 25s linear infinite; white-space: nowrap; }
+  .marquee-item { font-family: 'Bebas Neue', sans-serif; font-size: 0.85rem; letter-spacing: 0.3em; color: #ccc; padding: 0 2.5rem; display: flex; align-items: center; gap: 2.5rem; flex-shrink: 0; }
+  .marquee-item .dot { width: 3px; height: 3px; border-radius: 50%; background: #bbb; flex-shrink: 0; }
+  .marquee-item.accent { color: #0a0a0a; }
+  @keyframes marqueeScroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+  /* SECTIONS */
+  section { padding: 6rem 3rem; background: #f5f3ef; }
+  .section-header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 4rem; border-bottom: 0.5px solid #ddd9d0; padding-bottom: 1.5rem; }
+  .section-number { font-family: 'Bebas Neue', sans-serif; font-size: 0.75rem; letter-spacing: 0.3em; color: #bbb; }
+  .section-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(36px, 5vw, 60px); letter-spacing: 0.04em; color: #0a0a0a; line-height: 1; }
+  .section-link { font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: #aaa; cursor: pointer; transition: color 0.3s; text-decoration: none; border-bottom: 0.5px solid #ccc; padding-bottom: 2px; }
+  .section-link:hover { color: #0a0a0a; border-color: #0a0a0a; }
+
+  /* SERVICES */
+  .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: #ddd9d0; }
+  .service-card { background: #fff; padding: 2.5rem 2rem; position: relative; overflow: hidden; cursor: pointer; transition: background 0.4s; }
+  .service-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(to right, transparent, #bbb, transparent); transform: scaleX(0); transition: transform 0.4s; }
+  .service-card:hover { background: #f9f8f5; }
+  .service-card:hover::before { transform: scaleX(1); }
+  .service-num { font-family: 'Bebas Neue', sans-serif; font-size: 0.7rem; letter-spacing: 0.3em; color: #ccc; margin-bottom: 2rem; }
+  .service-name { font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; letter-spacing: 0.05em; color: #0a0a0a; margin-bottom: 0.8rem; }
+  .service-desc { font-size: 0.72rem; letter-spacing: 0.06em; color: #999; line-height: 1.8; margin-bottom: 2rem; }
+  .service-price { font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: #bbb; display: flex; justify-content: space-between; align-items: center; border-top: 0.5px solid #ece9e2; padding-top: 1.2rem; }
+  .service-price-amount { font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; letter-spacing: 0.05em; color: #0a0a0a; }
+
+  /* BARBERS */
+  .barbers-section { background: #fff; }
+  .barbers-section .section-header { border-color: #e8e5df; }
+  .barbers-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: #e8e5df; }
+  .barber-card { background: #fff; overflow: hidden; cursor: pointer; }
+  .barber-portrait { aspect-ratio: 3/4; background: #f5f3ef; position: relative; overflow: hidden; }
+  .barber-portrait-placeholder { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 1rem; }
+  .barber-silhouette { width: 60px; height: 80px; background: #e8e5df; clip-path: polygon(30% 0%, 70% 0%, 90% 20%, 100% 60%, 80% 100%, 20% 100%, 0% 60%, 10% 20%); }
+  .portrait-label { font-size: 0.55rem; letter-spacing: 0.3em; color: #ccc; text-transform: uppercase; }
+  .barber-overlay { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(to top, #fff 0%, transparent 100%); padding: 2rem 1.5rem 1.5rem; }
+  .barber-name { font-family: 'Bebas Neue', sans-serif; font-size: 1.3rem; letter-spacing: 0.08em; color: #0a0a0a; }
+  .barber-title { font-size: 0.6rem; letter-spacing: 0.25em; color: #aaa; text-transform: uppercase; }
+  .barber-info { padding: 1.2rem 1.5rem; background: #fff; }
+  .barber-spec { margin-top: 0.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; }
+  .spec-tag { font-size: 0.55rem; letter-spacing: 0.15em; text-transform: uppercase; border: 0.5px solid #ddd; padding: 0.3rem 0.7rem; color: #aaa; }
+
+  /* GALLERY */
+  .gallery-section { background: #f5f3ef; }
+  .gallery-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; grid-template-rows: auto auto; gap: 1px; background: #ddd9d0; }
+  .gallery-cell { background: #e8e5df; overflow: hidden; }
+  .gallery-cell:first-child { grid-row: span 2; }
+  .gallery-inner { width: 100%; height: 100%; min-height: 180px; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 0.5rem; transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1); }
+  .gallery-cell:first-child .gallery-inner { min-height: 400px; }
+  .gallery-cell:hover .gallery-inner { transform: scale(1.03); }
+  .gallery-placeholder-text { font-size: 0.55rem; letter-spacing: 0.3em; text-transform: uppercase; color: #ccc; }
+  .gallery-placeholder-icon { width: 32px; height: 32px; border: 0.5px solid #ccc; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #ccc; font-size: 14px; }
+
+  /* BOOKING */
+  .booking-section { background: #0a0a0a; }
+  .booking-section .section-number { color: #444; }
+  .booking-section .section-title { color: #fff; }
+  .booking-section .section-header { border-color: #1a1a1a; }
+  .booking-section .section-link { color: #555; border-color: #333; }
+  .booking-section .section-link:hover { color: #fff; border-color: #fff; }
+  .booking-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; }
+  .booking-text h2 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(40px, 6vw, 80px); letter-spacing: 0.02em; line-height: 0.9; color: #fff; margin-bottom: 2rem; }
+  .booking-text p { font-size: 0.75rem; letter-spacing: 0.08em; color: #555; line-height: 1.9; max-width: 300px; margin-bottom: 1.5rem; }
+  .booking-info-row { display: flex; gap: 2rem; border-top: 0.5px solid #1a1a1a; padding-top: 1.5rem; margin-top: 1.5rem; }
+  .booking-info-item { display: flex; flex-direction: column; gap: 0.3rem; }
+  .booking-info-label { font-size: 0.55rem; letter-spacing: 0.3em; text-transform: uppercase; color: #444; }
+  .booking-info-value { font-size: 0.8rem; letter-spacing: 0.05em; color: #fff; font-weight: 500; }
+  .booking-form { display: flex; flex-direction: column; border: 0.5px solid #1e1e1e; }
+  .form-group { border-bottom: 0.5px solid #1e1e1e; }
+  .form-group:last-of-type { border-bottom: none; }
+  .form-label { display: block; font-size: 0.55rem; letter-spacing: 0.25em; text-transform: uppercase; color: #444; padding: 1rem 1.2rem 0; }
+  .form-input { width: 100%; border: none; background: transparent; font-family: 'Inter', sans-serif; font-size: 0.85rem; color: #fff; padding: 0.4rem 1.2rem 1rem; outline: none; letter-spacing: 0.03em; }
+  .form-input::placeholder { color: #333; }
+  select.form-input { cursor: pointer; -webkit-appearance: none; appearance: none; }
+  select.form-input option { background: #111; color: #fff; }
+  input[type="datetime-local"].form-input { color-scheme: dark; }
+  .form-submit { background: #fff; color: #0a0a0a; border: none; padding: 1.3rem; font-family: 'Inter', sans-serif; font-size: 0.65rem; letter-spacing: 0.3em; text-transform: uppercase; cursor: pointer; transition: background 0.3s; width: 100%; font-weight: 500; }
+  .form-submit:hover { background: #e8e4dc; }
+
+  /* FOOTER */
+  footer { background: #f5f3ef; padding: 3rem; border-top: 0.5px solid #e0ddd6; }
+  .footer-top { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 3rem; }
+  .footer-brand { font-family: 'Bebas Neue', sans-serif; font-size: 3rem; letter-spacing: 0.08em; color: #ddd9d0; line-height: 1; }
+  .footer-brand-sub { font-size: 0.5rem; letter-spacing: 0.4em; text-transform: uppercase; color: #ccc; margin-top: 2px; }
+  .footer-tagline { font-size: 0.65rem; letter-spacing: 0.2em; color: #bbb; text-transform: uppercase; margin-top: 0.5rem; }
+  .footer-socials { display: flex; gap: 1.5rem; }
+  .social-link { font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: #bbb; text-decoration: none; border-bottom: 0.5px solid #ddd; padding-bottom: 2px; transition: color 0.3s; cursor: pointer; }
+  .social-link:hover { color: #0a0a0a; border-color: #0a0a0a; }
+  .footer-bottom { display: flex; justify-content: space-between; align-items: center; border-top: 0.5px solid #e0ddd6; padding-top: 1.5rem; }
+  .footer-address { font-size: 0.65rem; letter-spacing: 0.12em; color: #bbb; line-height: 1.7; }
+  .footer-copy { font-size: 0.55rem; letter-spacing: 0.2em; color: #ccc; text-transform: uppercase; }
+
+  /* SCROLL ANIMATIONS */
+  .reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1); }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+</style>
+</head>
+<body>
+
+<!-- LANGUAGE SPLASH -->
+<div id="lang-splash">
+  <div class="splash-brand">OFF CUT</div>
+  <div class="splash-sub">Barbershop</div>
+  <div class="splash-divider"></div>
+  <div class="splash-prompt">Choose your language</div>
+  <div class="lang-options">
+    <button class="lang-btn" onclick="selectLang('pl')">Polski</button>
+    <div class="lang-sep"></div>
+    <button class="lang-btn" onclick="selectLang('en')">English</button>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">
+    <span class="nav-logo-main">OFF CUT</span>
+    <span class="nav-logo-sub">Barbershop</span>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#services" data-pl="Usługi" data-en="Services">Usługi</a></li>
+    <li><a href="#barbers" data-pl="Barberzy" data-en="Barbers">Barberzy</a></li>
+    <li><a href="#gallery" data-pl="Galeria" data-en="Gallery">Galeria</a></li>
+    <li><a href="#booking" data-pl="Kontakt" data-en="Contact">Kontakt</a></li>
+  </ul>
+  <button class="nav-book" data-pl="Zarezerwuj" data-en="Book Now">Zarezerwuj</button>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-bg"></div>
+  <div class="hero-grid-lines"></div>
+  <div class="hero-year" data-pl="ZAŁ. 2019 — PREMIUM GROOMING" data-en="EST. 2019 — PREMIUM GROOMING">ZAŁ. 2019 — PREMIUM GROOMING</div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">
+      <span class="eyebrow-line"></span>
+      <span data-pl="Warszawa — Poznań — Kraków" data-en="Warsaw — Poznań — Kraków">Warszawa — Poznań — Kraków</span>
+    </div>
+    <h1 class="hero-title">
+      <span class="hero-title-line">THE</span>
+      <span class="hero-title-line">ART OF</span>
+      <span class="hero-title-line">SHARP</span>
+    </h1>
+    <p class="hero-sub" data-pl="Precyzyjne strzyżenie. Bezczasowe rzemiosło.<br>Gdzie pielęgnacja staje się rytuałem." data-en="Precision cuts. Timeless craft.<br>Where grooming becomes ritual.">Precyzyjne strzyżenie. Bezczasowe rzemiosło.<br>Gdzie pielęgnacja staje się rytuałem.</p>
+    <div class="hero-cta">
+      <button class="btn-primary" data-pl="Zarezerwuj wizytę" data-en="Book Appointment">Zarezerwuj wizytę</button>
+      <button class="btn-ghost" data-pl="Zobacz usługi" data-en="View Services">Zobacz usługi</button>
+    </div>
+  </div>
+  <div class="hero-scroll-hint">
+    <div class="scroll-line"></div>
+    <span>Scroll</span>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-section">
+  <div class="marquee-track" id="marqueeTrack"></div>
+</div>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="section-header">
+    <div>
+      <div class="section-number" data-pl="01 / USŁUGI" data-en="01 / SERVICES">01 / USŁUGI</div>
+      <div class="section-title" data-pl="Co robimy" data-en="What we do">Co robimy</div>
+    </div>
+    <a class="section-link" data-pl="Pełny cennik →" data-en="Full price list →">Pełny cennik →</a>
+  </div>
+  <div class="services-grid">
+    <div class="service-card reveal reveal-delay-1">
+      <div class="service-num">001</div>
+      <div class="service-name" data-pl="Klasyczne Strzyżenie" data-en="Classic Cut">Klasyczne Strzyżenie</div>
+      <div class="service-desc" data-pl="Fundament. Precyzyjna praca nożyczkami dopasowana do kształtu twarzy i stylu życia." data-en="The foundation. Precision scissor work tailored to your face shape and lifestyle.">Fundament. Precyzyjna praca nożyczkami dopasowana do kształtu twarzy i stylu życia.</div>
+      <div class="service-price"><span>45 min</span><span class="service-price-amount">80 PLN</span></div>
+    </div>
+    <div class="service-card reveal reveal-delay-2">
+      <div class="service-num">002</div>
+      <div class="service-name" data-pl="Fade &amp; Blend" data-en="Fade &amp; Blend">Fade &amp; Blend</div>
+      <div class="service-desc" data-pl="Maszynowe rzeźbienie od skóry do czubka. Czyste linie, płynne przejścia." data-en="Machine-sculpted from skin to crown. Clean lines, smooth transitions.">Maszynowe rzeźbienie od skóry do czubka. Czyste linie, płynne przejścia.</div>
+      <div class="service-price"><span>50 min</span><span class="service-price-amount">100 PLN</span></div>
+    </div>
+    <div class="service-card reveal reveal-delay-3">
+      <div class="service-num">003</div>
+      <div class="service-name" data-pl="Golenie Brzytwą" data-en="Hot Towel Shave">Golenie Brzytwą</div>
+      <div class="service-desc" data-pl="Stary rytuał. Brzytwa, gorący ręcznik, premium balsam. Pełne doświadczenie." data-en="Old-world ritual. Straight razor, hot towel, premium balm. The full experience.">Stary rytuał. Brzytwa, gorący ręcznik, premium balsam. Pełne doświadczenie.</div>
+      <div class="service-price"><span>60 min</span><span class="service-price-amount">120 PLN</span></div>
+    </div>
+    <div class="service-card reveal reveal-delay-1">
+      <div class="service-num">004</div>
+      <div class="service-name" data-pl="Rzeźbienie Brody" data-en="Beard Sculpt">Rzeźbienie Brody</div>
+      <div class="service-desc" data-pl="Kształt, definicja, krawędzie. Twoja broda jako statement, nie przypadek." data-en="Shape, define, edge. Your beard as a statement, not an afterthought.">Kształt, definicja, krawędzie. Twoja broda jako statement, nie przypadek.</div>
+      <div class="service-price"><span>30 min</span><span class="service-price-amount">60 PLN</span></div>
+    </div>
+    <div class="service-card reveal reveal-delay-2">
+      <div class="service-num">005</div>
+      <div class="service-name" data-pl="Strzyżenie + Broda" data-en="Cut + Beard">Strzyżenie + Broda</div>
+      <div class="service-desc" data-pl="Kompletny pakiet. Od głowy po szczękę, przez jednego rzemieślnika, w jednej wizycie." data-en="The complete package. Head-to-jaw, handled by one craftsman, one sitting.">Kompletny pakiet. Od głowy po szczękę, przez jednego rzemieślnika, w jednej wizycie.</div>
+      <div class="service-price"><span>75 min</span><span class="service-price-amount">150 PLN</span></div>
+    </div>
+    <div class="service-card reveal reveal-delay-3">
+      <div class="service-num">006</div>
+      <div class="service-name" data-pl="Strzyżenie Junior" data-en="Junior Cut">Strzyżenie Junior</div>
+      <div class="service-desc" data-pl="Cierpliwe ręce dla najmłodszych. Ta sama jakość, ta sama uwaga." data-en="Patient hands for young clients. Same quality, same attention.">Cierpliwe ręce dla najmłodszych. Ta sama jakość, ta sama uwaga.</div>
+      <div class="service-price"><span>30 min</span><span class="service-price-amount">60 PLN</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- BARBERS -->
+<section id="barbers" class="barbers-section">
+  <div class="section-header">
+    <div>
+      <div class="section-number" data-pl="02 / ZESPÓŁ" data-en="02 / TEAM">02 / ZESPÓŁ</div>
+      <div class="section-title" data-pl="Barberzy" data-en="The Barbers">Barberzy</div>
+    </div>
+    <a class="section-link" data-pl="Poznaj ekipę →" data-en="Meet the crew →">Poznaj ekipę →</a>
+  </div>
+  <div class="barbers-grid">
+    <div class="barber-card reveal reveal-delay-1">
+      <div class="barber-portrait">
+        <div class="barber-portrait-placeholder">
+          <div class="barber-silhouette"></div>
+          <span class="portrait-label" data-pl="Zdjęcie placeholder" data-en="Photo placeholder">Zdjęcie placeholder</span>
+        </div>
+        <div class="barber-overlay">
+          <div class="barber-name">MARCUS K.</div>
+          <div class="barber-title" data-pl="Master Barber — 9 lat" data-en="Master Barber — 9 years">Master Barber — 9 lat</div>
+        </div>
+      </div>
+      <div class="barber-info">
+        <div class="barber-spec">
+          <span class="spec-tag">Fade</span>
+          <span class="spec-tag" data-pl="Włosy teksturowane" data-en="Textured Hair">Włosy teksturowane</span>
+          <span class="spec-tag">Skin Fade</span>
+        </div>
+      </div>
+    </div>
+    <div class="barber-card reveal reveal-delay-2">
+      <div class="barber-portrait">
+        <div class="barber-portrait-placeholder">
+          <div class="barber-silhouette"></div>
+          <span class="portrait-label" data-pl="Zdjęcie placeholder" data-en="Photo placeholder">Zdjęcie placeholder</span>
+        </div>
+        <div class="barber-overlay">
+          <div class="barber-name">DANIEL W.</div>
+          <div class="barber-title" data-pl="Senior Barber — 6 lat" data-en="Senior Barber — 6 years">Senior Barber — 6 lat</div>
+        </div>
+      </div>
+      <div class="barber-info">
+        <div class="barber-spec">
+          <span class="spec-tag" data-pl="Klasyczne strzyżenie" data-en="Classic Cut">Klasyczne strzyżenie</span>
+          <span class="spec-tag" data-pl="Broda" data-en="Beard">Broda</span>
+          <span class="spec-tag" data-pl="Gorący ręcznik" data-en="Hot Towel">Gorący ręcznik</span>
+        </div>
+      </div>
+    </div>
+    <div class="barber-card reveal reveal-delay-3">
+      <div class="barber-portrait">
+        <div class="barber-portrait-placeholder">
+          <div class="barber-silhouette"></div>
+          <span class="portrait-label" data-pl="Zdjęcie placeholder" data-en="Photo placeholder">Zdjęcie placeholder</span>
+        </div>
+        <div class="barber-overlay">
+          <div class="barber-name">TOMÁS R.</div>
+          <div class="barber-title" data-pl="Barber — 4 lata" data-en="Barber — 4 years">Barber — 4 lata</div>
+        </div>
+      </div>
+      <div class="barber-info">
+        <div class="barber-spec">
+          <span class="spec-tag" data-pl="Praca nożyczkami" data-en="Scissor Work">Praca nożyczkami</span>
+          <span class="spec-tag" data-pl="Włosy kręcone" data-en="Curly Hair">Włosy kręcone</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section id="gallery" class="gallery-section">
+  <div class="section-header">
+    <div>
+      <div class="section-number" data-pl="03 / GALERIA" data-en="03 / GALLERY">03 / GALERIA</div>
+      <div class="section-title" data-pl="Nasza praca" data-en="The Work">Nasza praca</div>
+    </div>
+    <a class="section-link">Instagram →</a>
+  </div>
+  <div class="gallery-grid reveal">
+    <div class="gallery-cell"><div class="gallery-inner"><div class="gallery-placeholder-icon">+</div><span class="gallery-placeholder-text" data-pl="Główne zdjęcie" data-en="Feature photo">Główne zdjęcie</span></div></div>
+    <div class="gallery-cell"><div class="gallery-inner"><span class="gallery-placeholder-text">Work 01</span></div></div>
+    <div class="gallery-cell"><div class="gallery-inner"><span class="gallery-placeholder-text">Work 02</span></div></div>
+    <div class="gallery-cell"><div class="gallery-inner"><span class="gallery-placeholder-text">Work 03</span></div></div>
+    <div class="gallery-cell"><div class="gallery-inner"><span class="gallery-placeholder-text">Work 04</span></div></div>
+  </div>
+</section>
+
+<!-- BOOKING -->
+<section id="booking" class="booking-section">
+  <div class="section-header">
+    <div>
+      <div class="section-number" data-pl="04 / REZERWACJA" data-en="04 / BOOKING">04 / REZERWACJA</div>
+      <div class="section-title" data-pl="Zarezerwuj fotel" data-en="Reserve your chair">Zarezerwuj fotel</div>
+    </div>
+  </div>
+  <div class="booking-layout">
+    <div class="booking-text reveal">
+      <h2 data-pl="ZAREZERWUJ<br>SWÓJ<br>TERMIN" data-en="BOOK<br>YOUR<br>SLOT">ZAREZERWUJ<br>SWÓJ<br>TERMIN</h2>
+      <p data-pl="Wizyty walk-in dostępne gdy mamy wolne miejsca. Aby mieć pewność co do wybranego barbera, rezerwuj z wyprzedzeniem." data-en="Walk-ins welcome when available. For guaranteed access to your preferred barber, book ahead.">Wizyty walk-in dostępne gdy mamy wolne miejsca. Aby mieć pewność co do wybranego barbera, rezerwuj z wyprzedzeniem.</p>
+      <div class="booking-info-row">
+        <div class="booking-info-item">
+          <span class="booking-info-label" data-pl="Godziny" data-en="Hours">Godziny</span>
+          <span class="booking-info-value" data-pl="Pon–Sob 9–20" data-en="Mon–Sat 9–20">Pon–Sob 9–20</span>
+          <span class="booking-info-value" style="color:#555; font-size:0.7rem;" data-pl="Nie 10–16" data-en="Sun 10–16">Nie 10–16</span>
+        </div>
+        <div class="booking-info-item">
+          <span class="booking-info-label" data-pl="Telefon" data-en="Phone">Telefon</span>
+          <span class="booking-info-value">+48 600 000 000</span>
+        </div>
+        <div class="booking-info-item">
+          <span class="booking-info-label" data-pl="Adres" data-en="Location">Adres</span>
+          <span class="booking-info-value">ul. Twoja 1<br>Poznań</span>
+        </div>
+      </div>
+    </div>
+    <div class="booking-form reveal reveal-delay-2">
+      <div class="form-group">
+        <label class="form-label" data-pl="Imię i nazwisko" data-en="Full name">Imię i nazwisko</label>
+        <input class="form-input" type="text" placeholder="Jan Kowalski">
+      </div>
+      <div class="form-group">
+        <label class="form-label" data-pl="Usługa" data-en="Service">Usługa</label>
+        <select class="form-input">
+          <option value="" data-pl="Wybierz usługę" data-en="Select a service">Wybierz usługę</option>
+          <option data-pl="Klasyczne strzyżenie — 80 PLN" data-en="Classic Cut — 80 PLN">Klasyczne strzyżenie — 80 PLN</option>
+          <option data-pl="Fade &amp; Blend — 100 PLN" data-en="Fade &amp; Blend — 100 PLN">Fade &amp; Blend — 100 PLN</option>
+          <option data-pl="Golenie brzytwą — 120 PLN" data-en="Hot Towel Shave — 120 PLN">Golenie brzytwą — 120 PLN</option>
+          <option data-pl="Rzeźbienie brody — 60 PLN" data-en="Beard Sculpt — 60 PLN">Rzeźbienie brody — 60 PLN</option>
+          <option data-pl="Strzyżenie + Broda — 150 PLN" data-en="Cut + Beard — 150 PLN">Strzyżenie + Broda — 150 PLN</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label" data-pl="Preferowany barber" data-en="Preferred barber">Preferowany barber</label>
+        <select class="form-input">
+          <option value="" data-pl="Bez preferencji" data-en="No preference">Bez preferencji</option>
+          <option>Marcus K.</option>
+          <option>Daniel W.</option>
+          <option>Tomás R.</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label" data-pl="Data i godzina" data-en="Date &amp; time">Data i godzina</label>
+        <input class="form-input" type="datetime-local">
+      </div>
+      <div class="form-group">
+        <label class="form-label" data-pl="Telefon" data-en="Phone">Telefon</label>
+        <input class="form-input" type="tel" placeholder="+48 600 000 000">
+      </div>
+      <button class="form-submit" data-pl="Wyślij rezerwację →" data-en="Request Booking →">Wyślij rezerwację →</button>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div>
+      <div class="footer-brand">OFF CUT</div>
+      <div class="footer-brand-sub">Barbershop</div>
+      <div class="footer-tagline" data-pl="Premium Barbershop — Zał. 2019" data-en="Premium Barbershop — Est. 2019">Premium Barbershop — Zał. 2019</div>
+    </div>
+    <div class="footer-socials">
+      <a class="social-link" href="#">Instagram</a>
+      <a class="social-link" href="#">Facebook</a>
+      <a class="social-link" href="#">Google Maps</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-address">ul. Twoja 1, Poznań<br>contact@offcut.pl</div>
+    <div class="footer-copy">© 2025 Off Cut Barbershop.</div>
+  </div>
+</footer>
+
+<script>
+  var marqueeItemsPL = [
+    { text: 'PRECYZYJNE STRZYŻENIE', accent: false },
+    { text: 'GOLENIE BRZYTWĄ', accent: true },
+    { text: 'RZEŹBIENIE BRODY', accent: false },
+    { text: 'SKIN FADE', accent: true },
+    { text: 'KLASYCZNY GROOMING', accent: false },
+    { text: 'ZAŁ. 2019', accent: false },
+    { text: 'PREMIUM RZEMIOSŁO', accent: true },
+    { text: 'WARSZAWA · POZNAŃ · KRAKÓW', accent: false }
+  ];
+
+  var marqueeItemsEN = [
+    { text: 'PRECISION CUTS', accent: false },
+    { text: 'HOT TOWEL SHAVE', accent: true },
+    { text: 'BEARD SCULPTING', accent: false },
+    { text: 'SKIN FADE', accent: true },
+    { text: 'CLASSIC GROOMING', accent: false },
+    { text: 'EST. 2019', accent: false },
+    { text: 'PREMIUM CRAFT', accent: true },
+    { text: 'WARSAW · POZNAŃ · KRAKÓW', accent: false }
+  ];
+
+  function buildMarquee(lang) {
+    var track = document.getElementById('marqueeTrack');
+    track.innerHTML = '';
+    var items = lang === 'pl' ? marqueeItemsPL : marqueeItemsEN;
+    var doubled = items.concat(items).concat(items).concat(items);
+    doubled.forEach(function(item) {
+      var el = document.createElement('div');
+      el.className = 'marquee-item' + (item.accent ? ' accent' : '');
+      el.innerHTML = item.text + '<span class="dot"></span>';
+      track.appendChild(el);
+    });
+  }
+
+  function applyLang(lang) {
+    document.querySelectorAll('[data-' + lang + ']').forEach(function(el) {
+      var val = el.getAttribute('data-' + lang);
+      if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+        el.placeholder = val;
+      } else if (el.tagName === 'OPTION') {
+        el.textContent = val;
+      } else {
+        el.innerHTML = val;
+      }
+    });
+    document.querySelectorAll('select').forEach(function(sel) {
+      sel.querySelectorAll('option').forEach(function(opt) {
+        var val = opt.getAttribute('data-' + lang);
+        if (val) opt.textContent = val;
+      });
+    });
+    buildMarquee(lang);
+    document.documentElement.lang = lang;
+  }
+
+  function selectLang(lang) {
+    applyLang(lang);
+    var splash = document.getElementById('lang-splash');
+    splash.classList.add('hidden');
+  }
+
+  buildMarquee('pl');
+
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) entry.target.classList.add('visible');
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.reveal').forEach(function(el) {
+    observer.observe(el);
+  });
+</script>
+</body>
+</html>
