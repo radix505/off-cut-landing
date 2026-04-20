@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { useT } from '../context/LangContext';
+import { useT, useLang } from '../context/LangContext';
 
 export default function Nav() {
   const [open, setOpen] = useState(false);
   const close = () => setOpen(false);
+  const { lang, selectLang } = useLang();
 
   return (
     <nav>
@@ -21,6 +22,11 @@ export default function Nav() {
         <button className="nav-book" onClick={() => { document.getElementById('booking').scrollIntoView({ behavior: 'smooth' }); close(); }}>
           {useT('Zarezerwuj', 'Book Now')}
         </button>
+        <div className="lang-switch">
+          <button className={`lang-switch-btn${lang === 'pl' ? ' active' : ''}`} onClick={() => selectLang('pl')}>PL</button>
+          <span className="lang-switch-sep">/</span>
+          <button className={`lang-switch-btn${lang === 'en' ? ' active' : ''}`} onClick={() => selectLang('en')}>EN</button>
+        </div>
         <button className="nav-hamburger" onClick={() => setOpen(o => !o)} aria-label="Menu">
           {open ? (
             <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
