@@ -49,7 +49,7 @@ const services = [
 export default function Services() {
   const ref = useReveal();
   return (
-    <section id="services" ref={ref}>
+    <section id="services" className="services-section" ref={ref}>
       <div className="section-header">
         <div>
           <div className="section-number">{useT('01 / USŁUGI', '01 / SERVICES')}</div>

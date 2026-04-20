@@ -89,6 +89,23 @@ section { padding: 6rem 3rem; background: #f5f3ef; }
 .service-price { font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: #bbb; display: flex; justify-content: space-between; align-items: center; border-top: 0.5px solid #ece9e2; padding-top: 1.2rem; }
 .service-price-amount { font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; letter-spacing: 0.05em; color: #0a0a0a; }
 
+/* SERVICES – dark theme */
+.services-section { background: #0a0a0a; }
+.services-section .section-number { color: #444; }
+.services-section .section-title { color: #fff; }
+.services-section .section-header { border-color: #1a1a1a; }
+.services-section .section-link { color: #555; border-color: #333; }
+.services-section .section-link:hover { color: #fff; border-color: #fff; }
+.services-section .services-grid { background: #0a0a0a; }
+.services-section .service-card { background: rgba(255,255,255,0.05); border: 0.5px solid rgba(255,255,255,0.1); backdrop-filter: blur(8px); }
+.services-section .service-card:hover { background: rgba(255,255,255,0.09); }
+.services-section .service-card::before { background: linear-gradient(to right, transparent, rgba(255,255,255,0.2), transparent); }
+.services-section .service-num { color: #444; }
+.services-section .service-name { color: #fff; }
+.services-section .service-desc { color: #666; }
+.services-section .service-price { color: #444; border-color: #1a1a1a; }
+.services-section .service-price-amount { color: #fff; }
+
 /* BARBERS */
 .barbers-section { background: #fff; }
 .barbers-section .section-header { border-color: #e8e5df; }
