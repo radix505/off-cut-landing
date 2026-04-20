@@ -26,15 +26,15 @@ body { background: #f5f3ef; color: #1a1a1a; font-family: 'Inter', sans-serif; fo
 .lang-sep { width: 0.5px; background: #e0e0e0; align-self: stretch; }
 
 /* NAV */
-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; padding: 1.5rem 3rem; background: rgba(245,243,239,0.95); border-bottom: 0.5px solid #e8e5df; backdrop-filter: blur(8px); }
+nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; padding: 1.5rem 3rem; background: rgba(10,10,10,0.95); border-bottom: 0.5px solid #1a1a1a; backdrop-filter: blur(8px); }
 .nav-logo { display: flex; flex-direction: column; line-height: 1; }
-.nav-logo-main { font-family: 'Bebas Neue', sans-serif; font-size: 1.3rem; letter-spacing: 0.25em; color: #0a0a0a; }
-.nav-logo-sub { font-size: 0.45rem; letter-spacing: 0.4em; text-transform: uppercase; color: #bbb; margin-top: 1px; }
+.nav-logo-main { font-family: 'Bebas Neue', sans-serif; font-size: 1.3rem; letter-spacing: 0.25em; color: #fff; }
+.nav-logo-sub { font-size: 0.45rem; letter-spacing: 0.4em; text-transform: uppercase; color: #555; margin-top: 1px; }
 .nav-links { display: flex; gap: 2.5rem; list-style: none; }
-.nav-links a { font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: #888; text-decoration: none; transition: color 0.3s; }
-.nav-links a:hover { color: #0a0a0a; }
-.nav-book { font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; border: 0.5px solid #bbb; padding: 0.6rem 1.4rem; color: #444; cursor: pointer; background: transparent; font-family: 'Inter', sans-serif; transition: all 0.3s; }
-.nav-book:hover { background: #0a0a0a; color: #fff; border-color: #0a0a0a; }
+.nav-links a { font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: #666; text-decoration: none; transition: color 0.3s; }
+.nav-links a:hover { color: #fff; }
+.nav-book { font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; border: 0.5px solid #444; padding: 0.6rem 1.4rem; color: #aaa; cursor: pointer; background: transparent; font-family: 'Inter', sans-serif; transition: all 0.3s; }
+.nav-book:hover { background: #fff; color: #0a0a0a; border-color: #fff; }
 
 /* HERO */
 .hero { position: relative; height: 100vh; min-height: 700px; display: flex; align-items: flex-end; padding: 0 3rem 4rem; overflow: hidden; background: #fff; }
