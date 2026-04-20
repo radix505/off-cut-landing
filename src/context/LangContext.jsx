@@ -2,13 +2,27 @@ import { createContext, useContext, useState } from 'react';
 
 export const LangContext = createContext();
 
+function detectInitialLang() {
+  if (typeof window === 'undefined') return 'pl';
+  const stored = localStorage.getItem('lang-chosen');
+  if (stored === 'pl' || stored === 'en') return stored;
+  const nav = (navigator.language || navigator.userLanguage || 'pl').toLowerCase();
+  return nav.startsWith('pl') ? 'pl' : 'en';
+}
+
+function detectSplashVisible() {
+  if (typeof window === 'undefined') return false;
+  return !localStorage.getItem('lang-chosen');
+}
+
 export function LangProvider({ children }) {
-  const [lang, setLang] = useState('pl');
-  const [splashVisible, setSplashVisible] = useState(true);
+  const [lang, setLang] = useState(detectInitialLang);
+  const [splashVisible, setSplashVisible] = useState(detectSplashVisible);
 
   function selectLang(l) {
     setLang(l);
     setSplashVisible(false);
+    try { localStorage.setItem('lang-chosen', l); } catch { /* ignore quota/private mode */ }
   }
 
   return (

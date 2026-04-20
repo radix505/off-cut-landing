@@ -55,7 +55,7 @@ export default function Services() {
           <div className="section-number">{useT('01 / USŁUGI', '01 / SERVICES')}</div>
           <div className="section-title">{useT('Co robimy', 'What we do')}</div>
         </div>
-        <a className="section-link">{useT('Pełny cennik →', 'Full price list →')}</a>
+        <a className="section-link" href="#booking">{useT('Zarezerwuj →', 'Book a slot →')}</a>
       </div>
       <div className="services-grid">
         {services.map((s) => (

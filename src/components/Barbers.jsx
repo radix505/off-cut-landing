@@ -42,7 +42,7 @@ export default function Barbers() {
           <div className="section-number">{useT('02 / ZESPÓŁ', '02 / TEAM')}</div>
           <div className="section-title">{useT('Barberzy', 'The Barbers')}</div>
         </div>
-        <a className="section-link">{useT('Poznaj ekipę →', 'Meet the crew →')}</a>
+        <a className="section-link" href="#booking">{useT('Zarezerwuj fotel →', 'Book a chair →')}</a>
       </div>
       <div className="barbers-grid">
         {barbers.map((b) => (

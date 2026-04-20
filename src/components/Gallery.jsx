@@ -10,7 +10,7 @@ export default function Gallery() {
           <div className="section-number">{useT('03 / GALERIA', '03 / GALLERY')}</div>
           <div className="section-title">{useT('Nasza praca', 'The Work')}</div>
         </div>
-        <a className="section-link">Instagram →</a>
+        <a className="section-link" href="https://instagram.com/offcutbarber" target="_blank" rel="noopener noreferrer">Instagram →</a>
       </div>
       <div className="gallery-grid reveal">
         <div className="gallery-cell">
