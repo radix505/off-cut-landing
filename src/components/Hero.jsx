@@ -23,8 +23,8 @@ export default function Hero() {
           {subLine1}<br />{subLine2}
         </p>
         <div className="hero-cta">
-          <button className="btn-primary">{useT('Zarezerwuj wizytę', 'Book Appointment')}</button>
-          <button className="btn-ghost">{useT('Zobacz usługi', 'View Services')}</button>
+          <button className="btn-primary" onClick={() => document.getElementById('booking').scrollIntoView({ behavior: 'smooth' })}>{useT('Zarezerwuj wizytę', 'Book Appointment')}</button>
+          <button className="btn-ghost" onClick={() => document.getElementById('services').scrollIntoView({ behavior: 'smooth' })}>{useT('Zobacz usługi', 'View Services')}</button>
         </div>
       </div>
       <div className="hero-scroll-hint">
