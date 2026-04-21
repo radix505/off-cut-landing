@@ -8,7 +8,6 @@ import Barbers from './components/Barbers';
 import Gallery from './components/Gallery';
 import Booking from './components/Booking';
 import Footer from './components/Footer';
-
 export default function App() {
   return (
     <LangProvider>
