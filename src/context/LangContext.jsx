@@ -4,7 +4,7 @@ export const LangContext = createContext();
 
 export function LangProvider({ children }) {
   const [lang, setLang] = useState(() => { try { return localStorage.getItem('offcut-lang') || 'pl'; } catch { return 'pl'; } });
-  const [splashVisible, setSplashVisible] = useState(() => { try { return !localStorage.getItem('offcut-lang'); } catch { return true; } });
+  const [splashVisible, setSplashVisible] = useState(true);
 
   function selectLang(l) {
     setLang(l);
