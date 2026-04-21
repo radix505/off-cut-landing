@@ -9,7 +9,7 @@ body { background: #f5f3ef; color: #1a1a1a; font-family: 'Inter', sans-serif; fo
 
 /* LANG SPLASH */
 #lang-splash { position: fixed; inset: 0; z-index: 9999; overflow: hidden; }
-.splash-half { position: absolute; inset: 0; cursor: pointer; transition: clip-path 0.4s cubic-bezier(0.4,0,0.2,1); }
+.splash-half { position: absolute; inset: 0; cursor: pointer; transition: clip-path 0.4s cubic-bezier(0.4,0,0.2,1), transform 0.42s cubic-bezier(0.4,0,0.2,1); }
 .splash-half--dark { background: #0a0a0a; clip-path: polygon(0 0, 60% 0, 40% 100%, 0 100%); }
 .splash-half--dark:hover { clip-path: polygon(0 0, 68% 0, 48% 100%, 0 100%); }
 .splash-half--light { background: #fff; clip-path: polygon(60% 0, 100% 0, 100% 100%, 40% 100%); }
@@ -31,19 +31,14 @@ body { background: #f5f3ef; color: #1a1a1a; font-family: 'Inter', sans-serif; fo
   .splash-content--light { left: 50%; top: 72%; }
 }
 .splash-scissors-overlay { position: absolute; inset: 0; pointer-events: none; z-index: 10; overflow: hidden; }
-.splash-scissors-mover { position: absolute; top: 0; left: 0; width: 90px; color: #888; animation: splashScissorsCut 0.82s cubic-bezier(0.4,0,0.2,1) forwards; }
-.splash-scissors-mover svg { width: 90px; height: 36px; display: block; }
-@keyframes splashScissorsCut {
-  from { transform: translate(calc(60vw - 45px), -5vh) rotate(107deg); }
-  to   { transform: translate(calc(40vw - 45px), 107vh) rotate(107deg); }
+.splash-scissors-mover-up { position: absolute; left: 50%; color: #888; animation: splashScissorsUp 0.65s cubic-bezier(0.4,0,0.2,1) forwards; }
+.splash-scissors-mover-up svg { width: 90px; height: 36px; display: block; }
+@keyframes splashScissorsUp {
+  from { transform: translate(-50%, 110vh) rotate(-90deg); }
+  to   { transform: translate(-50%, -10vh) rotate(-90deg); }
 }
-@media (max-width: 600px) {
-  .splash-scissors-mover { animation-name: splashScissorsCutMobile; }
-  @keyframes splashScissorsCutMobile {
-    from { transform: translate(-110px, calc(45vh - 18px)) rotate(6deg); }
-    to   { transform: translate(110vw,  calc(55vh - 18px)) rotate(6deg); }
-  }
-}
+.splash-half--dark.splash-splitting { transform: translateX(-110vw); }
+.splash-half--light.splash-splitting { transform: translateX(110vw); }
 
 /* NAV */
 nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; padding: 1.5rem 3rem; background: rgba(10,10,10,0.95); border-bottom: 0.5px solid #1a1a1a; backdrop-filter: blur(8px); }

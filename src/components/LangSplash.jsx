@@ -1,21 +1,30 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useLang } from '../context/LangContext';
 
 export default function LangSplash() {
   const { splashVisible, selectLang } = useLang();
-  const [slicing, setSlicing] = useState(false);
+  const [phase, setPhase] = useState('idle'); // 'idle' | 'cutting' | 'splitting'
+  const pending = useRef(null);
 
   if (!splashVisible) return null;
 
   function handleSelect(l) {
-    if (slicing) return;
-    setSlicing(true);
-    setTimeout(() => selectLang(l), 820);
+    if (phase !== 'idle') return;
+    pending.current = l;
+    setPhase('cutting');
+    setTimeout(() => setPhase('splitting'), 620);
+    setTimeout(() => selectLang(l), 1050);
   }
+
+  const busy = phase !== 'idle';
 
   return (
     <div id="lang-splash">
-      <div className="splash-half splash-half--dark" onClick={() => handleSelect('pl')}>
+      <div
+        className={`splash-half splash-half--dark${phase === 'splitting' ? ' splash-splitting' : ''}`}
+        onClick={() => handleSelect('pl')}
+        style={busy ? { pointerEvents: 'none' } : {}}
+      >
         <div className="splash-content splash-content--dark">
           <div className="splash-brand">OFF CUT</div>
           <div className="splash-sub">Barbershop</div>
@@ -24,7 +33,11 @@ export default function LangSplash() {
           <div className="splash-lang-hint">kliknij aby wybrać</div>
         </div>
       </div>
-      <div className="splash-half splash-half--light" onClick={() => handleSelect('en')}>
+      <div
+        className={`splash-half splash-half--light${phase === 'splitting' ? ' splash-splitting' : ''}`}
+        onClick={() => handleSelect('en')}
+        style={busy ? { pointerEvents: 'none' } : {}}
+      >
         <div className="splash-content splash-content--light">
           <div className="splash-brand">OFF CUT</div>
           <div className="splash-sub">Barbershop</div>
@@ -33,9 +46,9 @@ export default function LangSplash() {
           <div className="splash-lang-hint">click to select</div>
         </div>
       </div>
-      {slicing && (
+      {phase === 'cutting' && (
         <div className="splash-scissors-overlay">
-          <div className="splash-scissors-mover">
+          <div className="splash-scissors-mover-up">
             <svg viewBox="0 0 100 40" fill="none" xmlns="http://www.w3.org/2000/svg">
               <g className="scissors-blade-top">
                 <circle cx="12" cy="10" r="8" stroke="currentColor" strokeWidth="1.5" />
