@@ -3,12 +3,13 @@ import { createContext, useContext, useState } from 'react';
 export const LangContext = createContext();
 
 export function LangProvider({ children }) {
-  const [lang, setLang] = useState('pl');
-  const [splashVisible, setSplashVisible] = useState(true);
+  const [lang, setLang] = useState(() => { try { return localStorage.getItem('offcut-lang') || 'pl'; } catch { return 'pl'; } });
+  const [splashVisible, setSplashVisible] = useState(() => { try { return !localStorage.getItem('offcut-lang'); } catch { return true; } });
 
   function selectLang(l) {
     setLang(l);
     setSplashVisible(false);
+    try { localStorage.setItem('offcut-lang', l); } catch {}
   }
 
   return (

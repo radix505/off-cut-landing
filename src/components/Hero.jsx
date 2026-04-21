@@ -16,8 +16,8 @@ export default function Hero() {
         </div>
         <h1 className="hero-title">
           <span className="hero-title-line">THE</span>
-          <span className="hero-title-line">ART OF</span>
           <span className="hero-title-line">SHARP</span>
+          <span className="hero-title-line">ART</span>
         </h1>
         <p className="hero-sub">
           {subLine1}<br />{subLine2}
@@ -29,7 +29,7 @@ export default function Hero() {
       </div>
       <div className="hero-scroll-hint">
         <div className="scroll-line" />
-        <span>Scroll</span>
+        <span>{useT('Przewiń', 'Scroll')}</span>
       </div>
     </section>
   );

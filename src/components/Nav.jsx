@@ -1,25 +1,57 @@
 import { useState } from 'react';
 import { useT, useLang } from '../context/LangContext';
+import { useRouter } from '../context/RouterContext';
 
 export default function Nav() {
   const [open, setOpen] = useState(false);
   const close = () => setOpen(false);
   const { lang, selectLang } = useLang();
+  const { page, navigate } = useRouter();
+  const onBlog = page === 'blog';
+
+  function sectionHref(hash) {
+    return onBlog ? `/${hash}` : hash;
+  }
+
+  function handleLogoClick() {
+    if (onBlog) navigate('/');
+    else window.scrollTo({ top: 0, behavior: 'smooth' });
+    close();
+  }
+
+  function handleBookClick() {
+    if (onBlog) {
+      navigate('/');
+      setTimeout(() => document.getElementById('booking')?.scrollIntoView({ behavior: 'smooth' }), 100);
+    } else {
+      document.getElementById('booking')?.scrollIntoView({ behavior: 'smooth' });
+    }
+    close();
+  }
 
   return (
     <nav>
-      <div className="nav-logo" onClick={() => { window.scrollTo({ top: 0, behavior: 'smooth' }); close(); }} style={{ cursor: 'pointer' }}>
+      <div className="nav-logo" onClick={handleLogoClick} style={{ cursor: 'pointer' }}>
         <span className="nav-logo-main">OFF CUT</span>
         <span className="nav-logo-sub">Barbershop</span>
       </div>
       <ul className={`nav-links${open ? ' nav-links--open' : ''}`}>
-        <li><a href="#services" onClick={close}>{useT('Usługi', 'Services')}</a></li>
-        <li><a href="#barbers" onClick={close}>{useT('Barberzy', 'Barbers')}</a></li>
-        <li><a href="#gallery" onClick={close}>{useT('Galeria', 'Gallery')}</a></li>
-        <li><a href="#booking" onClick={close}>{useT('Kontakt', 'Contact')}</a></li>
+        <li><a href={sectionHref('#services')} onClick={close}>{useT('Usługi', 'Services')}</a></li>
+        <li><a href={sectionHref('#barbers')} onClick={close}>{useT('Barberzy', 'Barbers')}</a></li>
+        <li><a href={sectionHref('#gallery')} onClick={close}>{useT('Galeria', 'Gallery')}</a></li>
+        <li><a href={sectionHref('#booking')} onClick={close}>{useT('Kontakt', 'Contact')}</a></li>
+        <li>
+          <a
+            href="/blog"
+            className={onBlog ? 'nav-link--active' : ''}
+            onClick={(e) => { e.preventDefault(); navigate('/blog'); close(); }}
+          >
+            Blog
+          </a>
+        </li>
       </ul>
       <div className="nav-right">
-        <button className="nav-book" onClick={() => { document.getElementById('booking').scrollIntoView({ behavior: 'smooth' }); close(); }}>
+        <button className="nav-book" onClick={handleBookClick}>
           {useT('Zarezerwuj', 'Book Now')}
         </button>
         <div className="lang-switch">
