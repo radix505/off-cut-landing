@@ -12,8 +12,8 @@ export default function LangSplash() {
     if (phase !== 'idle') return;
     pending.current = l;
     setPhase('cutting');
-    setTimeout(() => setPhase('splitting'), 620);
-    setTimeout(() => selectLang(l), 1050);
+    setTimeout(() => setPhase('splitting'), 1050);
+    setTimeout(() => selectLang(l), 1500);
   }
 
   const busy = phase !== 'idle';

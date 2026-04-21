@@ -31,11 +31,18 @@ body { background: #f5f3ef; color: #1a1a1a; font-family: 'Inter', sans-serif; fo
   .splash-content--light { left: 50%; top: 72%; }
 }
 .splash-scissors-overlay { position: absolute; inset: 0; pointer-events: none; z-index: 10; overflow: hidden; }
-.splash-scissors-mover-up { position: absolute; left: 50%; color: #888; animation: splashScissorsUp 0.65s cubic-bezier(0.4,0,0.2,1) forwards; }
+.splash-scissors-mover-up { position: absolute; top: 0; left: 0; color: #888; animation: splashScissorsDiag 1.1s cubic-bezier(0.4,0,0.2,1) forwards; }
 .splash-scissors-mover-up svg { width: 90px; height: 36px; display: block; }
-@keyframes splashScissorsUp {
-  from { transform: translate(-50%, 110vh) rotate(-90deg); }
-  to   { transform: translate(-50%, -10vh) rotate(-90deg); }
+@keyframes splashScissorsDiag {
+  from { transform: translate(calc(40vw - 45px), 110vh) rotate(-72deg); }
+  to   { transform: translate(calc(60vw - 45px), -10vh) rotate(-72deg); }
+}
+@media (max-width: 600px) {
+  .splash-scissors-mover-up { animation-name: splashScissorsDiagMobile; }
+  @keyframes splashScissorsDiagMobile {
+    from { transform: translate(-110px, calc(50vh - 18px)) rotate(6deg); }
+    to   { transform: translate(110vw,  calc(50vh - 18px)) rotate(6deg); }
+  }
 }
 .splash-half--dark.splash-splitting { transform: translateX(-110vw); }
 .splash-half--light.splash-splitting { transform: translateX(110vw); }
