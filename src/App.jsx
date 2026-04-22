@@ -4,12 +4,13 @@ import LangSplash from './components/LangSplash';
 import ScissorsTransition from './components/ScissorsTransition';
 import HomePage from './pages/HomePage';
 import BlogPage from './pages/BlogPage';
+import PricePage from './pages/PricePage';
 
 function AppRoutes() {
   const { page, pageVisible } = useRouter();
   return (
     <div className={`page-content${pageVisible ? ' visible' : ''}`}>
-      {page === 'blog' ? <BlogPage /> : <HomePage />}
+      {page === 'blog' ? <BlogPage /> : page === 'prices' ? <PricePage /> : <HomePage />}
     </div>
   );
 }

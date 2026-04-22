@@ -1,13 +1,14 @@
 import { useRouter } from '../context/RouterContext';
 
 export default function ScissorsTransition() {
-  const { cutting } = useRouter();
+  const { cutting, direction } = useRouter();
   if (!cutting) return null;
+  const rev = direction === 'backward';
 
   return (
     <div className="scissors-overlay">
-      <div className="cut-line" />
-      <div className="scissors-mover">
+      <div className={`cut-line${rev ? ' cut-line--rev' : ''}`} />
+      <div className={`scissors-mover${rev ? ' scissors-mover--rev' : ''}`}>
         <svg viewBox="0 0 100 40" fill="none" xmlns="http://www.w3.org/2000/svg">
           <g className="scissors-blade-top">
             <circle cx="12" cy="10" r="8" stroke="currentColor" strokeWidth="1.5" />

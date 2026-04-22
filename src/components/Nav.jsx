@@ -8,21 +8,27 @@ export default function Nav() {
   const { lang, selectLang } = useLang();
   const { page, navigate } = useRouter();
   const onBlog = page === 'blog';
-
-  function sectionHref(hash) {
-    return onBlog ? `/${hash}` : hash;
-  }
+  const onAway = page === 'blog' || page === 'prices';
 
   function handleLogoClick() {
-    if (onBlog) navigate('/');
+    if (onAway) navigate('/');
     else window.scrollTo({ top: 0, behavior: 'smooth' });
     close();
   }
 
-  function handleBookClick() {
-    if (onBlog) {
+  function handleSectionClick(e, id) {
+    if (onAway) {
+      e.preventDefault();
       navigate('/');
-      setTimeout(() => document.getElementById('booking')?.scrollIntoView({ behavior: 'smooth' }), 100);
+      setTimeout(() => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' }), 700);
+    }
+    close();
+  }
+
+  function handleBookClick() {
+    if (onAway) {
+      navigate('/');
+      setTimeout(() => document.getElementById('booking')?.scrollIntoView({ behavior: 'smooth' }), 700);
     } else {
       document.getElementById('booking')?.scrollIntoView({ behavior: 'smooth' });
     }
@@ -36,10 +42,10 @@ export default function Nav() {
         <span className="nav-logo-sub">Barbershop</span>
       </div>
       <ul className={`nav-links${open ? ' nav-links--open' : ''}`}>
-        <li><a href={sectionHref('#services')} onClick={close}>{useT('Usługi', 'Services')}</a></li>
-        <li><a href={sectionHref('#barbers')} onClick={close}>{useT('Barberzy', 'Barbers')}</a></li>
-        <li><a href={sectionHref('#gallery')} onClick={close}>{useT('Galeria', 'Gallery')}</a></li>
-        <li><a href={sectionHref('#booking')} onClick={close}>{useT('Kontakt', 'Contact')}</a></li>
+        <li><a href="#services" onClick={(e) => handleSectionClick(e, 'services')}>{useT('Usługi', 'Services')}</a></li>
+        <li><a href="#barbers" onClick={(e) => handleSectionClick(e, 'barbers')}>{useT('Barberzy', 'Barbers')}</a></li>
+        <li><a href="#gallery" onClick={(e) => handleSectionClick(e, 'gallery')}>{useT('Galeria', 'Gallery')}</a></li>
+        <li><a href="#booking" onClick={(e) => handleSectionClick(e, 'booking')}>{useT('Kontakt', 'Contact')}</a></li>
         <li>
           <a
             href="/blog"

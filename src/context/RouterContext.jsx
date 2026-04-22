@@ -3,15 +3,20 @@ import { createContext, useContext, useState, useEffect, useRef } from 'react';
 const RouterContext = createContext();
 
 export function RouterProvider({ children }) {
-  const [page, setPage] = useState(() =>
-    window.location.pathname === '/blog' ? 'blog' : 'home'
-  );
+  const [page, setPage] = useState(() => {
+    const p = window.location.pathname;
+    return p === '/blog' ? 'blog' : p === '/prices' ? 'prices' : 'home';
+  });
   const [cutting, setCutting] = useState(false);
+  const [direction, setDirection] = useState('forward');
   const [pageVisible, setPageVisible] = useState(true);
   const timers = useRef([]);
 
   useEffect(() => {
-    const onPop = () => setPage(window.location.pathname === '/blog' ? 'blog' : 'home');
+    const onPop = () => {
+      const p = window.location.pathname;
+      setPage(p === '/blog' ? 'blog' : p === '/prices' ? 'prices' : 'home');
+    };
     window.addEventListener('popstate', onPop);
     return () => window.removeEventListener('popstate', onPop);
   }, []);
@@ -19,11 +24,12 @@ export function RouterProvider({ children }) {
   useEffect(() => () => timers.current.forEach(clearTimeout), []);
 
   function navigate(path) {
-    const target = path === '/blog' ? 'blog' : 'home';
+    const target = path === '/blog' ? 'blog' : path === '/prices' ? 'prices' : 'home';
     if (target === page) return;
     timers.current.forEach(clearTimeout);
     timers.current = [];
 
+    setDirection(target === 'home' ? 'backward' : 'forward');
     setPageVisible(false);
     setCutting(true);
 
@@ -38,7 +44,7 @@ export function RouterProvider({ children }) {
   }
 
   return (
-    <RouterContext.Provider value={{ page, navigate, cutting, pageVisible }}>
+    <RouterContext.Provider value={{ page, navigate, cutting, direction, pageVisible }}>
       {children}
     </RouterContext.Provider>
   );
