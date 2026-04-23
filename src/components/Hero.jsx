@@ -12,7 +12,7 @@ export default function Hero() {
       <div className="hero-content">
         <div className="hero-eyebrow">
           <span className="eyebrow-line" />
-          <span>{useT('Warszawa — Poznań — Kraków', 'Warsaw — Poznań — Kraków')}</span>
+          <span>{useT('Szczecin', 'Szczecin')}</span>
         </div>
         <h1 className="hero-title">
           <span className="hero-title-line">THE</span>

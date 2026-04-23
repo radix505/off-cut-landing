@@ -2,8 +2,19 @@ import { useState } from 'react';
 import { useT, useLang } from '../context/LangContext';
 import { useRouter } from '../context/RouterContext';
 
+const ScissorsIcon = () => (
+  <svg className="nav-scissors" viewBox="0 0 100 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="10" cy="32" r="7" stroke="currentColor" strokeWidth="1.5" />
+    <line x1="16" y1="29" x2="95" y2="6" stroke="currentColor" strokeWidth="1.5" />
+    <circle cx="10" cy="8" r="7" stroke="currentColor" strokeWidth="1.5" />
+    <line x1="16" y1="11" x2="95" y2="34" stroke="currentColor" strokeWidth="1.5" />
+    <circle cx="43" cy="20" r="2.5" fill="currentColor" />
+  </svg>
+);
+
 export default function Nav() {
   const [open, setOpen] = useState(false);
+  const [activeLink, setActiveLink] = useState(null);
   const close = () => setOpen(false);
   const { lang, selectLang } = useLang();
   const { page, navigate } = useRouter();
@@ -57,6 +68,7 @@ export default function Nav() {
         </li>
       </ul>
       <div className="nav-right">
+        <ScissorsIcon />
         <button className="nav-book" onClick={handleBookClick}>
           {useT('Zarezerwuj', 'Book Now')}
         </button>

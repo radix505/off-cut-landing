@@ -34,6 +34,9 @@ export default function Footer() {
         <div className="footer-address">ul. Twoja 1, Poznań<br />contact@offcut.pl</div>
         <div className="footer-copy">© 2025 Off Cut Barbershop.</div>
       </div>
+      <div className="footer-credit">
+        {useT('Stworzone przez', 'Created by')} <a href="https://corelaners.eu" target="_blank" rel="noopener noreferrer">corelaners.eu</a>
+      </div>
     </footer>
   );
 }
