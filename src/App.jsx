@@ -15,10 +15,13 @@ function AppRoutes() {
   );
 }
 
+import WireScrollbar from './components/WireScrollbar';
+
 export default function App() {
   return (
     <LangProvider>
       <RouterProvider>
+        <WireScrollbar />
         <LangSplash />
         <ScissorsTransition />
         <AppRoutes />

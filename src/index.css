@@ -3,9 +3,8 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
 html { scroll-behavior: smooth; }
 body { background: #f5f3ef; color: #1a1a1a; font-family: 'Inter', sans-serif; font-weight: 300; overflow-x: hidden; }
-::-webkit-scrollbar { width: 2px; }
-::-webkit-scrollbar-track { background: #f5f3ef; }
-::-webkit-scrollbar-thumb { background: #ccc; }
+html, body { scrollbar-width: none; }
+html::-webkit-scrollbar, body::-webkit-scrollbar { display: none; }
 
 /* LANG SPLASH */
 #lang-splash { position: fixed; inset: 0; z-index: 9999; overflow: hidden; }
@@ -50,8 +49,8 @@ body { background: #f5f3ef; color: #1a1a1a; font-family: 'Inter', sans-serif; fo
 /* NAV */
 nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; padding: 1.5rem 3rem; background: rgba(10,10,10,0.95); border-bottom: 0.5px solid #1a1a1a; backdrop-filter: blur(8px); }
 .nav-logo { display: flex; flex-direction: column; line-height: 1; }
-.nav-logo-main { font-family: 'Bebas Neue', sans-serif; font-size: 1.3rem; letter-spacing: 0.25em; color: #fff; }
-.nav-logo-sub { font-size: 0.45rem; letter-spacing: 0.4em; text-transform: uppercase; color: #555; margin-top: 1px; }
+.nav-logo-main { font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; letter-spacing: 0.25em; color: #fff; }
+.nav-logo-sub { font-size: 0.55rem; letter-spacing: 0.4em; text-transform: uppercase; color: #555; margin-top: 4px; text-shadow: 0 0 8px rgba(255,255,255,0.6), 0 0 16px rgba(255,255,255,0.3); }
 .nav-links { display: flex; gap: 2.5rem; list-style: none; }
 .nav-links a { font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: #666; text-decoration: none; transition: color 0.3s; }
 .nav-links a:hover { color: #fff; }
