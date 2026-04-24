@@ -5,12 +5,13 @@ import ScissorsTransition from './components/ScissorsTransition';
 import HomePage from './pages/HomePage';
 import BlogPage from './pages/BlogPage';
 import PricePage from './pages/PricePage';
+import BookingPage from './pages/BookingPage';
 
 function AppRoutes() {
   const { page, pageVisible } = useRouter();
   return (
     <div className={`page-content${pageVisible ? ' visible' : ''}`}>
-      {page === 'blog' ? <BlogPage /> : page === 'prices' ? <PricePage /> : <HomePage />}
+      {page === 'blog' ? <BlogPage /> : page === 'prices' ? <PricePage /> : page === 'booking' ? <BookingPage /> : <HomePage />}
     </div>
   );
 }

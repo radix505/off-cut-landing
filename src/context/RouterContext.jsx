@@ -5,7 +5,7 @@ const RouterContext = createContext();
 export function RouterProvider({ children }) {
   const [page, setPage] = useState(() => {
     const p = window.location.pathname;
-    return p === '/blog' ? 'blog' : p === '/prices' ? 'prices' : 'home';
+    return p === '/blog' ? 'blog' : p === '/prices' ? 'prices' : p === '/booking' ? 'booking' : 'home';
   });
   const [cutting, setCutting] = useState(false);
   const [direction, setDirection] = useState('forward');
@@ -15,7 +15,7 @@ export function RouterProvider({ children }) {
   useEffect(() => {
     const onPop = () => {
       const p = window.location.pathname;
-      setPage(p === '/blog' ? 'blog' : p === '/prices' ? 'prices' : 'home');
+      setPage(p === '/blog' ? 'blog' : p === '/prices' ? 'prices' : p === '/booking' ? 'booking' : 'home');
     };
     window.addEventListener('popstate', onPop);
     return () => window.removeEventListener('popstate', onPop);
@@ -24,7 +24,7 @@ export function RouterProvider({ children }) {
   useEffect(() => () => timers.current.forEach(clearTimeout), []);
 
   function navigate(path) {
-    const target = path === '/blog' ? 'blog' : path === '/prices' ? 'prices' : 'home';
+    const target = path === '/blog' ? 'blog' : path === '/prices' ? 'prices' : path === '/booking' ? 'booking' : 'home';
     if (target === page) return;
     timers.current.forEach(clearTimeout);
     timers.current = [];

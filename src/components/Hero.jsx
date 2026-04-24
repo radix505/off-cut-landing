@@ -1,6 +1,8 @@
 import { useT } from '../context/LangContext';
+import { useRouter } from '../context/RouterContext';
 
 export default function Hero() {
+  const { navigate } = useRouter();
   const subLine1 = useT('Precyzyjne strzyżenie. Bezczasowe rzemiosło.', 'Precision cuts. Timeless craft.');
   const subLine2 = useT('Gdzie pielęgnacja staje się rytuałem.', 'Where grooming becomes ritual.');
 
@@ -23,7 +25,7 @@ export default function Hero() {
           {subLine1}<br />{subLine2}
         </p>
         <div className="hero-cta">
-          <button className="btn-primary" onClick={() => document.getElementById('booking').scrollIntoView({ behavior: 'smooth' })}>{useT('Zarezerwuj wizytę', 'Book Appointment')}</button>
+          <button className="btn-primary" onClick={() => navigate('/booking')}>{useT('Zarezerwuj wizytę', 'Book Appointment')}</button>
           <button className="btn-ghost" onClick={() => document.getElementById('services').scrollIntoView({ behavior: 'smooth' })}>{useT('Zobacz usługi', 'View Services')}</button>
         </div>
       </div>
