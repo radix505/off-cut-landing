@@ -35,7 +35,7 @@ export default function Footer() {
         <div className="footer-copy">© 2025 Off Cut Barbershop.</div>
       </div>
       <div className="footer-credit">
-        {useT('Stworzone przez', 'Created by')} <a href="https://corelaners.eu" target="_blank" rel="noopener noreferrer">corelaners.eu</a>
+        {useT('Stworzone przez', 'Created by')} <img src="/logo.png" alt="Corelaners" className="footer-credit-logo" /><a href="https://corelaners.eu" target="_blank" rel="noopener noreferrer">corelaners.eu</a>
       </div>
     </footer>
   );

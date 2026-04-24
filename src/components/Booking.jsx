@@ -46,23 +46,25 @@ export default function Booking() {
             <input className="form-input" type="text" placeholder="Jan Kowalski" />
           </div>
           <div className="form-group">
-            <label className="form-label">{useT('Usługa', 'Service')}</label>
-            <select className="form-input">
-              <option value="">{useT('Wybierz usługę', 'Select a service')}</option>
-              <option>{useT('Klasyczne strzyżenie — 80 PLN', 'Classic Cut — 80 PLN')}</option>
-              <option>{useT('Fade & Blend — 100 PLN', 'Fade & Blend — 100 PLN')}</option>
-              <option>{useT('Golenie brzytwą — 120 PLN', 'Hot Towel Shave — 120 PLN')}</option>
-              <option>{useT('Rzeźbienie brody — 60 PLN', 'Beard Sculpt — 60 PLN')}</option>
-              <option>{useT('Strzyżenie + Broda — 150 PLN', 'Cut + Beard — 150 PLN')}</option>
-            </select>
-          </div>
-          <div className="form-group">
             <label className="form-label">{useT('Preferowany barber', 'Preferred barber')}</label>
             <select className="form-input">
               <option value="">{useT('Bez preferencji', 'No preference')}</option>
-              <option>Marcus K.</option>
-              <option>Daniel W.</option>
-              <option>Tomás R.</option>
+              <option>Olek</option>
+              <option>Julia</option>
+              <option>Nico</option>
+            </select>
+          </div>
+          <div className="form-group">
+            <label className="form-label">{useT('Usługa', 'Service')}</label>
+            <select className="form-input">
+              <option value="">{useT('Wybierz usługę', 'Select a service')}</option>
+              <option>{useT('Strzyżenie Męskie Włosy Krótkie — 100 PLN', 'Men\'s Cut Short Hair — 100 PLN')}</option>
+              <option>{useT('Strzyżenie Męskie Włosy Długie — 110 PLN', 'Men\'s Cut Long Hair — 110 PLN')}</option>
+              <option>{useT('Trymowanie Brody — 80 PLN', 'Beard Trim — 80 PLN')}</option>
+              <option>{useT('Strzyżenie Głowy i Brody — 140 PLN', 'Cut & Beard — 140 PLN')}</option>
+              <option>{useT('Golenie Głowy Maszynką — 50 PLN', 'Head Shave — 50 PLN')}</option>
+              <option>{useT('Golenie Głowy Maszynką + Broda — 100 PLN', 'Head Shave + Beard — 100 PLN')}</option>
+              <option>{useT('Strzyżenie Głowy i Brody + Brzytwa — 170 PLN', 'Cut & Beard + Straight Razor — 170 PLN')}</option>
             </select>
           </div>
           <div className="form-group">

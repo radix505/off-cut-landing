@@ -8,11 +8,13 @@ import Blog from '../components/Blog';
 import Reviews from '../components/Reviews';
 import Booking from '../components/Booking';
 import Footer from '../components/Footer';
+import ScrollScissors from '../components/ScrollScissors';
 
 export default function HomePage() {
   return (
     <>
       <Nav />
+      <ScrollScissors />
       <Hero />
       <Marquee />
       <Services />

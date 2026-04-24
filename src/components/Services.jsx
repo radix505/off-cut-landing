@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useT } from '../context/LangContext';
 import { useReveal } from '../hooks/useReveal';
 import { useRouter } from '../context/RouterContext';
@@ -6,45 +6,107 @@ import { useRouter } from '../context/RouterContext';
 export const services = [
   {
     num: '001',
-    namePL: 'Klasyczne Strzyżenie', nameEN: 'Classic Cut',
-    descPL: 'Fundament. Precyzyjna praca nożyczkami dopasowana do kształtu twarzy i stylu życia.',
-    descEN: 'The foundation. Precision scissor work tailored to your face shape and lifestyle.',
-    duration: '45 min', price: '80 PLN', delay: 1,
+    namePL: 'Strzyżenie Męskie Włosy Krótkie', nameEN: 'Men\'s Cut — Short Hair',
+    descPL: 'Precyzyjne strzyżenie krótkich włosów. Czyste linie, dopasowane do kształtu głowy.',
+    descEN: 'Precise short hair cut. Clean lines, shaped to your head.',
+    duration: '50 min', price: '100 PLN', delay: 1,
+    barbers: ['OLEK', 'JULIA'],
   },
   {
     num: '002',
-    namePL: 'Fade & Blend', nameEN: 'Fade & Blend',
-    descPL: 'Maszynowe rzeźbienie od skóry do czubka. Czyste linie, płynne przejścia.',
-    descEN: 'Machine-sculpted from skin to crown. Clean lines, smooth transitions.',
-    duration: '50 min', price: '100 PLN', delay: 2,
+    namePL: 'Strzyżenie Męskie Włosy Długie', nameEN: 'Men\'s Cut — Long Hair',
+    descPL: 'Strzyżenie długich włosów z dbałością o teksturę i ruch.',
+    descEN: 'Long hair cut with attention to texture and movement.',
+    duration: '1h', price: '110 PLN', delay: 2,
+    barbers: ['OLEK', 'JULIA'],
   },
   {
     num: '003',
-    namePL: 'Golenie Brzytwą', nameEN: 'Hot Towel Shave',
-    descPL: 'Stary rytuał. Brzytwa, gorący ręcznik, premium balsam. Pełne doświadczenie.',
-    descEN: 'Old-world ritual. Straight razor, hot towel, premium balm. The full experience.',
-    duration: '60 min', price: '120 PLN', delay: 3,
+    namePL: 'Trymowanie Brody', nameEN: 'Beard Trim',
+    descPL: 'Kształt, krawędzie, definicja. Broda pod kontrolą.',
+    descEN: 'Shape, edge, define. Beard back in line.',
+    duration: '20 min', price: '80 PLN', delay: 3,
+    barbers: ['OLEK', 'JULIA'],
   },
   {
     num: '004',
-    namePL: 'Rzeźbienie Brody', nameEN: 'Beard Sculpt',
-    descPL: 'Kształt, definicja, krawędzie. Twoja broda jako statement, nie przypadek.',
-    descEN: 'Shape, define, edge. Your beard as a statement, not an afterthought.',
-    duration: '30 min', price: '60 PLN', delay: 1,
+    namePL: 'Strzyżenie Głowy i Brody', nameEN: 'Cut & Beard',
+    descPL: 'Kompletna wizyta. Włosy i broda w jednym czasie, przez jednego rzemieślnika.',
+    descEN: 'Full visit. Hair and beard in one sitting, by one craftsman.',
+    duration: '1h 10min', price: '140 PLN', delay: 1,
+    barbers: ['OLEK', 'JULIA'],
   },
   {
     num: '005',
-    namePL: 'Strzyżenie + Broda', nameEN: 'Cut + Beard',
-    descPL: 'Kompletny pakiet. Od głowy po szczękę, przez jednego rzemieślnika, w jednej wizycie.',
-    descEN: 'The complete package. Head-to-jaw, handled by one craftsman, one sitting.',
-    duration: '75 min', price: '150 PLN', delay: 2,
+    namePL: 'Golenie Głowy Maszynką', nameEN: 'Head Shave — One Length',
+    descPL: 'Gładkie golenie maszynką na jedną długość. Szybko, czysto, równo.',
+    descEN: 'Clean machine shave at one length. Fast, precise, even.',
+    duration: '10 min', price: '50 PLN', delay: 2,
+    barbers: ['OLEK', 'JULIA'],
   },
   {
     num: '006',
-    namePL: 'Strzyżenie Junior', nameEN: 'Junior Cut',
-    descPL: 'Cierpliwe ręce dla najmłodszych. Ta sama jakość, ta sama uwaga.',
-    descEN: 'Patient hands for young clients. Same quality, same attention.',
-    duration: '30 min', price: '60 PLN', delay: 3,
+    namePL: 'Golenie Głowy Maszynką + Broda', nameEN: 'Head Shave + Beard',
+    descPL: 'Golenie głowy maszynką z pełnym trymowaniem brody.',
+    descEN: 'Machine head shave with full beard trim.',
+    duration: '30 min', price: '100 PLN', delay: 3,
+    barbers: ['OLEK', 'JULIA'],
+  },
+  {
+    num: '007',
+    namePL: 'Strzyżenie Głowy i Brody + Brzytwa', nameEN: 'Cut & Beard + Straight Razor',
+    descPL: 'Pełne doświadczenie. Strzyżenie, broda i wykończenie brzytwą.',
+    descEN: 'The full experience. Cut, beard, and straight razor finish.',
+    duration: '1h 15min', price: '170 PLN', delay: 2,
+    barbers: ['OLEK', 'JULIA'],
+  },
+  {
+    num: '008',
+    namePL: 'Strzyżenie Męskie Włosy Krótkie', nameEN: 'Men\'s Cut — Short Hair',
+    descPL: 'Precyzyjne strzyżenie krótkich włosów. Czyste linie, dopasowane do kształtu głowy.',
+    descEN: 'Precise short hair cut. Clean lines, shaped to your head.',
+    duration: '1h', price: '80 PLN', delay: 3,
+    barbers: ['NICO'],
+  },
+  {
+    num: '009',
+    namePL: 'Strzyżenie Męskie Włosy Długie', nameEN: 'Men\'s Cut — Long Hair',
+    descPL: 'Strzyżenie długich włosów z dbałością o teksturę i ruch.',
+    descEN: 'Long hair cut with attention to texture and movement.',
+    duration: '1h 20min', price: '90 PLN', delay: 1,
+    barbers: ['NICO'],
+  },
+  {
+    num: '010',
+    namePL: 'Trymowanie Brody', nameEN: 'Beard Trim',
+    descPL: 'Kształt, krawędzie, definicja. Broda pod kontrolą.',
+    descEN: 'Shape, edge, define. Beard back in line.',
+    duration: '40 min', price: '60 PLN', delay: 2,
+    barbers: ['NICO'],
+  },
+  {
+    num: '011',
+    namePL: 'Strzyżenie Głowy i Brody', nameEN: 'Cut & Beard',
+    descPL: 'Kompletna wizyta. Włosy i broda w jednym czasie, przez jednego rzemieślnika.',
+    descEN: 'Full visit. Hair and beard in one sitting, by one craftsman.',
+    duration: '1h 30min', price: '130 PLN', delay: 3,
+    barbers: ['NICO'],
+  },
+  {
+    num: '012',
+    namePL: 'Golenie Głowy Maszynką', nameEN: 'Head Shave — One Length',
+    descPL: 'Gładkie golenie maszynką na jedną długość. Szybko, czysto, równo.',
+    descEN: 'Clean machine shave at one length. Fast, precise, even.',
+    duration: '30 min', price: '40 PLN', delay: 1,
+    barbers: ['NICO'],
+  },
+  {
+    num: '013',
+    namePL: 'Golenie Głowy Maszynką + Broda', nameEN: 'Head Shave + Beard',
+    descPL: 'Golenie głowy maszynką z pełnym trymowaniem brody.',
+    descEN: 'Machine head shave with full beard trim.',
+    duration: '1h', price: '100 PLN', delay: 2,
+    barbers: ['NICO'],
   },
 ];
 
@@ -73,16 +135,28 @@ export default function Services() {
         </div>
       </div>
       <div className={view === 'list' ? 'services-list' : 'services-grid'}>
-        {services.map((s) => (
-          <div key={s.num} className={`service-card reveal reveal-delay-${s.delay}`}>
-            <div className="service-num">{s.num}</div>
-            <div className="service-name">{useT(s.namePL, s.nameEN)}</div>
-            <div className="service-desc">{useT(s.descPL, s.descEN)}</div>
-            <div className="service-price">
-              <span>{s.duration}</span>
-              <span className="service-price-amount">{s.price}</span>
+        {services.map((s, i) => (
+          <React.Fragment key={s.num}>
+            {view === 'list' && i > 0 && services[i - 1].barbers?.[0] !== s.barbers?.[0] && (
+              <div className="services-list-separator">
+                <span>{s.barbers?.[0]}</span>
+              </div>
+            )}
+            <div className={`service-card reveal reveal-delay-${s.delay}`}>
+              <div className="service-num">{s.num}</div>
+              <div className="service-name">{useT(s.namePL, s.nameEN)}</div>
+              <div className="service-desc">{useT(s.descPL, s.descEN)}</div>
+              {s.barbers && (
+                <div className="service-barbers">
+                  {s.barbers.map((b) => <span key={b} className="service-barber-tag">{b}</span>)}
+                </div>
+              )}
+              <div className="service-price">
+                <span>{s.duration}</span>
+                <span className="service-price-amount">{s.price}</span>
+              </div>
             </div>
-          </div>
+          </React.Fragment>
         ))}
       </div>
     </section>

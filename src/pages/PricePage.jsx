@@ -2,8 +2,10 @@ import Nav from '../components/Nav';
 import Footer from '../components/Footer';
 import { services } from '../components/Services';
 import { useT } from '../context/LangContext';
+import { useRouter } from '../context/RouterContext';
 
 export default function PricePage() {
+  const { navigate } = useRouter();
   return (
     <>
       <Nav />
@@ -33,6 +35,13 @@ export default function PricePage() {
         </div>
       </section>
       <Footer />
+      <button
+        className="prices-back-circle-btn"
+        onClick={() => navigate('/')}
+        aria-label={useT('Powrót', 'Back')}
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
       <button
         className="scroll-top-btn"
         onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}

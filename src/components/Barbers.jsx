@@ -3,31 +3,35 @@ import { useReveal } from '../hooks/useReveal';
 
 const barbers = [
   {
-    name: 'MARCUS K.',
-    titlePL: 'Master Barber — 9 lat', titleEN: 'Master Barber — 9 years',
-    tags: [
-      { pl: 'Fade', en: 'Fade' },
-      { pl: 'Włosy teksturowane', en: 'Textured Hair' },
-      { pl: 'Skin Fade', en: 'Skin Fade' },
-    ],
-    delay: 1,
-  },
-  {
-    name: 'DANIEL W.',
-    titlePL: 'Senior Barber — 6 lat', titleEN: 'Senior Barber — 6 years',
+    name: 'NICO',
+    titlePL: 'Barber', titleEN: 'Barber',
+    photo: '/team/Nico.jpeg',
     tags: [
       { pl: 'Klasyczne strzyżenie', en: 'Classic Cut' },
       { pl: 'Broda', en: 'Beard' },
       { pl: 'Gorący ręcznik', en: 'Hot Towel' },
     ],
+    delay: 1,
+  },
+  {
+    name: 'OLEK',
+    titlePL: 'Master Barber', titleEN: 'Master Barber',
+    photo: '/team/Olek.jpeg',
+    tags: [
+      { pl: 'Fade', en: 'Fade' },
+      { pl: 'Broda', en: 'Beard' },
+      { pl: 'Skin Fade', en: 'Skin Fade' },
+    ],
     delay: 2,
   },
   {
-    name: 'TOMÁS R.',
-    titlePL: 'Barber — 4 lata', titleEN: 'Barber — 4 years',
+    name: 'JULIA',
+    titlePL: 'Barber', titleEN: 'Barber',
+    photo: '/team/Julia.jpeg',
     tags: [
       { pl: 'Praca nożyczkami', en: 'Scissor Work' },
-      { pl: 'Włosy kręcone', en: 'Curly Hair' },
+      { pl: 'Włosy teksturowane', en: 'Textured Hair' },
+      { pl: 'Skin Fade', en: 'Skin Fade' },
     ],
     delay: 3,
   },
@@ -48,10 +52,13 @@ export default function Barbers() {
         {barbers.map((b) => (
           <div key={b.name} className={`barber-card reveal reveal-delay-${b.delay}`}>
             <div className="barber-portrait">
-              <div className="barber-portrait-placeholder">
-                <div className="barber-silhouette" />
-                <span className="portrait-label">{useT('Zdjęcie placeholder', 'Photo placeholder')}</span>
-              </div>
+              {b.photo
+                ? <img src={b.photo} alt={b.name} className="barber-photo" />
+                : <div className="barber-portrait-placeholder">
+                    <div className="barber-silhouette" />
+                    <span className="portrait-label">{useT('Zdjęcie placeholder', 'Photo placeholder')}</span>
+                  </div>
+              }
               <div className="barber-overlay">
                 <div className="barber-name">{b.name}</div>
                 <div className="barber-title">{useT(b.titlePL, b.titleEN)}</div>
