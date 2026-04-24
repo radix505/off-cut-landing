@@ -127,9 +127,19 @@ export default function Services() {
             <button className={`view-toggle-btn${view === 'grid' ? ' active' : ''}`} onClick={() => setView('grid')} aria-label="Grid view">
               <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><rect x="0" y="0" width="5.5" height="5.5"/><rect x="7.5" y="0" width="5.5" height="5.5"/><rect x="0" y="7.5" width="5.5" height="5.5"/><rect x="7.5" y="7.5" width="5.5" height="5.5"/></svg>
             </button>
-            <button className={`view-toggle-btn${view === 'list' ? ' active' : ''}`} onClick={() => setView('list')} aria-label="List view">
-              <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><rect x="0" y="0" width="13" height="1.5"/><rect x="0" y="5.75" width="13" height="1.5"/><rect x="0" y="11.5" width="13" height="1.5"/></svg>
-            </button>
+            <div className="view-toggle-list-wrap">
+              {view === 'grid' && (
+                <div className="view-toggle-hint" aria-hidden="true">
+                  <svg width="10" height="14" viewBox="0 0 10 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <line x1="5" y1="0" x2="5" y2="10" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/>
+                    <polyline points="1,6 5,11 9,6" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+                  </svg>
+                </div>
+              )}
+              <button className={`view-toggle-btn${view === 'list' ? ' active' : ''}`} onClick={() => setView('list')} aria-label="List view">
+                <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><rect x="0" y="0" width="13" height="1.5"/><rect x="0" y="5.75" width="13" height="1.5"/><rect x="0" y="11.5" width="13" height="1.5"/></svg>
+              </button>
+            </div>
           </div>
           <a className="section-link" onClick={() => navigate('/prices')} style={{ cursor: 'pointer' }}>{useT('Pełny cennik →', 'Full price list →')}</a>
         </div>
