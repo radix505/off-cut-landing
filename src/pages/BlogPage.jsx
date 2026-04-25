@@ -2,8 +2,14 @@ import Nav from '../components/Nav';
 import Blog from '../components/Blog';
 import Footer from '../components/Footer';
 import { useT } from '../context/LangContext';
+import { useIsDark } from '../hooks/useIsDark';
 
 export default function BlogPage() {
+  const isDark = useIsDark();
+  const btnStyle = isDark
+    ? { background: 'rgba(255,255,255,0.13)', borderColor: 'rgba(255,255,255,0.35)', color: '#fff' }
+    : {};
+
   return (
     <>
       <Nav />
@@ -16,6 +22,7 @@ export default function BlogPage() {
       <Footer />
       <button
         className="scroll-top-btn"
+        style={btnStyle}
         onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
         aria-label="Back to top"
       >

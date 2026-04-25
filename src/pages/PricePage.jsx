@@ -3,9 +3,15 @@ import Footer from '../components/Footer';
 import { services } from '../components/Services';
 import { useT } from '../context/LangContext';
 import { useRouter } from '../context/RouterContext';
+import { useIsDark } from '../hooks/useIsDark';
 
 export default function PricePage() {
   const { navigate } = useRouter();
+  const isDark = useIsDark();
+  const btnStyle = isDark
+    ? { background: 'rgba(255,255,255,0.13)', borderColor: 'rgba(255,255,255,0.35)', color: '#fff' }
+    : {};
+
   return (
     <>
       <Nav />
@@ -37,6 +43,7 @@ export default function PricePage() {
       <Footer />
       <button
         className="prices-back-circle-btn"
+        style={btnStyle}
         onClick={() => navigate('/')}
         aria-label={useT('Powrót', 'Back')}
       >
@@ -44,6 +51,7 @@ export default function PricePage() {
       </button>
       <button
         className="scroll-top-btn"
+        style={btnStyle}
         onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
         aria-label="Back to top"
       >

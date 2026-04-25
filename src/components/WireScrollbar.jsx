@@ -73,6 +73,28 @@ export default function WireScrollbar() {
   const activeColor = isDark ? 'rgba(255,255,255,0.85)' : 'rgba(10,10,10,0.65)';
   const dashOffset = pathLen > 0 ? pathLen * (1 - progress) : 0;
 
+  const handleMouseDown = (e) => {
+    e.preventDefault();
+    const rect = e.currentTarget.getBoundingClientRect();
+    const usable = height - CLIPPER_H;
+
+    const seek = (clientY) => {
+      const p = Math.max(0, Math.min(1, (clientY - rect.top) / usable));
+      const total = document.documentElement.scrollHeight - window.innerHeight;
+      window.scrollTo({ top: p * total, behavior: 'instant' });
+    };
+
+    seek(e.clientY);
+
+    const onMove = (ev) => seek(ev.clientY);
+    const onUp = () => {
+      window.removeEventListener('mousemove', onMove);
+      window.removeEventListener('mouseup', onUp);
+    };
+    window.addEventListener('mousemove', onMove);
+    window.addEventListener('mouseup', onUp);
+  };
+
   return (
     <div style={{
       position: 'fixed', right: 8, top: 0,
@@ -80,7 +102,10 @@ export default function WireScrollbar() {
       zIndex: 100, pointerEvents: 'none',
       overflow: 'visible',
     }}>
-      <svg width="16" height={height} viewBox={`0 0 16 ${height}`} fill="none" overflow="visible">
+      <svg width="16" height={height} viewBox={`0 0 16 ${height}`} fill="none" overflow="visible"
+        style={{ pointerEvents: 'auto', cursor: 'pointer' }}
+        onMouseDown={handleMouseDown}
+      >
         {/* dim base wire */}
         <path ref={baseRef} d={d} stroke={baseColor} strokeWidth="1" strokeLinecap="round" style={{ transition: 'stroke 0.5s' }} />
         {/* active wire — scroll progress */}

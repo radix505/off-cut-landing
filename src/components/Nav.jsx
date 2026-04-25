@@ -37,12 +37,7 @@ export default function Nav() {
   }
 
   function handleBookClick() {
-    if (onAway) {
-      navigate('/');
-      setTimeout(() => document.getElementById('booking')?.scrollIntoView({ behavior: 'smooth' }), 700);
-    } else {
-      document.getElementById('booking')?.scrollIntoView({ behavior: 'smooth' });
-    }
+    navigate('/booking');
     close();
   }
 

@@ -3,9 +3,15 @@ import Footer from '../components/Footer';
 import Booking from '../components/Booking';
 import { useT } from '../context/LangContext';
 import { useRouter } from '../context/RouterContext';
+import { useIsDark } from '../hooks/useIsDark';
 
 export default function BookingPage() {
   const { navigate } = useRouter();
+  const isDark = useIsDark();
+  const btnStyle = isDark
+    ? { background: 'rgba(255,255,255,0.13)', borderColor: 'rgba(255,255,255,0.35)', color: '#fff' }
+    : {};
+
   return (
     <>
       <Nav />
@@ -23,6 +29,7 @@ export default function BookingPage() {
       <Footer />
       <button
         className="prices-back-circle-btn"
+        style={btnStyle}
         onClick={() => navigate('/')}
         aria-label={useT('Powrót', 'Back')}
       >
