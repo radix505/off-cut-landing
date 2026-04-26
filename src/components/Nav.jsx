@@ -19,7 +19,8 @@ export default function Nav() {
   const { lang, selectLang } = useLang();
   const { page, navigate } = useRouter();
   const onBlog = page === 'blog';
-  const onAway = page === 'blog' || page === 'prices';
+  const onGallery = page === 'gallery';
+  const onAway = page === 'blog' || page === 'prices' || page === 'gallery';
 
   function handleLogoClick() {
     if (onAway) navigate('/');
@@ -50,8 +51,17 @@ export default function Nav() {
       <ul className={`nav-links${open ? ' nav-links--open' : ''}`}>
         <li><a href="#services" onClick={(e) => handleSectionClick(e, 'services')}>{useT('Usługi', 'Services')}</a></li>
         <li><a href="#barbers" onClick={(e) => handleSectionClick(e, 'barbers')}>{useT('Barberzy', 'Barbers')}</a></li>
-        <li><a href="#gallery" onClick={(e) => handleSectionClick(e, 'gallery')}>{useT('Galeria', 'Gallery')}</a></li>
+        <li>
+          <a
+            href="/gallery"
+            className={onGallery ? 'nav-link--active' : ''}
+            onClick={(e) => { e.preventDefault(); navigate('/gallery'); close(); }}
+          >
+            {useT('Galeria', 'Gallery')}
+          </a>
+        </li>
         <li><a href="#booking" onClick={(e) => handleSectionClick(e, 'booking')}>{useT('Kontakt', 'Contact')}</a></li>
+        <li><a href="#location" onClick={(e) => handleSectionClick(e, 'location')}>{useT('Lokalizacja', 'Location')}</a></li>
         <li>
           <a
             href="/blog"

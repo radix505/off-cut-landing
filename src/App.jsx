@@ -6,12 +6,13 @@ import HomePage from './pages/HomePage';
 import BlogPage from './pages/BlogPage';
 import PricePage from './pages/PricePage';
 import BookingPage from './pages/BookingPage';
+import GalleryPage from './pages/GalleryPage';
 
 function AppRoutes() {
   const { page, pageVisible } = useRouter();
   return (
     <div className={`page-content${pageVisible ? ' visible' : ''}`}>
-      {page === 'blog' ? <BlogPage /> : page === 'prices' ? <PricePage /> : page === 'booking' ? <BookingPage /> : <HomePage />}
+      {page === 'blog' ? <BlogPage /> : page === 'prices' ? <PricePage /> : page === 'booking' ? <BookingPage /> : page === 'gallery' ? <GalleryPage /> : <HomePage />}
     </div>
   );
 }

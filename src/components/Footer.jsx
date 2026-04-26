@@ -31,7 +31,7 @@ export default function Footer() {
         </div>
       </div>
       <div className="footer-bottom">
-        <div className="footer-address">ul. Twoja 1, Poznań<br />contact@offcut.pl</div>
+        <div className="footer-address">Bolesława Krzywoustego 27 U4, 70-316 Szczecin<br />offcutszczecin@gmail.com</div>
         <div className="footer-copy">© 2025 Off Cut Barbershop.</div>
       </div>
       <div className="footer-credit">

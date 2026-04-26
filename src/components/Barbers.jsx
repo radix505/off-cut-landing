@@ -14,9 +14,9 @@ const barbers = [
     delay: 1,
   },
   {
-    name: 'OLEK',
+    name: 'ALEKSANDER',
     titlePL: 'Master Barber', titleEN: 'Master Barber',
-    photo: '/team/Olek.jpeg',
+    photo: '/team/Aleksander.jpeg',
     tags: [
       { pl: 'Fade', en: 'Fade' },
       { pl: 'Broda', en: 'Beard' },

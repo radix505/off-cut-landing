@@ -3,6 +3,13 @@ import { useT } from '../context/LangContext';
 import { useReveal } from '../hooks/useReveal';
 import { useRouter } from '../context/RouterContext';
 
+const BARBER_PHOTO = {
+  'ALEKSANDER': '/team/Aleksander.jpeg',
+  'OLEK':       '/team/Aleksander.jpeg',
+  'JULIA':      '/team/Julia.jpeg',
+  'NICO':       '/team/Nico.jpeg',
+};
+
 export const services = [
   {
     num: '001',
@@ -158,7 +165,11 @@ export default function Services() {
               <div className="service-desc">{useT(s.descPL, s.descEN)}</div>
               {s.barbers && (
                 <div className="service-barbers">
-                  {s.barbers.map((b) => <span key={b} className="service-barber-tag">{b}</span>)}
+                  {s.barbers.map((b) => (
+                    <div key={b} className="service-barber-av-wrap" title={b === 'OLEK' ? 'ALEKSANDER' : b}>
+                      <img src={BARBER_PHOTO[b]} alt={b} className="service-barber-av" />
+                    </div>
+                  ))}
                 </div>
               )}
               <div className="service-price">
