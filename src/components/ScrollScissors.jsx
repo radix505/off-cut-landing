@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 
 // Must match the clip-path polygon points in index.css exactly
 // [xPercent, yRem]
@@ -21,7 +21,6 @@ function samplePath(xPct, vw, rem) {
   const t = x1 === x0 ? 0 : (clamped - x0) / (x1 - x0);
   const yRem = y0 + (y1 - y0) * t;
 
-  // local slope angle in degrees — scissors tilt with the cut
   const dx = (x1 - x0) / 100 * vw;
   const dy = (y1 - y0) * rem;
   const angle = Math.atan2(dy, dx) * 180 / Math.PI;
@@ -29,75 +28,106 @@ function samplePath(xPct, vw, rem) {
   return { xPx: (clamped / 100) * vw, yRem, angle };
 }
 
+// Half-dimensions of the SVG (90×36) for centering via transform
+const HW = 45;
+const HH = 18;
+
 export default function ScrollScissors() {
-  const [pos, setPos] = useState({ x: 0, y: 0, angle: -3, opacity: 0, flipX: false });
-  const lastScrollY = useRef(typeof window !== 'undefined' ? window.scrollY : 0);
+  const elRef  = useRef(null);
+  const topRef = useRef(null);
+  const botRef = useRef(null);
+
+  const lastScrollY  = useRef(typeof window !== 'undefined' ? window.scrollY : 0);
+  const remCache     = useRef(typeof window !== 'undefined' ? parseFloat(getComputedStyle(document.documentElement).fontSize) : 16);
+  const barbersCache = useRef(null);
 
   useEffect(() => {
+    let rafId = null;
+
     const update = () => {
-      const barbers = document.querySelector('#barbers');
+      const el = elRef.current;
+      if (!el) return;
+
+      if (!barbersCache.current) barbersCache.current = document.querySelector('#barbers');
+      const barbers = barbersCache.current;
       if (!barbers) return;
 
       const scrollingDown = window.scrollY >= lastScrollY.current;
       lastScrollY.current = window.scrollY;
 
-      const rect = barbers.getBoundingClientRect();
-      const vh = window.innerHeight;
-      const vw = window.innerWidth;
-      const rem = parseFloat(getComputedStyle(document.documentElement).fontSize);
+      const rect   = barbers.getBoundingClientRect();
+      const vh     = window.innerHeight;
+      const vw     = window.innerWidth;
+      const rem    = remCache.current;
       const offset = 5 * rem;
 
       const isVisible = rect.top <= vh && rect.top >= -offset;
       if (!isVisible) {
-        setPos(prev => ({ ...prev, opacity: 0 }));
+        el.style.opacity = '0';
+        topRef.current && (topRef.current.style.animationPlayState = 'paused');
+        botRef.current && (botRef.current.style.animationPlayState = 'paused');
         return;
       }
 
-      // progress: 0 = path right end at viewport bottom, 1 = path left end at viewport top
-      const progress = Math.max(0, Math.min(1, (vh - rect.top) / (vh + offset)));
+      const progress  = Math.max(0, Math.min(1, (vh - rect.top) / (vh + offset)));
+      const { xPx, yRem, angle } = samplePath(progress * 100, vw, rem);
 
-      // map progress to x% along the path (scrolling down → move right)
-      const xPct = progress * 100;
-      const { xPx, yRem, angle } = samplePath(xPct, vw, rem);
-
-      // y in viewport = barbers element top + path y offset
+      // y in viewport coords — barbers top + path y offset from that top
       const y = rect.top + yRem * rem;
 
       const edgeFade = Math.min(progress * 6, (1 - progress) * 6, 1);
-      setPos({ x: xPx, y, angle, opacity: edgeFade, flipX: !scrollingDown });
+
+      // Use transform only (no left/top changes) — stays on compositor thread
+      el.style.transform = `translate(${xPx - HW}px, ${y - HH}px) rotate(${angle}deg) scaleX(${scrollingDown ? 1 : -1})`;
+      el.style.opacity    = String(edgeFade);
+
+      const play = edgeFade > 0 ? 'running' : 'paused';
+      topRef.current && (topRef.current.style.animationPlayState = play);
+      botRef.current && (botRef.current.style.animationPlayState = play);
     };
 
-    window.addEventListener('scroll', update, { passive: true });
-    window.addEventListener('resize', update);
+    const onScroll = () => {
+      if (rafId) return;
+      rafId = requestAnimationFrame(() => { rafId = null; update(); });
+    };
+    const onResize = () => {
+      remCache.current  = parseFloat(getComputedStyle(document.documentElement).fontSize);
+      barbersCache.current = null;
+      if (rafId) return;
+      rafId = requestAnimationFrame(() => { rafId = null; update(); });
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onResize, { passive: true });
     update();
     return () => {
-      window.removeEventListener('scroll', update);
-      window.removeEventListener('resize', update);
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onResize);
+      if (rafId) cancelAnimationFrame(rafId);
     };
   }, []);
 
-  const playing = pos.opacity > 0 ? 'running' : 'paused';
-
   return (
     <div
+      ref={elRef}
       style={{
         position: 'fixed',
-        left: pos.x,
-        top: pos.y,
-        transform: `translate(-50%, -50%) rotate(${pos.angle}deg) scaleX(${pos.flipX ? -1 : 1})`,
-        opacity: pos.opacity,
-        transition: 'opacity 0.2s',
+        left: 0,
+        top: 0,
+        opacity: 0,
+        transition: 'opacity 0.15s',
         zIndex: 50,
         pointerEvents: 'none',
         mixBlendMode: 'difference',
+        willChange: 'transform',
       }}
     >
       <svg viewBox="0 0 100 40" fill="none" xmlns="http://www.w3.org/2000/svg" width="90" height="36" color="#fff">
-        <g className="scroll-scissor-top" style={{ animationPlayState: playing }}>
+        <g ref={topRef} className="scroll-scissor-top" style={{ animationPlayState: 'paused' }}>
           <circle cx="12" cy="10" r="8" stroke="currentColor" strokeWidth="1.5" />
           <line x1="19" y1="12" x2="95" y2="20" stroke="currentColor" strokeWidth="1.5" />
         </g>
-        <g className="scroll-scissor-bottom" style={{ animationPlayState: playing }}>
+        <g ref={botRef} className="scroll-scissor-bottom" style={{ animationPlayState: 'paused' }}>
           <circle cx="12" cy="30" r="8" stroke="currentColor" strokeWidth="1.5" />
           <line x1="19" y1="28" x2="95" y2="20" stroke="currentColor" strokeWidth="1.5" />
         </g>

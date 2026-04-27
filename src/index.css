@@ -129,12 +129,13 @@ section { padding: 6rem 3rem; background: #f5f3ef; }
 
 /* list view */
 .services-list { display: flex; flex-direction: column; }
-.services-list .service-card { display: grid; grid-template-columns: 3rem 1fr auto; grid-template-rows: auto auto; column-gap: 1.5rem; align-items: center; padding: 0.8rem 1.5rem; border-bottom: 0.5px solid #1a1a1a; }
+.services-list .service-card { display: grid; grid-template-columns: 3rem 1fr auto auto; grid-template-rows: auto auto; column-gap: 1.5rem; align-items: center; padding: 0.8rem 1.5rem; border-bottom: 0.5px solid #1a1a1a; }
 .services-list .service-card::before { display: none; }
 .services-list .service-num { margin-bottom: 0; grid-row: 1 / 3; align-self: center; }
 .services-list .service-name { margin-bottom: 0.2rem; font-size: 1.2rem; }
 .services-list .service-desc { margin-bottom: 0; font-size: 0.65rem; color: #555; grid-column: 2; }
-.services-list .service-price { border-top: none; padding-top: 0; flex-direction: column; align-items: flex-end; gap: 0.3rem; grid-row: 1 / 3; grid-column: 3; }
+.services-list .service-barbers { grid-row: 1 / 3; grid-column: 3; align-self: center; margin-bottom: 0; }
+.services-list .service-price { border-top: none; padding-top: 0; flex-direction: column; align-items: flex-end; gap: 0.3rem; grid-row: 1 / 3; grid-column: 4; }
 
 /* SERVICES – dark theme */
 .services-section { background: #0a0a0a; }
@@ -157,7 +158,6 @@ section { padding: 6rem 3rem; background: #f5f3ef; }
 .services-list-separator::after { content: ''; flex: 1; height: 0.5px; background: #1a1a1a; }
 .services-section .services-list .service-card { background: rgba(255,255,255,0.05); border: none; border-bottom: 0.5px solid #1a1a1a; background-image: radial-gradient(rgba(255,255,255,0.04) 1px, transparent 1px); background-size: 18px 18px; }
 .services-section .services-list .service-card:hover { background: rgba(255,255,255,0.03); }
-
 /* BARBERS */
 .barbers-section { background: #fff; position: relative; z-index: 2; margin-top: -5rem; padding-top: 11rem; clip-path: polygon(0 5rem, 3% 5rem, 6% 4.1rem, 9% 4.7rem, 13% 3.9rem, 17% 4.3rem, 21% 3.5rem, 25% 3.9rem, 29% 3.1rem, 33% 3.5rem, 37% 2.7rem, 41% 3rem, 45% 2.2rem, 49% 2.6rem, 53% 1.8rem, 57% 2.2rem, 61% 1.4rem, 65% 1.8rem, 69% 1rem, 73% 1.4rem, 77% 0.6rem, 81% 1rem, 85% 0.3rem, 89% 0.6rem, 93% 0.1rem, 97% 0.3rem, 100% 0, 100% 100%, 0 100%); }
 .barbers-section .section-header { border-color: #e8e5df; }
@@ -366,8 +366,9 @@ footer { background: #f5f3ef; padding: 3rem; border-top: 0.5px solid #e0ddd6; }
   /* Services */
   .services-grid { grid-template-columns: 1fr; }
   .view-toggle { display: none; }
-  .services-list .service-card { grid-template-columns: 2.5rem 1fr; grid-template-rows: auto auto auto; }
-  .services-list .service-price { grid-row: 3; grid-column: 2; flex-direction: row; align-items: center; border-top: 0.5px solid #1a1a1a; padding-top: 0.8rem; margin-top: 0.4rem; }
+  .services-list .service-card { grid-template-columns: 2.5rem 1fr auto; grid-template-rows: auto auto auto; }
+  .services-list .service-barbers { grid-column: 2; grid-row: 3; align-self: flex-start; margin-top: 0.4rem; }
+  .services-list .service-price { grid-row: 1 / 3; grid-column: 3; flex-direction: column; align-items: flex-end; border-top: none; padding-top: 0; margin-top: 0; }
 
   /* Barbers */
   .barbers-grid { grid-template-columns: 1fr; }

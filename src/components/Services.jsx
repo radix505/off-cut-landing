@@ -119,7 +119,7 @@ export const services = [
 
 export default function Services() {
   const ref = useReveal();
-  const [view, setView] = useState('grid');
+  const [view, setView] = useState('list');
   const { navigate } = useRouter();
 
   return (
@@ -152,14 +152,14 @@ export default function Services() {
         </div>
       </div>
       <div className={view === 'list' ? 'services-list' : 'services-grid'}>
-        {services.map((s, i) => (
+        {services.slice(0, 6).map((s, i) => (
           <React.Fragment key={s.num}>
             {view === 'list' && i > 0 && services[i - 1].barbers?.[0] !== s.barbers?.[0] && (
               <div className="services-list-separator">
                 <span>{s.barbers?.[0]}</span>
               </div>
             )}
-            <div className={`service-card reveal reveal-delay-${s.delay}`}>
+            <div className={`service-card reveal reveal-delay-${s.delay}`} onClick={() => navigate('/booking')} style={{ cursor: 'pointer' }}>
               <div className="service-num">{s.num}</div>
               <div className="service-name">{useT(s.namePL, s.nameEN)}</div>
               <div className="service-desc">{useT(s.descPL, s.descEN)}</div>

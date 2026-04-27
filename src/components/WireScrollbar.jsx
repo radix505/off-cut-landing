@@ -39,33 +39,40 @@ export default function WireScrollbar() {
   }, [height]);
 
   useEffect(() => {
-    const update = () => {
-      setScrollingDown(window.scrollY >= lastScrollY.current);
-      lastScrollY.current = window.scrollY;
+    let rafId = null;
+    const onScroll = () => {
+      if (rafId) return;
+      rafId = requestAnimationFrame(() => {
+        rafId = null;
+        setScrollingDown(window.scrollY >= lastScrollY.current);
+        lastScrollY.current = window.scrollY;
 
-      const total = document.documentElement.scrollHeight - window.innerHeight;
-      const p = total > 0 ? window.scrollY / total : 0;
-      setProgress(p);
+        const total = document.documentElement.scrollHeight - window.innerHeight;
+        const p = total > 0 ? window.scrollY / total : 0;
+        setProgress(p);
 
-      let tipY = window.innerHeight * 0.5;
-      if (baseRef.current && pathLen > 0) {
-        const pt = baseRef.current.getPointAtLength(pathLen * p);
-        setTip({ x: pt.x, y: pt.y });
-        tipY = pt.y;
-      }
+        let tipY = window.innerHeight * 0.5;
+        if (baseRef.current && pathLen > 0) {
+          const pt = baseRef.current.getPointAtLength(pathLen * p);
+          setTip({ x: pt.x, y: pt.y });
+          tipY = pt.y;
+        }
 
-      // color based on what section the clipper tip is actually over
-      const dark = DARK_SECTIONS.some(id => {
-        const el = document.getElementById(id);
-        if (!el) return false;
-        const r = el.getBoundingClientRect();
-        return r.top <= tipY && r.bottom >= tipY;
+        const dark = DARK_SECTIONS.some(id => {
+          const el = document.getElementById(id);
+          if (!el) return false;
+          const r = el.getBoundingClientRect();
+          return r.top <= tipY && r.bottom >= tipY;
+        });
+        setIsDark(dark);
       });
-      setIsDark(dark);
     };
-    window.addEventListener('scroll', update, { passive: true });
-    update();
-    return () => window.removeEventListener('scroll', update);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      if (rafId) cancelAnimationFrame(rafId);
+    };
   }, [pathLen]);
 
   const d = buildPath(height);

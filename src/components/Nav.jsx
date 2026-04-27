@@ -20,7 +20,7 @@ export default function Nav() {
   const { page, navigate } = useRouter();
   const onBlog = page === 'blog';
   const onGallery = page === 'gallery';
-  const onAway = page === 'blog' || page === 'prices' || page === 'gallery';
+  const onAway = page === 'blog' || page === 'prices' || page === 'gallery' || page === 'booking';
 
   function handleLogoClick() {
     if (onAway) navigate('/');

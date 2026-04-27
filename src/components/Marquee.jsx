@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { useLang } from '../context/LangContext';
 
 const itemsPL = [
@@ -24,8 +25,10 @@ const itemsEN = [
 
 export default function Marquee() {
   const { lang } = useLang();
-  const base = lang === 'pl' ? itemsPL : itemsEN;
-  const items = [...base, ...base, ...base, ...base];
+  const items = useMemo(() => {
+    const base = lang === 'pl' ? itemsPL : itemsEN;
+    return [...base, ...base, ...base, ...base];
+  }, [lang]);
 
   return (
     <div className="marquee-section">

@@ -28,7 +28,7 @@ export default function PricePage() {
       <section className="prices-full-section">
         <div className="services-list">
           {services.map((s) => (
-            <div key={s.num} className="service-card">
+            <div key={s.num} className="service-card" onClick={() => navigate('/booking')} style={{ cursor: 'pointer' }}>
               <div className="service-num">{s.num}</div>
               <div className="service-name">{useT(s.namePL, s.nameEN)}</div>
               <div className="service-desc">{useT(s.descPL, s.descEN)}</div>

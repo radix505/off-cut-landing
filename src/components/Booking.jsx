@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useT, useLang } from '../context/LangContext';
 import { useReveal } from '../hooks/useReveal';
 
@@ -63,8 +63,8 @@ export default function Booking() {
 
   const calYear  = calBase.getFullYear();
   const calMonth = calBase.getMonth();
-  const calDays  = buildCalDays(calYear, calMonth);
-  const slots    = buildSlots(date);
+  const calDays  = useMemo(() => buildCalDays(calYear, calMonth), [calYear, calMonth]);
+  const slots    = useMemo(() => buildSlots(date), [date]);
 
   const today = new Date(); today.setHours(0, 0, 0, 0);
 
