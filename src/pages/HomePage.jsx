@@ -29,8 +29,7 @@ export default function HomePage() {
 
   function handleScrollBtn() {
     if (atTop) {
-      const firstSection = document.getElementById('services');
-      firstSection?.scrollIntoView({ behavior: 'smooth' });
+      window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
     } else {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
