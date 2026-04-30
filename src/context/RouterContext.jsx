@@ -2,21 +2,28 @@ import { createContext, useContext, useState, useEffect, useRef } from 'react';
 
 const RouterContext = createContext();
 
+function parsePath(p) {
+  if (p.startsWith('/crew/')) return { page: 'barber', crewSlug: p.split('/')[2] || null };
+  if (p === '/crew') return { page: 'crew', crewSlug: null };
+  if (p === '/blog') return { page: 'blog', crewSlug: null };
+  if (p === '/prices') return { page: 'prices', crewSlug: null };
+  if (p === '/booking') return { page: 'booking', crewSlug: null };
+  if (p === '/gallery') return { page: 'gallery', crewSlug: null };
+  return { page: 'home', crewSlug: null };
+}
+
 export function RouterProvider({ children }) {
-  const [page, setPage] = useState(() => {
-    const p = window.location.pathname;
-    return p === '/blog' ? 'blog' : p === '/prices' ? 'prices' : p === '/booking' ? 'booking' : p === '/gallery' ? 'gallery' : 'home';
-  });
+  const [state, setState] = useState(() => parsePath(window.location.pathname));
   const [cutting, setCutting] = useState(false);
   const [direction, setDirection] = useState('forward');
   const [pageVisible, setPageVisible] = useState(true);
   const timers = useRef([]);
 
+  const page = state.page;
+  const crewSlug = state.crewSlug;
+
   useEffect(() => {
-    const onPop = () => {
-      const p = window.location.pathname;
-      setPage(p === '/blog' ? 'blog' : p === '/prices' ? 'prices' : p === '/booking' ? 'booking' : p === '/gallery' ? 'gallery' : 'home');
-    };
+    const onPop = () => setState(parsePath(window.location.pathname));
     window.addEventListener('popstate', onPop);
     return () => window.removeEventListener('popstate', onPop);
   }, []);
@@ -24,18 +31,18 @@ export function RouterProvider({ children }) {
   useEffect(() => () => timers.current.forEach(clearTimeout), []);
 
   function navigate(path) {
-    const target = path === '/blog' ? 'blog' : path === '/prices' ? 'prices' : path === '/booking' ? 'booking' : path === '/gallery' ? 'gallery' : 'home';
-    if (target === page) return;
+    const target = parsePath(path);
+    if (target.page === page && target.crewSlug === crewSlug) return;
     timers.current.forEach(clearTimeout);
     timers.current = [];
 
-    setDirection(target === 'home' ? 'backward' : 'forward');
+    setDirection(target.page === 'home' ? 'backward' : 'forward');
     setPageVisible(false);
     setCutting(true);
 
     timers.current.push(setTimeout(() => {
       window.history.pushState(null, '', path);
-      setPage(target);
+      setState(target);
       window.scrollTo(0, 0);
     }, 450));
 
@@ -44,7 +51,7 @@ export function RouterProvider({ children }) {
   }
 
   return (
-    <RouterContext.Provider value={{ page, navigate, cutting, direction, pageVisible }}>
+    <RouterContext.Provider value={{ page, crewSlug, navigate, cutting, direction, pageVisible }}>
       {children}
     </RouterContext.Provider>
   );

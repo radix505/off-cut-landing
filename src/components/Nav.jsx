@@ -14,13 +14,13 @@ const ScissorsIcon = () => (
 
 export default function Nav() {
   const [open, setOpen] = useState(false);
-  const [activeLink, setActiveLink] = useState(null);
   const close = () => setOpen(false);
   const { lang, selectLang } = useLang();
   const { page, navigate } = useRouter();
   const onBlog = page === 'blog';
   const onGallery = page === 'gallery';
-  const onAway = page === 'blog' || page === 'prices' || page === 'gallery' || page === 'booking';
+  const onCrew = page === 'crew' || page === 'barber';
+  const onAway = page === 'blog' || page === 'prices' || page === 'gallery' || page === 'booking' || page === 'crew' || page === 'barber';
 
   function handleLogoClick() {
     if (onAway) navigate('/');
@@ -51,6 +51,15 @@ export default function Nav() {
       <ul className={`nav-links${open ? ' nav-links--open' : ''}`}>
         <li><a href="#services" onClick={(e) => handleSectionClick(e, 'services')}>{useT('Usługi', 'Services')}</a></li>
         <li><a href="#barbers" onClick={(e) => handleSectionClick(e, 'barbers')}>{useT('Barberzy', 'Barbers')}</a></li>
+        <li>
+          <a
+            href="/crew"
+            className={onCrew ? 'nav-link--active' : ''}
+            onClick={(e) => { e.preventDefault(); navigate('/crew'); close(); }}
+          >
+            {useT('Ekipa', 'Meet Crew')}
+          </a>
+        </li>
         <li>
           <a
             href="/gallery"

@@ -305,21 +305,48 @@ section { padding: 6rem 3rem; background: #f5f3ef; }
 .booking-reset-btn:hover { border-color: #fff; color: #fff; }
 
 /* FOOTER */
-footer { background: #f5f3ef; padding: 3rem; border-top: 0.5px solid #e0ddd6; }
-.footer-top { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 3rem; }
-.footer-brand { font-family: 'Bebas Neue', sans-serif; font-size: 3rem; letter-spacing: 0.08em; color: #ddd9d0; line-height: 1; }
-.footer-brand-sub { font-size: 0.5rem; letter-spacing: 0.4em; text-transform: uppercase; color: #ccc; margin-top: 2px; }
-.footer-tagline { font-size: 0.65rem; letter-spacing: 0.2em; color: #0a0a0a; text-transform: uppercase; margin-top: 0.5rem; }
-.footer-socials { display: flex; gap: 1.5rem; }
+/* FOOTER PRO */
+footer.footer-pro { background: #0a0a0a; border-top: 0.5px solid #1a1a1a; padding: 0; }
+.footer-pro-inner { display: grid; grid-template-columns: 1.6fr 1fr 1fr 1.2fr; gap: 0; border-bottom: 0.5px solid #1a1a1a; }
+.footer-col { padding: 4rem 3rem; border-right: 0.5px solid #1a1a1a; }
+.footer-col:last-child { border-right: none; }
+.footer-col--brand { }
+.footer-pro-logo { font-family: 'Bebas Neue', sans-serif; font-size: 2.4rem; letter-spacing: 0.1em; color: #fff; line-height: 1; }
+.footer-pro-logo-sub { font-size: 0.48rem; letter-spacing: 0.45em; text-transform: uppercase; color: #444; margin-top: 3px; }
+.footer-pro-scissors { color: #fff; margin: 1.5rem 0 1rem; }
+.footer-pro-tagline { font-size: 0.58rem; letter-spacing: 0.18em; text-transform: uppercase; color: #888; line-height: 1.8; }
+.footer-pro-socials { display: flex; gap: 1rem; margin-top: 2rem; }
+.footer-pro-social { color: #aaa; transition: color 0.3s; display: flex; align-items: center; }
+.footer-pro-social:hover { color: #fff; }
+.footer-col-label { font-size: 0.48rem; letter-spacing: 0.4em; text-transform: uppercase; color: #666; margin-bottom: 1.5rem; }
+.footer-pro-nav { list-style: none; display: flex; flex-direction: column; gap: 0.75rem; }
+.footer-pro-nav a { font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: #bbb; text-decoration: none; cursor: pointer; transition: color 0.3s; }
+.footer-pro-nav a:hover { color: #fff; }
+.footer-pro-hours { list-style: none; display: flex; flex-direction: column; gap: 0.75rem; }
+.footer-pro-hours li { display: flex; justify-content: space-between; gap: 1rem; font-size: 0.65rem; letter-spacing: 0.08em; color: #bbb; border-bottom: 0.5px solid #1a1a1a; padding-bottom: 0.75rem; }
+.footer-pro-hours li:last-child { border-bottom: none; }
+.footer-pro-hours li span:first-child { color: #888; }
+.footer-pro-address { font-style: normal; display: flex; flex-direction: column; gap: 1.25rem; }
+.footer-pro-address-line { display: flex; align-items: flex-start; gap: 0.6rem; font-size: 0.65rem; letter-spacing: 0.08em; color: #bbb; line-height: 1.7; }
+.footer-pro-address-line svg { flex-shrink: 0; margin-top: 2px; color: #888; }
+.footer-pro-address-line a { color: #bbb; text-decoration: none; transition: color 0.3s; }
+.footer-pro-address-line a:hover { color: #fff; }
+.footer-pro-bottom { display: flex; align-items: center; justify-content: space-between; padding: 1.5rem 5rem 1.5rem 3rem; gap: 2rem; flex-wrap: wrap; }
+.footer-pro-copy { font-size: 0.52rem; letter-spacing: 0.2em; text-transform: uppercase; color: #888; }
+.footer-pro-legal { display: flex; align-items: center; gap: 0.75rem; }
+.footer-pro-legal-link { font-size: 0.52rem; letter-spacing: 0.18em; text-transform: uppercase; color: #aaa; text-decoration: none; transition: color 0.3s; }
+.footer-pro-legal-link:hover { color: #fff; }
+.footer-pro-legal-sep { color: #555; font-size: 0.6rem; }
+.footer-credit { font-size: 0.52rem; letter-spacing: 0.15em; color: #aaa; text-transform: uppercase; display: flex; align-items: center; gap: 0.4rem; }
+.footer-credit-logo { height: 20px; width: auto; opacity: 0.85; filter: invert(1); }
+.footer-credit a { color: #ddd; text-decoration: none; border-bottom: 0.5px solid #555; padding-bottom: 1px; transition: color 0.3s, border-color 0.3s; }
+.footer-credit a:hover { color: #fff; border-color: #fff; }
+/* old social-link kept for any leftover refs */
 .social-link { display: flex; align-items: center; color: #0a0a0a; text-decoration: none; transition: color 0.3s; cursor: pointer; }
 .social-link:hover { color: #555; }
 .footer-bottom { display: flex; justify-content: space-between; align-items: center; border-top: 0.5px solid #e0ddd6; padding-top: 1.5rem; }
 .footer-address { font-size: 0.65rem; letter-spacing: 0.12em; color: #0a0a0a; line-height: 1.7; }
 .footer-copy { font-size: 0.55rem; letter-spacing: 0.2em; color: #0a0a0a; text-transform: uppercase; }
-.footer-credit { text-align: center; padding-top: 1.5rem; font-size: 0.7rem; letter-spacing: 0.2em; color: #888; text-transform: uppercase; display: flex; align-items: center; justify-content: center; gap: 0.2rem; }
-.footer-credit-logo { height: 20px; width: auto; mix-blend-mode: multiply; opacity: 0.75; }
-.footer-credit a { color: #0a0a0a; text-decoration: none; border-bottom: 0.5px solid #aaa; padding-bottom: 1px; transition: color 0.3s, border-color 0.3s; }
-.footer-credit a:hover { color: #000; border-color: #000; }
 
 /* NAV HAMBURGER */
 .nav-right { display: flex; align-items: center; gap: 1rem; }
@@ -386,9 +413,10 @@ footer { background: #f5f3ef; padding: 3rem; border-top: 0.5px solid #e0ddd6; }
   .bslots-grid { grid-template-columns: repeat(4, 1fr); }
 
   /* Footer */
-  footer { padding: 2.5rem 1.5rem; }
-  .footer-top { flex-direction: column; align-items: flex-start; gap: 2rem; }
-  .footer-bottom { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
+  .footer-pro-inner { grid-template-columns: 1fr 1fr; }
+  .footer-col { padding: 2.5rem 1.5rem; }
+  .footer-pro-bottom { padding: 1.25rem 1.5rem; flex-direction: column; align-items: flex-start; gap: 1rem; }
+  .barber-page-hero-content { padding: 6rem 1.5rem 2.5rem; }
 
   /* Scroll top btn */
   .scroll-top-btn { bottom: 1.25rem; right: 1.25rem; width: 40px; height: 40px; }
@@ -399,6 +427,9 @@ footer { background: #f5f3ef; padding: 3rem; border-top: 0.5px solid #e0ddd6; }
   .services-grid { grid-template-columns: 1fr; }
   .barbers-grid { grid-template-columns: 1fr; }
   .blog-grid { grid-template-columns: 1fr; }
+  .footer-pro-inner { grid-template-columns: 1fr; }
+  .footer-col { border-right: none; border-bottom: 0.5px solid #1a1a1a; }
+  .footer-col:last-child { border-bottom: none; }
 }
 
 @media (min-width: 481px) and (max-width: 900px) {
@@ -581,4 +612,77 @@ footer { background: #f5f3ef; padding: 3rem; border-top: 0.5px solid #e0ddd6; }
   .map-layout { grid-template-columns: 1fr; gap: 2.5rem; }
   .map-frame-wrap, .map-frame { min-height: 300px; }
   .map-info { gap: 1.5rem; }
+}
+
+/* BARBER HOVER BIO (homepage Barbers section) */
+.barber-overlay { display: flex; flex-direction: column; justify-content: flex-end; padding: 1.5rem; }
+.barber-bio-hover { font-size: 0.68rem; letter-spacing: 0.04em; line-height: 1.75; color: rgba(255,255,255,0.78); margin-top: 0.5rem; max-height: 0; overflow: hidden; opacity: 0; transition: max-height 0.4s cubic-bezier(0.16,1,0.3,1), opacity 0.35s ease; }
+.barber-portrait:hover .barber-bio-hover { max-height: 80px; opacity: 1; }
+
+/* CREW PAGE */
+.crew-page-back { position: fixed; top: 6.5rem; left: 3rem; z-index: 99; background: #fff; border: none; color: #0a0a0a; font-size: 0.58rem; letter-spacing: 0.25em; text-transform: uppercase; font-family: 'Inter', sans-serif; font-weight: 500; padding: 0.55rem 1.1rem; cursor: pointer; transition: background 0.3s; }
+.crew-page-back:hover { background: #ddd; }
+@media (max-width: 768px) { .crew-page-back { left: 1.5rem; } }
+.crew-page-section { background: #0a0a0a; padding: 10rem 3rem 7rem; }
+.crew-page-header { display: grid; grid-template-columns: 220px 1fr; gap: 4rem; align-items: start; }
+.crew-page-header-text { position: sticky; top: 8rem; }
+.crew-page-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(42px, 5vw, 64px); letter-spacing: 0.04em; color: #fff; line-height: 1; white-space: pre-line; margin: 1rem 0 1.5rem; }
+.crew-page-sub { font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase; color: #555; line-height: 1.9; }
+.crew-page-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+
+.crew-card { cursor: pointer; display: flex; flex-direction: column; gap: 0; }
+.crew-card-photo-wrap { position: relative; overflow: hidden; aspect-ratio: 3/4; }
+.crew-card-photo { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.55s cubic-bezier(0.16,1,0.3,1); }
+.crew-card:hover .crew-card-photo { transform: scale(1.04); }
+
+.crew-card-name-bar { position: absolute; bottom: 0; left: 0; right: 0; padding: 1.2rem 1.25rem 1rem; background: linear-gradient(to top, rgba(0,0,0,0.82) 0%, transparent 100%); display: flex; flex-direction: column; gap: 0.2rem; transition: opacity 0.35s; }
+.crew-card:hover .crew-card-name-bar { opacity: 0; }
+.crew-card-name { font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; letter-spacing: 0.06em; color: #fff; line-height: 1; }
+.crew-card-title { font-size: 0.55rem; letter-spacing: 0.3em; text-transform: uppercase; color: rgba(255,255,255,0.55); }
+
+.crew-card-bio-overlay { position: absolute; inset: 0; background: rgba(10,10,10,0.82); display: flex; flex-direction: column; justify-content: center; align-items: flex-start; padding: 2rem; opacity: 0; transition: opacity 0.35s ease; gap: 1rem; }
+.crew-card:hover .crew-card-bio-overlay { opacity: 1; }
+.crew-card-bio-text { font-size: 0.72rem; letter-spacing: 0.04em; line-height: 1.8; color: rgba(255,255,255,0.8); }
+.crew-card-cta { font-size: 0.55rem; letter-spacing: 0.25em; text-transform: uppercase; color: #aaa; border-bottom: 0.5px solid #555; padding-bottom: 2px; }
+
+.crew-card-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; padding: 0.9rem 0 0; background: transparent; }
+
+@media (max-width: 900px) {
+  .crew-page-header { grid-template-columns: 1fr; gap: 2.5rem; }
+  .crew-page-header-text { position: static; }
+  .crew-page-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 600px) {
+  .crew-page-section { padding: 8rem 1.5rem 5rem; }
+  .crew-page-grid { grid-template-columns: 1fr; }
+}
+
+/* BARBER SUBPAGE */
+.barber-page-hero { background: #0a0a0a; border-bottom: 0.5px solid #1a1a1a; }
+.barber-page-hero-content { padding: 9rem 3rem 3.5rem; width: 100%; }
+.barber-page-back { background: #fff; border: none; color: #0a0a0a; font-size: 0.58rem; letter-spacing: 0.25em; text-transform: uppercase; font-family: 'Inter', sans-serif; font-weight: 500; padding: 0.55rem 1.1rem; cursor: pointer; display: inline-block; margin-bottom: 2rem; transition: background 0.3s; }
+.barber-page-back:hover { background: #ddd; }
+.barber-page-hero-name { font-family: 'Bebas Neue', sans-serif; font-size: clamp(64px, 10vw, 120px); letter-spacing: 0.03em; color: #fff; line-height: 0.9; }
+.barber-page-hero-title { font-size: 0.65rem; letter-spacing: 0.35em; text-transform: uppercase; color: rgba(255,255,255,0.45); margin-top: 0.75rem; }
+
+.barber-page-body { background: #f5f3ef; padding: 6rem 3rem 7rem; }
+.barber-page-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: start; max-width: 1100px; margin: 0 auto; }
+.barber-page-section-label { font-size: 0.55rem; letter-spacing: 0.35em; text-transform: uppercase; color: #bbb; margin-bottom: 1rem; }
+.barber-page-bio { font-size: 0.8rem; letter-spacing: 0.04em; line-height: 2; color: #555; }
+.barber-page-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.spec-tag--light { border-color: #ddd9d0; color: #888; }
+.barber-page-book { margin-top: 3rem; display: block; font-size: 0.65rem; letter-spacing: 0.25em; text-transform: uppercase; background: #0a0a0a; color: #fff; border: none; padding: 1rem 2.2rem; cursor: pointer; font-family: 'Inter', sans-serif; font-weight: 500; transition: background 0.3s, transform 0.3s; }
+.barber-page-book:hover { background: #222; transform: translateY(-2px); }
+
+.barber-page-photo-col { display: flex; flex-direction: column; gap: 1rem; }
+.barber-page-photo-wrap { overflow: hidden; aspect-ratio: 3/4; }
+.barber-page-photo { width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block; }
+.barber-page-placeholder-block { border: 0.5px solid #ddd9d0; padding: 2rem; display: flex; align-items: center; justify-content: center; background: #edeae4; }
+.barber-page-placeholder-label { font-size: 0.55rem; letter-spacing: 0.3em; text-transform: uppercase; color: #bbb; }
+
+@media (max-width: 768px) {
+  .barber-page-layout { grid-template-columns: 1fr; gap: 3rem; }
+  .barber-page-body { padding: 4rem 1.5rem 5rem; }
+  .barber-page-hero-content { padding: 8rem 1.5rem 2.5rem; }
+  .barber-page-photo-col { order: -1; }
 }
