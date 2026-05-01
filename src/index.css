@@ -103,7 +103,7 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; j
 section { padding: 6rem 3rem; background: #f5f3ef; }
 .section-header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 4rem; border-bottom: 0.5px solid #ddd9d0; padding-bottom: 1.5rem; }
 .section-number { font-family: 'Bebas Neue', sans-serif; font-size: 0.75rem; letter-spacing: 0.3em; color: #bbb; }
-.section-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(36px, 5vw, 60px); letter-spacing: 0.04em; color: #0a0a0a; line-height: 1; }
+.section-title { font-family: 'Let Me Ride', 'Bebas Neue', sans-serif; font-size: clamp(36px, 5vw, 60px); letter-spacing: 0.04em; color: #0a0a0a; line-height: 1; }
 .section-link { font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: #aaa; cursor: pointer; transition: color 0.3s; text-decoration: none; border-bottom: 0.5px solid #ccc; padding-bottom: 2px; }
 .section-link:hover { color: #0a0a0a; border-color: #0a0a0a; }
 
