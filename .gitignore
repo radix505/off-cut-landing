@@ -1,4 +1,11 @@
 .env
+
+# DB
+data/*.sqlite
+data/*.sqlite-journal
+data/*.sqlite-wal
+data/*.sqlite-shm
+
 # Logs
 logs
 *.log

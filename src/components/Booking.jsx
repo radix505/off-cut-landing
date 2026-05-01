@@ -1,29 +1,16 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useT, useLang } from '../context/LangContext';
 import { useReveal } from '../hooks/useReveal';
-
-const BARBERS = [
-  { id: 'aleksander', name: 'Aleksander', photo: '/team/Aleksander.jpeg', titlePL: 'Senior Barber', titleEN: 'Senior Barber' },
-  { id: 'julia', name: 'Julia', photo: '/team/Julia.jpeg', titlePL: 'Barber & Broda', titleEN: 'Barber & Beard' },
-  { id: 'nico',  name: 'Nico',  photo: '/team/Nico.jpeg',  titlePL: 'Master Barber',  titleEN: 'Master Barber' },
-];
-
-const SERVICES = [
-  { id: 's1', namePL: 'Strzyżenie Krótkie',        nameEN: 'Short Cut',             duration: '45 min',    price: '100 PLN' },
-  { id: 's2', namePL: 'Strzyżenie Długie',          nameEN: 'Long Cut',              duration: '55 min',    price: '110 PLN' },
-  { id: 's3', namePL: 'Trymowanie Brody',           nameEN: 'Beard Trim',            duration: '30 min',    price: '80 PLN'  },
-  { id: 's4', namePL: 'Strzyżenie + Broda',         nameEN: 'Cut & Beard',           duration: '1h 15min',  price: '140 PLN' },
-  { id: 's5', namePL: 'Golenie Głowy',              nameEN: 'Head Shave',            duration: '30 min',    price: '50 PLN'  },
-  { id: 's6', namePL: 'Golenie Głowy + Broda',      nameEN: 'Head Shave + Beard',    duration: '50 min',    price: '100 PLN' },
-  { id: 's7', namePL: 'Cięcie + Broda + Brzytwa',   nameEN: 'Cut + Beard + Razor',   duration: '1h 20min',  price: '170 PLN' },
-];
+import { BARBERS, SERVICES, buildSlots } from '../data/booking-config';
 
 const MONTH_PL = ['Styczeń','Luty','Marzec','Kwiecień','Maj','Czerwiec','Lipiec','Sierpień','Wrzesień','Październik','Listopad','Grudzień'];
 const MONTH_EN = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 const DAYS_PL  = ['Pon','Wt','Śr','Czw','Pt','Sob','Nie'];
 const DAYS_EN  = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
 
-const UNAVAILABLE = new Set(['09:30','11:00','13:30','15:00','17:00']);
+function toISODate(d) {
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
 
 function buildCalDays(year, month) {
   const first = new Date(year, month, 1).getDay();
@@ -32,19 +19,6 @@ function buildCalDays(year, month) {
   const days   = Array(offset).fill(null);
   for (let d = 1; d <= total; d++) days.push(d);
   return days;
-}
-
-function buildSlots(date) {
-  if (!date) return [];
-  const sun = date.getDay() === 0;
-  const [sh, eh] = sun ? [10, 15] : [9, 19];
-  const slots = [];
-  for (let h = sh; h <= eh; h++)
-    for (let m = 0; m < 60; m += 30) {
-      if (h === eh && m > 0) break;
-      slots.push(`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`);
-    }
-  return slots;
 }
 
 export default function Booking() {
@@ -60,11 +34,28 @@ export default function Booking() {
   const [name,      setName]      = useState('');
   const [phone,     setPhone]     = useState('');
   const [submitted, setSubmitted] = useState(false);
+  const [unavailable,  setUnavailable]  = useState(() => new Set());
+  const [loadingAvail, setLoadingAvail] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMsg,     setErrorMsg]     = useState('');
 
   const calYear  = calBase.getFullYear();
   const calMonth = calBase.getMonth();
   const calDays  = useMemo(() => buildCalDays(calYear, calMonth), [calYear, calMonth]);
   const slots    = useMemo(() => buildSlots(date), [date]);
+
+  useEffect(() => {
+    if (!barber || !date) { setUnavailable(new Set()); return; }
+    const iso = toISODate(date);
+    const ctrl = new AbortController();
+    setLoadingAvail(true);
+    fetch(`/api/availability?barberId=${encodeURIComponent(barber.id)}&date=${iso}`, { signal: ctrl.signal })
+      .then(r => r.ok ? r.json() : Promise.reject(new Error(`HTTP ${r.status}`)))
+      .then(data => setUnavailable(new Set(data.unavailable ?? [])))
+      .catch(err => { if (err.name !== 'AbortError') setUnavailable(new Set()); })
+      .finally(() => setLoadingAvail(false));
+    return () => ctrl.abort();
+  }, [barber?.id, date]);
 
   const today = new Date(); today.setHours(0, 0, 0, 0);
 
@@ -89,7 +80,54 @@ export default function Booking() {
     () => name.trim().length > 1 && phone.trim().length > 5,
   ];
 
-  function reset() { setStep(1); setBarber(null); setService(null); setDate(null); setSlot(null); setName(''); setPhone(''); setSubmitted(false); }
+  function reset() {
+    setStep(1); setBarber(null); setService(null); setDate(null); setSlot(null);
+    setName(''); setPhone(''); setSubmitted(false);
+    setUnavailable(new Set()); setIsSubmitting(false); setErrorMsg('');
+  }
+
+  async function submitBooking() {
+    if (isSubmitting) return;
+    setErrorMsg(''); setIsSubmitting(true);
+    try {
+      const res = await fetch('/api/bookings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          barberId:  barber.id,
+          serviceId: service.id,
+          date:      toISODate(date),
+          slot,
+          name:      name.trim(),
+          phone:     phone.trim(),
+        }),
+      });
+      if (res.ok) { setSubmitted(true); return; }
+      let body = {};
+      try { body = await res.json(); } catch {}
+      if (res.status === 409) {
+        setErrorMsg(lang === 'pl'
+          ? 'Ten termin został właśnie zajęty. Wybierz inną godzinę.'
+          : 'This slot was just taken. Please choose another time.');
+        setSlot(null);
+        setStep(3);
+      } else if (res.status === 400 || res.status === 422) {
+        setErrorMsg(lang === 'pl'
+          ? 'Sprawdź wpisane dane i spróbuj ponownie.'
+          : 'Please check your details and try again.');
+      } else {
+        setErrorMsg(lang === 'pl'
+          ? 'Nie udało się wysłać. Spróbuj ponownie za chwilę.'
+          : 'Could not submit. Please try again shortly.');
+      }
+    } catch {
+      setErrorMsg(lang === 'pl'
+        ? 'Brak połączenia. Sprawdź internet i spróbuj ponownie.'
+        : 'Connection error. Check your network and retry.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
 
   const stepLabels = [
     useT('Barber','Barber'), useT('Usługa','Service'), useT('Termin','Date'), useT('Dane','Details')
@@ -244,15 +282,18 @@ export default function Booking() {
                     : useT('Najpierw wybierz dzień','Select a day first')}
                 </div>
                 {date && (
-                  <div className="bslots-grid">
-                    {slots.map(s => (
-                      <button
-                        key={s}
-                        className={`bslot${UNAVAILABLE.has(s)?' unavail':''}${slot===s?' sel':''}`}
-                        onClick={() => !UNAVAILABLE.has(s) && setSlot(s)}
-                        disabled={UNAVAILABLE.has(s)}
-                      >{s}</button>
-                    ))}
+                  <div className="bslots-grid" aria-busy={loadingAvail || undefined}>
+                    {slots.map(s => {
+                      const taken = unavailable.has(s);
+                      return (
+                        <button
+                          key={s}
+                          className={`bslot${taken?' unavail':''}${slot===s?' sel':''}`}
+                          onClick={() => !taken && setSlot(s)}
+                          disabled={taken || loadingAvail}
+                        >{s}</button>
+                      );
+                    })}
                   </div>
                 )}
               </div>
@@ -289,16 +330,27 @@ export default function Booking() {
             </div>
           )}
 
+          {errorMsg && (
+            <div className="booking-error" role="alert">{errorMsg}</div>
+          )}
+
           {/* Navigation */}
           <div className="booking-wizard-nav">
             {step > 1
-              ? <button className="bwiz-back" onClick={() => setStep(s => s-1)}>← {useT('Wróć','Back')}</button>
+              ? <button className="bwiz-back" onClick={() => setStep(s => s-1)} disabled={isSubmitting}>← {useT('Wróć','Back')}</button>
               : <span />}
             <button
-              className={`bwiz-next${canAdvance[step-1]() ? '' : ' off'}`}
-              onClick={() => canAdvance[step-1]() && (step < 4 ? setStep(s => s+1) : setSubmitted(true))}
+              className={`bwiz-next${canAdvance[step-1]() && !isSubmitting ? '' : ' off'}`}
+              disabled={isSubmitting}
+              onClick={() => {
+                if (!canAdvance[step-1]() || isSubmitting) return;
+                if (step < 4) setStep(s => s + 1);
+                else submitBooking();
+              }}
             >
-              {step < 4 ? useT('Dalej','Next') : useT('Wyślij →','Send →')}
+              {step < 4
+                ? useT('Dalej','Next')
+                : isSubmitting ? useT('Wysyłanie…','Sending…') : useT('Wyślij →','Send →')}
             </button>
           </div>
 
