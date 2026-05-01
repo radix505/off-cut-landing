@@ -4,7 +4,6 @@ import { RouterProvider, useRouter } from './context/RouterContext';
 import LangSplash from './components/LangSplash';
 import ScissorsTransition from './components/ScissorsTransition';
 import HomePage from './pages/HomePage';
-import WireScrollbar from './components/WireScrollbar';
 
 const BlogPage    = lazy(() => import('./pages/BlogPage'));
 const PricePage   = lazy(() => import('./pages/PricePage'));
@@ -34,7 +33,6 @@ export default function App() {
   return (
     <LangProvider>
       <RouterProvider>
-        <WireScrollbar />
         <LangSplash />
         <ScissorsTransition />
         <AppRoutes />
