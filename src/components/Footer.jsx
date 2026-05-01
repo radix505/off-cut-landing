@@ -19,7 +19,10 @@ export default function Footer() {
 
         {/* Brand */}
         <div className="footer-col footer-col--brand">
-          <div className="footer-pro-logo">OFF CUT</div>
+          <div className="footer-pro-logo-wrap">
+            <div className="footer-pro-logo">OFF CUT</div>
+            <img src="/logo.svg" alt="" className="footer-logo-icon" />
+          </div>
           <div className="footer-pro-logo-sub">Barbershop</div>
           <div className="footer-pro-scissors"><ScissorsIcon /></div>
           <p className="footer-pro-tagline">{useT('Premium Barbershop — Zał. 2019', 'Premium Barbershop — Est. 2019')}</p>
@@ -59,9 +62,13 @@ export default function Footer() {
         <div className="footer-col">
           <div className="footer-col-label">{useT('Godziny otwarcia', 'Opening Hours')}</div>
           <ul className="footer-pro-hours">
-            <li><span>{useT('Pon – Pt', 'Mon – Fri')}</span><span>10:00 – 20:00</span></li>
-            <li><span>{useT('Sob', 'Sat')}</span><span>09:00 – 17:00</span></li>
-            <li><span>{useT('Niedz', 'Sun')}</span><span>{useT('Zamknięte', 'Closed')}</span></li>
+            <li><span>{useT('Poniedziałek', 'Monday')}</span><span>10:00 – 19:00</span></li>
+            <li><span>{useT('Wtorek', 'Tuesday')}</span><span>09:00 – 19:00</span></li>
+            <li><span>{useT('Środa', 'Wednesday')}</span><span>09:00 – 19:00</span></li>
+            <li><span>{useT('Czwartek', 'Thursday')}</span><span>09:00 – 19:00</span></li>
+            <li><span>{useT('Piątek', 'Friday')}</span><span>09:00 – 19:00</span></li>
+            <li><span>{useT('Sobota', 'Saturday')}</span><span>08:00 – 18:00</span></li>
+            <li><span>{useT('Niedziela', 'Sunday')}</span><span>{useT('Zamknięte', 'Closed')}</span></li>
           </ul>
         </div>
 

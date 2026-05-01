@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useT, useLang } from '../context/LangContext';
 import { useRouter } from '../context/RouterContext';
 
@@ -14,8 +14,28 @@ const ScissorsIcon = () => (
 
 export default function Nav() {
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const navRef = useRef(null);
   const close = () => setOpen(false);
   const { lang, selectLang } = useLang();
+
+  const [hidden, setHidden] = useState(false);
+  const lastY = useRef(0);
+
+  useEffect(() => {
+    let raf;
+    const onScroll = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        const y = window.scrollY;
+        setScrolled(y > 50);
+        setHidden(y > 120 && y > lastY.current);
+        lastY.current = y;
+      });
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => { window.removeEventListener('scroll', onScroll); cancelAnimationFrame(raf); };
+  }, []);
   const { page, navigate } = useRouter();
   const onBlog = page === 'blog';
   const onGallery = page === 'gallery';
@@ -43,10 +63,13 @@ export default function Nav() {
   }
 
   return (
-    <nav>
+    <nav ref={navRef} className={[scrolled ? 'nav-scrolled' : '', hidden ? 'nav-hidden' : ''].filter(Boolean).join(' ')}>
       <div className="nav-logo" onClick={handleLogoClick} style={{ cursor: 'pointer' }}>
-        <span className="nav-logo-main">OFF CUT</span>
-        <span className="nav-logo-sub">Barbershop</span>
+        <img src="/logo.svg" alt="" className="nav-logo-icon" />
+        <div className="nav-logo-text">
+          <span className="nav-logo-main">OFF CUT</span>
+          <span className="nav-logo-sub">Barbershop</span>
+        </div>
       </div>
       <ul className={`nav-links${open ? ' nav-links--open' : ''}`}>
         <li><a href="#services" onClick={(e) => handleSectionClick(e, 'services')}>{useT('Usługi', 'Services')}</a></li>

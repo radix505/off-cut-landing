@@ -17,11 +17,12 @@ export default function LangSplash() {
   }
 
   const busy = phase !== 'idle';
+  const splitting = phase === 'splitting';
 
   return (
     <div id="lang-splash">
       <div
-        className={`splash-half splash-half--dark${phase === 'splitting' ? ' splash-splitting' : ''}`}
+        className={`splash-half splash-half--dark${splitting ? ' splash-splitting' : ''}`}
         onClick={() => handleSelect('pl')}
         style={busy ? { pointerEvents: 'none' } : {}}
       >
@@ -34,7 +35,7 @@ export default function LangSplash() {
         </div>
       </div>
       <div
-        className={`splash-half splash-half--light${phase === 'splitting' ? ' splash-splitting' : ''}`}
+        className={`splash-half splash-half--light${splitting ? ' splash-splitting' : ''}`}
         onClick={() => handleSelect('en')}
         style={busy ? { pointerEvents: 'none' } : {}}
       >
@@ -46,6 +47,17 @@ export default function LangSplash() {
           <div className="splash-lang-hint">click to select</div>
         </div>
       </div>
+
+      {/* Full-viewport logo with color split matching the diagonal */}
+      <div className={`splash-logo-wrap${splitting ? ' splash-logo-splitting' : ''}`}>
+        <div className="splash-logo-half splash-logo-half--dark">
+          <img src="/logo.svg" alt="" className="splash-logo-img splash-logo-img--dark" />
+        </div>
+        <div className="splash-logo-half splash-logo-half--light">
+          <img src="/logo.svg" alt="" className="splash-logo-img splash-logo-img--light" />
+        </div>
+      </div>
+
       {phase === 'cutting' && (
         <div className="splash-scissors-overlay">
           <div className="splash-scissors-mover-up">

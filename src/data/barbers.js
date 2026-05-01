@@ -23,8 +23,8 @@ export const barbers = [
   {
     slug: 'aleksander',
     name: 'ALEKSANDER',
-    titlePL: 'Master Barber',
-    titleEN: 'Master Barber',
+    titlePL: 'Senior Barber',
+    titleEN: 'Senior Barber',
     photo: '/team/Aleksander.jpeg',
     tags: [
       { pl: 'Fade', en: 'Fade' },
@@ -44,8 +44,8 @@ export const barbers = [
   {
     slug: 'julia',
     name: 'JULIA',
-    titlePL: 'Barber',
-    titleEN: 'Barber',
+    titlePL: 'Senior Barber',
+    titleEN: 'Senior Barber',
     photo: '/team/Julia.jpeg',
     tags: [
       { pl: 'Praca nożyczkami', en: 'Scissor Work' },

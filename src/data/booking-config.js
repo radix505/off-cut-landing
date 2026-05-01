@@ -1,7 +1,7 @@
 export const BARBERS = [
   { id: 'aleksander', name: 'Aleksander', photo: '/team/Aleksander.jpeg', titlePL: 'Senior Barber', titleEN: 'Senior Barber', keys: ['OLEK', 'ALEKSANDER'] },
-  { id: 'julia',      name: 'Julia',      photo: '/team/Julia.jpeg',      titlePL: 'Barber & Broda', titleEN: 'Barber & Beard', keys: ['JULIA'] },
-  { id: 'nico',       name: 'Nico',       photo: '/team/Nico.jpeg',       titlePL: 'Master Barber',  titleEN: 'Master Barber',  keys: ['NICO'] },
+  { id: 'julia',      name: 'Julia',      photo: '/team/Julia.jpeg',      titlePL: 'Senior Barber',  titleEN: 'Senior Barber',  keys: ['JULIA'] },
+  { id: 'nico',       name: 'Nico',       photo: '/team/Nico.jpeg',       titlePL: 'Barber',         titleEN: 'Barber',         keys: ['NICO'] },
 ];
 
 export const SERVICES = [
@@ -16,8 +16,9 @@ export const SERVICES = [
 
 export function buildSlots(date) {
   if (!date) return [];
-  const sun = date.getDay() === 0;
-  const [sh, eh] = sun ? [10, 15] : [9, 19];
+  const day = date.getDay(); // 0=Sun,1=Mon,2=Tue,...,6=Sat
+  if (day === 0) return [];  // Sunday closed
+  const [sh, eh] = day === 1 ? [10, 19] : day === 6 ? [8, 18] : [9, 19];
   const slots = [];
   for (let h = sh; h <= eh; h++)
     for (let m = 0; m < 60; m += 30) {
