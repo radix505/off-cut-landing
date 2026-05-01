@@ -50,7 +50,6 @@ export default function Nav() {
       </div>
       <ul className={`nav-links${open ? ' nav-links--open' : ''}`}>
         <li><a href="#services" onClick={(e) => handleSectionClick(e, 'services')}>{useT('Usługi', 'Services')}</a></li>
-        <li><a href="#barbers" onClick={(e) => handleSectionClick(e, 'barbers')}>{useT('Barberzy', 'Barbers')}</a></li>
         <li>
           <a
             href="/crew"

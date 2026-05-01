@@ -91,7 +91,7 @@ export default function Footer() {
           <a href="/cookies" className="footer-pro-legal-link">Cookies</a>
         </div>
         <div className="footer-credit">
-          {useT('Stworzone przez', 'Created by')} <img src="/logo.png" alt="Corelaners" className="footer-credit-logo" /><a href="https://corelaners.eu" target="_blank" rel="noopener noreferrer">corelaners.eu</a>
+          {useT('Stworzone przez', 'Created by')} <img src="/drawing.svg" alt="Corelaners" className="footer-credit-logo" /><a href="https://corelaners.eu" target="_blank" rel="noopener noreferrer">corelaners.eu</a>
         </div>
       </div>
     </footer>

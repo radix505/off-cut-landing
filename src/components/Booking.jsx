@@ -1,7 +1,8 @@
 import { useState, useMemo, useEffect } from 'react';
 import { useT, useLang } from '../context/LangContext';
 import { useReveal } from '../hooks/useReveal';
-import { BARBERS, SERVICES, buildSlots } from '../data/booking-config';
+import { BARBERS, buildSlots } from '../data/booking-config';
+import { services as ALL_SERVICES } from './Services';
 
 const MONTH_PL = ['Styczeń','Luty','Marzec','Kwiecień','Maj','Czerwiec','Lipiec','Sierpień','Wrzesień','Październik','Listopad','Grudzień'];
 const MONTH_EN = ['January','February','March','April','May','June','July','August','September','October','November','December'];
@@ -95,7 +96,7 @@ export default function Booking() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           barberId:  barber.id,
-          serviceId: service.id,
+          serviceId: service.num,
           date:      toISODate(date),
           slot,
           name:      name.trim(),
@@ -235,8 +236,8 @@ export default function Booking() {
             <div className="booking-step-body">
               <div className="bwiz-heading">{useT('Wybierz usługę','Choose a service')}</div>
               <div className="booking-services-list">
-                {SERVICES.map(s => (
-                  <button key={s.id} className={`booking-service-item${service?.id===s.id?' selected':''}`} onClick={() => setService(s)}>
+                {ALL_SERVICES.filter(s => s.barbers.some(k => barber?.keys.includes(k))).map(s => (
+                  <button key={s.num} className={`booking-service-item${service?.num===s.num?' selected':''}`} onClick={() => setService(s)}>
                     <span className="bsi-name">{lang==='pl' ? s.namePL : s.nameEN}</span>
                     <span className="bsi-meta">
                       <span className="bsi-dur">{s.duration}</span>

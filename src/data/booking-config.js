@@ -1,7 +1,7 @@
 export const BARBERS = [
-  { id: 'aleksander', name: 'Aleksander', photo: '/team/Aleksander.jpeg', titlePL: 'Senior Barber', titleEN: 'Senior Barber' },
-  { id: 'julia',      name: 'Julia',      photo: '/team/Julia.jpeg',      titlePL: 'Barber & Broda', titleEN: 'Barber & Beard' },
-  { id: 'nico',       name: 'Nico',       photo: '/team/Nico.jpeg',       titlePL: 'Master Barber',  titleEN: 'Master Barber' },
+  { id: 'aleksander', name: 'Aleksander', photo: '/team/Aleksander.jpeg', titlePL: 'Senior Barber', titleEN: 'Senior Barber', keys: ['OLEK', 'ALEKSANDER'] },
+  { id: 'julia',      name: 'Julia',      photo: '/team/Julia.jpeg',      titlePL: 'Barber & Broda', titleEN: 'Barber & Beard', keys: ['JULIA'] },
+  { id: 'nico',       name: 'Nico',       photo: '/team/Nico.jpeg',       titlePL: 'Master Barber',  titleEN: 'Master Barber',  keys: ['NICO'] },
 ];
 
 export const SERVICES = [
