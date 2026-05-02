@@ -9,7 +9,7 @@
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; overflow-x: hidden; }
 body { background: #f5f3ef; color: #1a1a1a; font-family: 'Inter', sans-serif; font-weight: 300; overflow-x: hidden; }
 html, body { scrollbar-width: thin; scrollbar-color: #333 transparent; }
 html::-webkit-scrollbar { width: 4px; }
@@ -24,7 +24,7 @@ html::-webkit-scrollbar-thumb:hover { background: #555; }
 .splash-half--dark:hover { clip-path: polygon(0 0, 68% 0, 48% 100%, 0 100%); }
 .splash-half--light { background: #fff; clip-path: polygon(60% 0, 100% 0, 100% 100%, 40% 100%); }
 .splash-half--light:hover { clip-path: polygon(52% 0, 100% 0, 100% 100%, 32% 100%); }
-.splash-content { position: absolute; top: 50%; text-align: center; pointer-events: none; }
+.splash-content { position: absolute; top: 50%; text-align: center; pointer-events: none; z-index: 6; }
 .splash-content--dark { left: 25%; transform: translate(-50%, -50%); color: #fff; }
 .splash-content--light { left: 73%; transform: translate(-50%, -50%); color: #0a0a0a; }
 .splash-brand { font-family: 'Let Me Ride', 'Bebas Neue', sans-serif; font-size: clamp(30px,5vw,64px); letter-spacing: 0.08em; line-height: 1; white-space: nowrap; }
@@ -48,6 +48,11 @@ html::-webkit-scrollbar-thumb:hover { background: #555; }
   .splash-half--light:hover ~ .splash-logo-wrap .splash-logo-half--dark { clip-path: polygon(0 0, 100% 0, 100% 50%, 0 40%); }
   .splash-half--light:hover ~ .splash-logo-wrap .splash-logo-half--light { clip-path: polygon(0 40%, 100% 50%, 100% 100%, 0 100%); }
   .splash-logo-img { width: 110px; }
+  /* logo enters from top (dark) / bottom (light) on mobile */
+  .splash-logo-img--dark  { animation-name: splash-logo-enter-dark-mobile,  splash-logo-float; }
+  .splash-logo-img--light { animation-name: splash-logo-enter-light-mobile, splash-logo-float; }
+  @keyframes splash-logo-enter-dark-mobile  { from { transform: translate(-50%, calc(-50% - 20px)); opacity: 0; } to { transform: translate(-50%, -50%); opacity: 1; } }
+  @keyframes splash-logo-enter-light-mobile { from { transform: translate(-50%, calc(-50% + 20px)); opacity: 0; } to { transform: translate(-50%, -50%); opacity: 1; } }
 }
 /* Splash logo — full-viewport container so clip-path % matches the half polygons exactly */
 .splash-logo-wrap { position: absolute; inset: 0; z-index: 5; pointer-events: none; transition: opacity 0.45s ease 0.25s; }
@@ -59,6 +64,11 @@ html::-webkit-scrollbar-thumb:hover { background: #555; }
 .splash-logo-half { position: absolute; inset: 0; overflow: hidden; transition: clip-path 0.4s cubic-bezier(0.4,0,0.2,1); }
 .splash-logo-half--dark { clip-path: polygon(0 0, 60% 0, 40% 100%, 0 100%); }
 .splash-logo-half--light { clip-path: polygon(60% 0, 100% 0, 100% 100%, 40% 100%); }
+/* mobile must come AFTER the desktop defaults to win the cascade */
+@media (max-width: 600px) {
+  .splash-logo-half--dark { clip-path: polygon(0 0, 100% 0, 100% 55%, 0 45%); }
+  .splash-logo-half--light { clip-path: polygon(0 45%, 100% 55%, 100% 100%, 0 100%); }
+}
 .splash-logo-img { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 170px; height: auto; display: block; }
 .splash-logo-img--dark  { filter: invert(1); animation: splash-logo-enter-dark 0.9s cubic-bezier(0.16,1,0.3,1) 0.2s both, splash-logo-float 2.2s ease-in-out 1.1s infinite; }
 .splash-logo-img--light { filter: none;      animation: splash-logo-enter-light 0.9s cubic-bezier(0.16,1,0.3,1) 0.2s both, splash-logo-float 2.2s ease-in-out 1.1s infinite; }
@@ -72,6 +82,15 @@ html::-webkit-scrollbar-thumb:hover { background: #555; }
 .splash-half--dark:hover ~ .splash-logo-wrap .splash-logo-half--light { clip-path: polygon(68% 0, 100% 0, 100% 100%, 48% 100%); }
 .splash-half--light:hover ~ .splash-logo-wrap .splash-logo-half--dark { clip-path: polygon(0 0, 52% 0, 32% 100%, 0 100%); }
 .splash-half--light:hover ~ .splash-logo-wrap .splash-logo-half--light { clip-path: polygon(52% 0, 100% 0, 100% 100%, 32% 100%); }
+/* mobile hover + size overrides — must sit AFTER the desktop rules above to win the cascade */
+@media (max-width: 600px) {
+  .splash-logo-img { width: 110px; }
+  .splash-half--dark:hover ~ .splash-half--light { clip-path: polygon(0 50%, 100% 60%, 100% 100%, 0 100%); }
+  .splash-half--dark:hover ~ .splash-logo-wrap .splash-logo-half--dark { clip-path: polygon(0 0, 100% 0, 100% 60%, 0 50%); }
+  .splash-half--dark:hover ~ .splash-logo-wrap .splash-logo-half--light { clip-path: polygon(0 50%, 100% 60%, 100% 100%, 0 100%); }
+  .splash-half--light:hover ~ .splash-logo-wrap .splash-logo-half--dark { clip-path: polygon(0 0, 100% 0, 100% 50%, 0 40%); }
+  .splash-half--light:hover ~ .splash-logo-wrap .splash-logo-half--light { clip-path: polygon(0 40%, 100% 50%, 100% 100%, 0 100%); }
+}
 .splash-scissors-overlay { position: absolute; inset: 0; pointer-events: none; z-index: 10; overflow: hidden; }
 .splash-scissors-mover-up { position: absolute; top: 0; left: 0; color: #888; animation: splashScissorsDiag 1.1s cubic-bezier(0.4,0,0.2,1) forwards; }
 .splash-scissors-mover-up svg { width: 90px; height: 36px; display: block; }
@@ -82,12 +101,26 @@ html::-webkit-scrollbar-thumb:hover { background: #555; }
 @media (max-width: 600px) {
   .splash-scissors-mover-up { animation-name: splashScissorsDiagMobile; }
   @keyframes splashScissorsDiagMobile {
-    from { transform: translate(-110px, calc(50vh - 18px)) rotate(6deg); }
-    to   { transform: translate(110vw,  calc(50vh - 18px)) rotate(6deg); }
+    from { transform: translate(-110px, calc(42vh - 18px)) rotate(12deg); }
+    to   { transform: translate(calc(100vw + 20px), calc(55.5vh - 18px)) rotate(12deg); }
   }
 }
 .splash-half--dark.splash-splitting { transform: translateX(-110vw); }
 .splash-half--light.splash-splitting { transform: translateX(110vw); }
+@media (max-width: 600px) {
+  .splash-half--dark.splash-splitting  { transform: translateY(-110vh); }
+  .splash-half--light.splash-splitting { transform: translateY(110vh); }
+  .splash-logo-wrap.splash-logo-splitting .splash-logo-img--dark  { animation-name: logo-crash-mobile-up; }
+  .splash-logo-wrap.splash-logo-splitting .splash-logo-img--light { animation-name: logo-crash-mobile-down; }
+  @keyframes logo-crash-mobile-up {
+    from { transform: translate(-50%, -50%) rotate(0deg); opacity: 1; }
+    to   { transform: translate(-50%, calc(-50% - 200px)) rotate(-8deg); opacity: 0; }
+  }
+  @keyframes logo-crash-mobile-down {
+    from { transform: translate(-50%, -50%) rotate(0deg); opacity: 1; }
+    to   { transform: translate(-50%, calc(-50% + 200px)) rotate(8deg); opacity: 0; }
+  }
+}
 
 /* NAV */
 nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; padding: 1.5rem 3rem 1.5rem 1.2rem; background: rgba(10,10,10,0.95); border-bottom: 0.5px solid #1a1a1a; backdrop-filter: blur(8px); transition: padding 0.3s, transform 0.4s cubic-bezier(0.4,0,0.2,1); }
@@ -103,6 +136,9 @@ nav.nav-hidden { transform: translateY(-110%); }
 .nav-links a { font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: #888; text-decoration: none; transition: color 0.3s; }
 .nav-links a:hover { color: #fff; }
 .nav-scissors { width: 40px; height: 16px; color: #fff; flex-shrink: 0; }
+.nav-mobile-book { display: none; }
+.nav-book-mobile { background: transparent; border: 0.5px solid rgba(255,255,255,0.3); color: #ccc; padding: 0.7rem 2.5rem; font-size: 0.62rem; letter-spacing: 0.28em; text-transform: uppercase; cursor: pointer; font-family: 'Inter', sans-serif; transition: border-color 0.25s, color 0.25s; }
+.nav-book-mobile:hover { border-color: #fff; color: #fff; }
 .nav-book { font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; border: 0.5px solid #fff; padding: 0.6rem 1.4rem; color: #0a0a0a; cursor: pointer; background: #fff; font-family: 'Inter', sans-serif; transition: all 0.3s; white-space: nowrap; }
 .nav-book:hover { background: transparent; color: #fff; border-color: #fff; }
 
@@ -431,18 +467,20 @@ footer.footer-pro { background: #0a0a0a; border-top: 0.5px solid #1a1a1a; paddin
   nav { padding: 1.1rem 1.5rem 1.1rem 1rem; }
   .nav-hamburger { display: flex; }
   .nav-book { display: none; }
+  .nav-scissors { display: none; }
   .nav-links {
     position: fixed; inset: 0; top: 0;
-    background: rgba(10,10,10,0.97);
+    background: rgba(8,8,8,0.98);
     flex-direction: column; align-items: center; justify-content: center;
-    gap: 2.5rem; list-style: none;
+    gap: 2rem; list-style: none;
     opacity: 0; visibility: hidden; pointer-events: none;
     transition: opacity 0.3s, visibility 0.3s;
     z-index: 99;
   }
   .nav-links--open { opacity: 1; visibility: visible; pointer-events: all; }
-  .nav-links a { font-size: 1.4rem; letter-spacing: 0.25em; color: #888; }
-  .nav-links a:hover { color: #fff; }
+  .nav-links a { font-size: 1.05rem; letter-spacing: 0.22em; color: #bbb; }
+  .nav-links a:hover, .nav-links a.nav-link--active { color: #fff; }
+  .nav-mobile-book { display: flex; justify-content: center; padding-top: 0.5rem; }
 
   /* Hero */
   .hero { padding: 0 1.5rem 3.5rem; min-height: 600px; }
@@ -482,6 +520,10 @@ footer.footer-pro { background: #0a0a0a; border-top: 0.5px solid #1a1a1a; paddin
   .booking-barbers-grid { grid-template-columns: repeat(3, 1fr); gap: 0.5rem; }
   .booking-step-body--dt { grid-template-columns: 1fr; }
   .bslots-grid { grid-template-columns: repeat(4, 1fr); }
+  /* Booking subpage — match specificity of the desktop overrides */
+  .booking-page-wrap .booking-section { padding-top: 5.5rem; }
+  .booking-page-wrap .booking-layout { grid-template-columns: 1fr; gap: 2rem; }
+  .booking-page-wrap .booking-wizard { min-height: unset; padding: 1.5rem; }
 
   /* Footer */
   .footer-logo-icon { height: 40px; }
@@ -500,8 +542,20 @@ footer.footer-pro { background: #0a0a0a; border-top: 0.5px solid #1a1a1a; paddin
   .barbers-grid { grid-template-columns: 1fr; }
   .blog-grid { grid-template-columns: 1fr; }
   .footer-pro-inner { grid-template-columns: 1fr; }
-  .footer-col { border-right: none; border-bottom: 0.5px solid #1a1a1a; }
+  .footer-col { border-right: none; border-bottom: 0.5px solid #1a1a1a; padding: 1.5rem 1.2rem; }
   .footer-col:last-child { border-bottom: none; }
+  .footer-col-label { font-size: 0.5rem; margin-bottom: 0.6rem; }
+  .footer-pro-nav a { font-size: 0.68rem; }
+  .footer-pro-hours li { font-size: 0.62rem; padding-bottom: 0.3rem; }
+  .footer-pro-address-line { font-size: 0.62rem; }
+  .footer-pro-logo { font-size: 1.8rem; }
+  .footer-logo-icon { height: 28px; }
+  .footer-pro-tagline { font-size: 0.6rem; }
+  .footer-pro-socials { margin-top: 0.8rem; gap: 0.7rem; }
+  .footer-pro-bottom { padding: 0.85rem 1.2rem; gap: 0.5rem; }
+  .footer-pro-copy { font-size: 0.55rem; }
+  .footer-pro-legal-link { font-size: 0.55rem; }
+  .footer-credit { font-size: 0.55rem; }
 }
 
 @media (min-width: 481px) and (max-width: 900px) {

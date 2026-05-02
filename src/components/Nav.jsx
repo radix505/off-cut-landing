@@ -102,6 +102,11 @@ export default function Nav() {
             Blog
           </a>
         </li>
+        <li className="nav-mobile-book">
+          <button className="nav-book-mobile" onClick={handleBookClick}>
+            {useT('Zarezerwuj', 'Book Now')}
+          </button>
+        </li>
       </ul>
       <div className="nav-right">
         <ScissorsIcon />
