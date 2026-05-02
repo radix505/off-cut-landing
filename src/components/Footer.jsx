@@ -93,9 +93,9 @@ export default function Footer() {
       <div className="footer-pro-bottom">
         <div className="footer-pro-copy">© {new Date().getFullYear()} Off Cut Barbershop. {useT('Wszelkie prawa zastrzeżone.', 'All rights reserved.')}</div>
         <div className="footer-pro-legal">
-          <a href="/privacy" className="footer-pro-legal-link">{useT('Polityka prywatności', 'Privacy Policy')}</a>
+          <button className="footer-pro-legal-link" onClick={() => navigate('/privacy')}>{useT('Polityka prywatności', 'Privacy Policy')}</button>
           <span className="footer-pro-legal-sep">·</span>
-          <a href="/cookies" className="footer-pro-legal-link">Cookies</a>
+          <button className="footer-pro-legal-link" onClick={() => navigate('/cookies')}>Cookies</button>
         </div>
         <div className="footer-credit">
           {useT('Stworzone przez', 'Created by')} <img src="/drawing.svg" alt="Corelaners" className="footer-credit-logo" /><a href="https://corelaners.eu" target="_blank" rel="noopener noreferrer">corelaners.eu</a>

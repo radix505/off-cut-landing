@@ -9,6 +9,8 @@ function parsePath(p) {
   if (p === '/prices') return { page: 'prices', crewSlug: null };
   if (p === '/booking') return { page: 'booking', crewSlug: null };
   if (p === '/gallery') return { page: 'gallery', crewSlug: null };
+  if (p === '/privacy') return { page: 'privacy', crewSlug: null };
+  if (p === '/cookies') return { page: 'cookies', crewSlug: null };
   return { page: 'home', crewSlug: null };
 }
 
@@ -17,6 +19,7 @@ export function RouterProvider({ children }) {
   const [cutting, setCutting] = useState(false);
   const [direction, setDirection] = useState('forward');
   const [pageVisible, setPageVisible] = useState(true);
+  const [navState, setNavState] = useState(null);
   const timers = useRef([]);
 
   const page = state.page;
@@ -30,7 +33,9 @@ export function RouterProvider({ children }) {
 
   useEffect(() => () => timers.current.forEach(clearTimeout), []);
 
-  function navigate(path) {
+  function clearNavState() { setNavState(null); }
+
+  function navigate(path, state = null) {
     const target = parsePath(path);
     if (target.page === page && target.crewSlug === crewSlug) return;
     timers.current.forEach(clearTimeout);
@@ -43,6 +48,7 @@ export function RouterProvider({ children }) {
     timers.current.push(setTimeout(() => {
       window.history.pushState(null, '', path);
       setState(target);
+      setNavState(state);
       window.scrollTo(0, 0);
     }, 450));
 
@@ -51,7 +57,7 @@ export function RouterProvider({ children }) {
   }
 
   return (
-    <RouterContext.Provider value={{ page, crewSlug, navigate, cutting, direction, pageVisible }}>
+    <RouterContext.Provider value={{ page, crewSlug, navigate, navState, clearNavState, cutting, direction, pageVisible }}>
       {children}
     </RouterContext.Provider>
   );

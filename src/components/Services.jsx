@@ -159,7 +159,7 @@ export default function Services() {
                 <span>{s.barbers?.[0]}</span>
               </div>
             )}
-            <div className={`service-card reveal reveal-delay-${s.delay}`} onClick={() => navigate('/booking')} style={{ cursor: 'pointer' }}>
+            <div className={`service-card reveal reveal-delay-${s.delay}`} onClick={() => navigate('/booking', { preselectedService: s })} style={{ cursor: 'pointer' }}>
               <div className="service-num">{s.num}</div>
               <div className="service-name">{useT(s.namePL, s.nameEN)}</div>
               <div className="service-desc">{useT(s.descPL, s.descEN)}</div>

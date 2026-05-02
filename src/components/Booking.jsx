@@ -1,6 +1,7 @@
 import { useState, useMemo, useEffect } from 'react';
 import { useT, useLang } from '../context/LangContext';
 import { useReveal } from '../hooks/useReveal';
+import { useRouter } from '../context/RouterContext';
 import { BARBERS, buildSlots } from '../data/booking-config';
 import { services as ALL_SERVICES } from './Services';
 
@@ -25,6 +26,7 @@ function buildCalDays(year, month) {
 export default function Booking() {
   const ref = useReveal();
   const { lang } = useLang();
+  const { navState, clearNavState } = useRouter();
 
   const [step,      setStep]      = useState(1);
   const [barber,    setBarber]    = useState(null);
@@ -39,6 +41,7 @@ export default function Booking() {
   const [loadingAvail, setLoadingAvail] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMsg,     setErrorMsg]     = useState('');
+  const [filteredBarberIds, setFilteredBarberIds] = useState(null);
 
   const calYear  = calBase.getFullYear();
   const calMonth = calBase.getMonth();
@@ -59,6 +62,42 @@ export default function Booking() {
   }, [barber?.id, date]);
 
   const today = new Date(); today.setHours(0, 0, 0, 0);
+
+  useEffect(() => {
+    if (!navState?.preselectedService) return;
+    const pre = navState.preselectedService;
+    clearNavState();
+    setService(pre);
+    const eligible = BARBERS.filter(b => pre.barbers.some(k => b.keys.includes(k)));
+    if (eligible.length === 1) {
+      setBarber(eligible[0]);
+      setFilteredBarberIds(new Set(eligible.map(b => b.id)));
+      setStep(3);
+    } else {
+      setFilteredBarberIds(new Set(eligible.map(b => b.id)));
+      setStep(1);
+    }
+  }, [navState]);
+
+  const visibleSteps = useMemo(() => {
+    if (!filteredBarberIds) return [1, 2, 3, 4];
+    const steps = [1, 3, 4]; // service (2) always skipped when preselected
+    if (filteredBarberIds.size <= 1) return [3, 4]; // single barber, skip 1 too
+    return steps;
+  }, [filteredBarberIds]);
+
+  const stepIdx = visibleSteps.indexOf(step);
+
+  function goBack() {
+    if (stepIdx <= 0) return;
+    setStep(visibleSteps[stepIdx - 1]);
+  }
+
+  function goForward() {
+    if (!canAdvance[step - 1]() || isSubmitting) return;
+    if (stepIdx < visibleSteps.length - 1) setStep(visibleSteps[stepIdx + 1]);
+    else submitBooking();
+  }
 
   function prevMonth() { setCalBase(b => { const d = new Date(b); d.setMonth(d.getMonth()-1); return d; }); setDate(null); setSlot(null); }
   function nextMonth() { setCalBase(b => { const d = new Date(b); d.setMonth(d.getMonth()+1); return d; }); setDate(null); setSlot(null); }
@@ -85,6 +124,7 @@ export default function Booking() {
     setStep(1); setBarber(null); setService(null); setDate(null); setSlot(null);
     setName(''); setPhone(''); setSubmitted(false);
     setUnavailable(new Set()); setIsSubmitting(false); setErrorMsg('');
+    setFilteredBarberIds(null);
   }
 
   async function submitBooking() {
@@ -205,12 +245,12 @@ export default function Booking() {
           {/* Progress */}
           <div className="booking-progress">
             <div className="booking-progress-track">
-              <div className="booking-progress-fill" style={{ width: `${((step-1)/3)*100}%` }} />
+              <div className="booking-progress-fill" style={{ width: `${(stepIdx / (visibleSteps.length - 1)) * 100}%` }} />
             </div>
-            {stepLabels.map((label, i) => (
-              <div key={i} className={`bpstep${step > i+1 ? ' done' : step === i+1 ? ' active' : ''}`}>
-                <div className="bpstep-dot">{step > i+1 ? '✓' : i+1}</div>
-                <span className="bpstep-label">{label}</span>
+            {visibleSteps.map((vs, i) => (
+              <div key={vs} className={`bpstep${stepIdx > i ? ' done' : step === vs ? ' active' : ''}`}>
+                <div className="bpstep-dot">{stepIdx > i ? '✓' : i + 1}</div>
+                <span className="bpstep-label">{stepLabels[vs - 1]}</span>
               </div>
             ))}
           </div>
@@ -220,7 +260,7 @@ export default function Booking() {
             <div className="booking-step-body">
               <div className="bwiz-heading">{useT('Wybierz barbera','Choose your barber')}</div>
               <div className="booking-barbers-grid">
-                {BARBERS.map(b => (
+                {BARBERS.filter(b => !filteredBarberIds || filteredBarberIds.has(b.id)).map(b => (
                   <button key={b.id} className={`booking-barber-card${barber?.id===b.id?' selected':''}`} onClick={() => setBarber(b)}>
                     <img className="booking-barber-av" src={b.photo} alt={b.name} />
                     <div className="booking-barber-name">{b.name}</div>
@@ -337,19 +377,15 @@ export default function Booking() {
 
           {/* Navigation */}
           <div className="booking-wizard-nav">
-            {step > 1
-              ? <button className="bwiz-back" onClick={() => setStep(s => s-1)} disabled={isSubmitting}>← {useT('Wróć','Back')}</button>
+            {stepIdx > 0
+              ? <button className="bwiz-back" onClick={goBack} disabled={isSubmitting}>← {useT('Wróć','Back')}</button>
               : <span />}
             <button
               className={`bwiz-next${canAdvance[step-1]() && !isSubmitting ? '' : ' off'}`}
               disabled={isSubmitting}
-              onClick={() => {
-                if (!canAdvance[step-1]() || isSubmitting) return;
-                if (step < 4) setStep(s => s + 1);
-                else submitBooking();
-              }}
+              onClick={goForward}
             >
-              {step < 4
+              {stepIdx < visibleSteps.length - 1
                 ? useT('Dalej','Next')
                 : isSubmitting ? useT('Wysyłanie…','Sending…') : useT('Wyślij →','Send →')}
             </button>

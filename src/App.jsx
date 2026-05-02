@@ -11,6 +11,8 @@ const BookingPage = lazy(() => import('./pages/BookingPage'));
 const GalleryPage = lazy(() => import('./pages/GalleryPage'));
 const CrewPage    = lazy(() => import('./pages/CrewPage'));
 const BarberPage  = lazy(() => import('./pages/BarberPage'));
+const PrivacyPage = lazy(() => import('./pages/PrivacyPage'));
+const CookiesPage = lazy(() => import('./pages/CookiesPage'));
 
 function AppRoutes() {
   const { page, pageVisible } = useRouter();
@@ -23,6 +25,8 @@ function AppRoutes() {
          page === 'gallery' ? <GalleryPage /> :
          page === 'crew'    ? <CrewPage /> :
          page === 'barber'  ? <BarberPage /> :
+         page === 'privacy' ? <PrivacyPage /> :
+         page === 'cookies' ? <CookiesPage /> :
          <HomePage />}
       </Suspense>
     </div>

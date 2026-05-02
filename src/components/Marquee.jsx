@@ -9,7 +9,7 @@ const itemsPL = [
   { text: 'KLASYCZNY GROOMING', accent: false },
   { text: 'ZAŁ. 2019', accent: false },
   { text: 'PREMIUM RZEMIOSŁO', accent: true },
-  { text: 'WARSZAWA · POZNAŃ · KRAKÓW', accent: false },
+  { text: 'SZCZECIN', accent: false },
 ];
 
 const itemsEN = [
@@ -20,7 +20,7 @@ const itemsEN = [
   { text: 'CLASSIC GROOMING', accent: false },
   { text: 'EST. 2019', accent: false },
   { text: 'PREMIUM CRAFT', accent: true },
-  { text: 'WARSAW · POZNAŃ · KRAKÓW', accent: false },
+  { text: 'SZCZECIN', accent: false },
 ];
 
 export default function Marquee() {

@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import Nav from '../components/Nav';
 import Footer from '../components/Footer';
 import { useT } from '../context/LangContext';
@@ -45,6 +46,28 @@ export default function GalleryPage() {
     ? { background: 'rgba(255,255,255,0.13)', borderColor: 'rgba(255,255,255,0.35)', color: '#fff' }
     : {};
 
+  const [lightboxIdx, setLightboxIdx] = useState(null);
+  const open  = i => setLightboxIdx(i);
+  const close = () => setLightboxIdx(null);
+  const prev  = e => { e.stopPropagation(); setLightboxIdx(i => (i - 1 + photos.length) % photos.length); };
+  const next  = e => { e.stopPropagation(); setLightboxIdx(i => (i + 1) % photos.length); };
+
+  useEffect(() => {
+    if (lightboxIdx === null) return;
+    const onKey = e => {
+      if (e.key === 'Escape')     close();
+      if (e.key === 'ArrowLeft')  setLightboxIdx(i => (i - 1 + photos.length) % photos.length);
+      if (e.key === 'ArrowRight') setLightboxIdx(i => (i + 1) % photos.length);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [lightboxIdx]);
+
+  useEffect(() => {
+    document.body.style.overflow = lightboxIdx !== null ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
+  }, [lightboxIdx]);
+
   return (
     <>
       <Nav />
@@ -71,10 +94,28 @@ export default function GalleryPage() {
               key={i}
               className="gallery-page-cell"
               style={{ backgroundImage: `url(${src})` }}
+              onClick={() => open(i)}
             />
           ))}
         </div>
       </section>
+
+      {lightboxIdx !== null && (
+        <div className="lightbox" onClick={close}>
+          <button className="lightbox-close" onClick={close}>×</button>
+          <button className="lightbox-prev" onClick={prev}>‹</button>
+          <img
+            key={lightboxIdx}
+            src={photos[lightboxIdx]}
+            className="lightbox-img"
+            onClick={e => e.stopPropagation()}
+            alt=""
+          />
+          <button className="lightbox-next" onClick={next}>›</button>
+          <div className="lightbox-counter">{lightboxIdx + 1} / {photos.length}</div>
+        </div>
+      )}
+
       <Footer />
       <button
         className="scroll-top-btn"

@@ -15,17 +15,7 @@ export default function BookingPage() {
   return (
     <>
       <Nav />
-      <div className="prices-page-hero">
-        <div className="blog-page-eyebrow">Off Cut — Barbershop</div>
-        <h1 className="blog-page-title">{useT('Rezerwacja', 'Booking')}</h1>
-        <p className="blog-page-sub">
-          {useT(
-            'Zarezerwuj fotel online. Wybierz barbera, usługę i termin.',
-            'Book your chair online. Pick your barber, service, and time.'
-          )}
-        </p>
-      </div>
-      <Booking />
+      <div className="booking-page-wrap"><Booking /></div>
       <Footer />
       <button
         className="prices-back-circle-btn"

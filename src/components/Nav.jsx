@@ -40,7 +40,7 @@ export default function Nav() {
   const onBlog = page === 'blog';
   const onGallery = page === 'gallery';
   const onCrew = page === 'crew' || page === 'barber';
-  const onAway = page === 'blog' || page === 'prices' || page === 'gallery' || page === 'booking' || page === 'crew' || page === 'barber';
+  const onAway = page === 'blog' || page === 'prices' || page === 'gallery' || page === 'booking' || page === 'crew' || page === 'barber' || page === 'privacy' || page === 'cookies';
 
   function handleLogoClick() {
     if (onAway) navigate('/');
@@ -72,7 +72,7 @@ export default function Nav() {
         </div>
       </div>
       <ul className={`nav-links${open ? ' nav-links--open' : ''}`}>
-        <li><a href="#services" onClick={(e) => handleSectionClick(e, 'services')}>{useT('Usługi', 'Services')}</a></li>
+        <li><a href="/prices" onClick={(e) => { e.preventDefault(); navigate('/prices'); close(); }}>{useT('Usługi', 'Services')}</a></li>
         <li>
           <a
             href="/crew"
@@ -91,7 +91,7 @@ export default function Nav() {
             {useT('Galeria', 'Gallery')}
           </a>
         </li>
-        <li><a href="#booking" onClick={(e) => handleSectionClick(e, 'booking')}>{useT('Kontakt', 'Contact')}</a></li>
+        <li><a href="#footer" onClick={(e) => { e.preventDefault(); if (onAway) { navigate('/'); setTimeout(() => document.querySelector('footer')?.scrollIntoView({ behavior: 'smooth' }), 700); } else { document.querySelector('footer')?.scrollIntoView({ behavior: 'smooth' }); } close(); }}>{useT('Kontakt', 'Contact')}</a></li>
         <li><a href="#location" onClick={(e) => handleSectionClick(e, 'location')}>{useT('Lokalizacja', 'Location')}</a></li>
         <li>
           <a
