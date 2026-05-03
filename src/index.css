@@ -106,8 +106,8 @@ html::-webkit-scrollbar-thumb:hover { background: #555; }
 @media (max-width: 600px) {
   .splash-half--dark.splash-splitting  { transform: translateY(-110vh); }
   .splash-half--light.splash-splitting { transform: translateY(110vh); }
-  .splash-logo-wrap.splash-logo-splitting .splash-logo-img--dark  { animation-name: logo-crash-mobile-up; }
-  .splash-logo-wrap.splash-logo-splitting .splash-logo-img--light { animation-name: logo-crash-mobile-down; }
+  .splash-logo-wrap.splash-logo-splitting .splash-logo-img--dark  { animation-name: logo-crash-mobile-up;   animation-duration: 0.65s; }
+  .splash-logo-wrap.splash-logo-splitting .splash-logo-img--light { animation-name: logo-crash-mobile-down; animation-duration: 0.65s; }
   @keyframes logo-crash-mobile-up {
     from { transform: translate(-50%, -50%) rotate(0deg); opacity: 1; }
     to   { transform: translate(-50%, calc(-50% - 200px)) rotate(-8deg); opacity: 0; }
