@@ -98,33 +98,8 @@ html::-webkit-scrollbar-thumb:hover { background: #555; }
   from { transform: translate(calc(38vw - 44px), calc(110vh - 21px)) rotate(-72deg); }
   to   { transform: translate(calc(62vw - 44px), calc(-10vh - 21px)) rotate(-72deg); }
 }
-/* scissors follow whichever lane is active when clicked — class is on the element itself */
-.splash-scissors-mover-up--pl { animation-name: splashScissorsDiagPL; }
-@keyframes splashScissorsDiagPL {
-  from { transform: translate(calc(46vw - 44px), calc(110vh - 21px)) rotate(-72deg); }
-  to   { transform: translate(calc(70vw - 44px), calc(-10vh - 21px)) rotate(-72deg); }
-}
-.splash-scissors-mover-up--en { animation-name: splashScissorsDiagEN; }
-@keyframes splashScissorsDiagEN {
-  from { transform: translate(calc(30vw - 44px), calc(110vh - 21px)) rotate(-72deg); }
-  to   { transform: translate(calc(54vw - 44px), calc(-10vh - 21px)) rotate(-72deg); }
-}
 @media (max-width: 600px) {
-  .splash-scissors-mover-up { animation-name: splashScissorsDiagMobile; }
-  @keyframes splashScissorsDiagMobile {
-    from { transform: translate(-110px, calc(42vh - 18px)) rotate(12deg); }
-    to   { transform: translate(calc(100vw + 20px), calc(55.5vh - 18px)) rotate(12deg); }
-  }
-  .splash-scissors-mover-up--pl { animation-name: splashScissorsDiagMobilePL; }
-  @keyframes splashScissorsDiagMobilePL {
-    from { transform: translate(-110px, calc(47vh - 18px)) rotate(12deg); }
-    to   { transform: translate(calc(100vw + 20px), calc(60.5vh - 18px)) rotate(12deg); }
-  }
-  .splash-scissors-mover-up--en { animation-name: splashScissorsDiagMobileEN; }
-  @keyframes splashScissorsDiagMobileEN {
-    from { transform: translate(-110px, calc(37vh - 18px)) rotate(12deg); }
-    to   { transform: translate(calc(100vw + 20px), calc(50.5vh - 18px)) rotate(12deg); }
-  }
+  .splash-scissors-overlay { display: none; }
 }
 .splash-half--dark.splash-splitting { transform: translateX(-110vw); }
 .splash-half--light.splash-splitting { transform: translateX(110vw); }

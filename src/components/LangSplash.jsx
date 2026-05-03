@@ -60,7 +60,7 @@ export default function LangSplash() {
 
       {phase === 'cutting' && (
         <div className="splash-scissors-overlay">
-          <div className={`splash-scissors-mover-up splash-scissors-mover-up--${pending.current}`}>
+          <div className="splash-scissors-mover-up">
             <svg viewBox="0 0 100 40" fill="none" xmlns="http://www.w3.org/2000/svg">
               <g className="scissors-blade-top">
                 <circle cx="12" cy="10" r="8" stroke="currentColor" strokeWidth="2.5" />
