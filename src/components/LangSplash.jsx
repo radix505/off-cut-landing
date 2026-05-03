@@ -1,10 +1,34 @@
-import { useState, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useLang } from '../context/LangContext';
 
 export default function LangSplash() {
   const { splashVisible, selectLang } = useLang();
   const [phase, setPhase] = useState('idle'); // 'idle' | 'cutting' | 'splitting'
   const pending = useRef(null);
+  const scissorsRef = useRef(null);
+
+  // Mobile scissors: compute exact Y from real viewport dimensions and drive with Web Animations API
+  useEffect(() => {
+    if (phase !== 'cutting') return;
+    const isMobile = window.matchMedia('(max-width: 600px)').matches;
+    if (!isMobile || !scissorsRef.current) return;
+
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    // Cut line: polygon(0 0, 100% 0, 100% 55%, 0 45%) → from (0, 45vh) to (100vw, 55vh)
+    const startX = -110;
+    const endX = vw + 20;
+    const startY = vh * 0.45 + (startX / vw) * vh * 0.1 - 18;
+    const endY   = vh * 0.45 + (endX   / vw) * vh * 0.1 - 18;
+
+    scissorsRef.current.animate(
+      [
+        { transform: `translate(${startX}px, ${startY.toFixed(1)}px) rotate(12deg)` },
+        { transform: `translate(${endX}px,   ${endY.toFixed(1)}px) rotate(12deg)` },
+      ],
+      { duration: 700, easing: 'cubic-bezier(0.4,0,0.2,1)', fill: 'forwards' }
+    );
+  }, [phase]);
 
   if (!splashVisible) return null;
 
@@ -12,11 +36,11 @@ export default function LangSplash() {
     if (phase !== 'idle') return;
     pending.current = l;
     const mobile = window.matchMedia('(max-width: 600px)').matches;
+    setPhase('cutting');
     if (mobile) {
-      setPhase('splitting');
-      setTimeout(() => selectLang(l), 750);
+      setTimeout(() => setPhase('splitting'), 700);
+      setTimeout(() => selectLang(l), 1250);
     } else {
-      setPhase('cutting');
       setTimeout(() => setPhase('splitting'), 1050);
       setTimeout(() => selectLang(l), 1500);
     }
@@ -66,7 +90,7 @@ export default function LangSplash() {
 
       {phase === 'cutting' && (
         <div className="splash-scissors-overlay">
-          <div className="splash-scissors-mover-up">
+          <div className="splash-scissors-mover-up" ref={scissorsRef}>
             <svg viewBox="0 0 100 40" fill="none" xmlns="http://www.w3.org/2000/svg">
               <g className="scissors-blade-top">
                 <circle cx="12" cy="10" r="8" stroke="currentColor" strokeWidth="2.5" />

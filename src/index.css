@@ -94,7 +94,8 @@ html::-webkit-scrollbar-thumb:hover { background: #555; }
   to   { transform: translate(calc(62vw - 44px), calc(-10vh - 21px)) rotate(-72deg); }
 }
 @media (max-width: 600px) {
-  .splash-scissors-overlay { display: none; }
+  /* JS drives mobile scissors precisely — cancel CSS animation */
+  .splash-scissors-mover-up { animation: none; }
 }
 .splash-half--dark.splash-splitting { transform: translateX(-110vw); }
 .splash-half--light.splash-splitting { transform: translateX(110vw); }
