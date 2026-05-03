@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { useLang } from '../context/LangContext';
 
 export default function LangSplash() {
@@ -7,8 +7,9 @@ export default function LangSplash() {
   const scissorsRef = useRef(null);
 
   // Mobile: drive scissors along the diagonal cut line with Web Animations API
+  // useLayoutEffect fires before paint so scissors never flash at position 0,0
   // Cut line: polygon(0 0,100% 0,100% 55%,0 45%) → y goes from 45vh at x=0 to 55vh at x=100vw
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (phase !== 'cutting') return;
     if (!window.matchMedia('(max-width: 600px)').matches) return;
     if (!scissorsRef.current) return;
