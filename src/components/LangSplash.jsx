@@ -11,9 +11,15 @@ export default function LangSplash() {
   function handleSelect(l) {
     if (phase !== 'idle') return;
     pending.current = l;
-    setPhase('cutting');
-    setTimeout(() => setPhase('splitting'), 1050);
-    setTimeout(() => selectLang(l), 1500);
+    const mobile = window.matchMedia('(max-width: 600px)').matches;
+    if (mobile) {
+      setPhase('splitting');
+      setTimeout(() => selectLang(l), 750);
+    } else {
+      setPhase('cutting');
+      setTimeout(() => setPhase('splitting'), 1050);
+      setTimeout(() => selectLang(l), 1500);
+    }
   }
 
   const busy = phase !== 'idle';
