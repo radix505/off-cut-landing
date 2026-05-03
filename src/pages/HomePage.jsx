@@ -9,6 +9,7 @@ import Booking from '../components/Booking';
 import Blog from '../components/Blog';
 import Map from '../components/Map';
 import Footer from '../components/Footer';
+import ScrollScissors from '../components/ScrollScissors';
 import { useIsDark } from '../hooks/useIsDark';
 import { useState, useEffect } from 'react';
 
@@ -37,6 +38,7 @@ export default function HomePage() {
   return (
     <>
       <Nav />
+      <ScrollScissors />
       <Hero />
       <Marquee />
       <Services />
