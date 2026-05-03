@@ -42,12 +42,6 @@ html::-webkit-scrollbar-thumb:hover { background: #555; }
   /* mobile splash logo — horizontal split */
   .splash-logo-half--dark { clip-path: polygon(0 0, 100% 0, 100% 55%, 0 45%); }
   .splash-logo-half--light { clip-path: polygon(0 45%, 100% 55%, 100% 100%, 0 100%); }
-  /* no hover shift on touch — all hover states = resting state */
-  .splash-half--dark:hover ~ .splash-half--light { clip-path: polygon(0 45%, 100% 55%, 100% 100%, 0 100%); }
-  .splash-half--dark:hover ~ .splash-logo-wrap .splash-logo-half--dark { clip-path: polygon(0 0, 100% 0, 100% 55%, 0 45%); }
-  .splash-half--dark:hover ~ .splash-logo-wrap .splash-logo-half--light { clip-path: polygon(0 45%, 100% 55%, 100% 100%, 0 100%); }
-  .splash-half--light:hover ~ .splash-logo-wrap .splash-logo-half--dark { clip-path: polygon(0 0, 100% 0, 100% 55%, 0 45%); }
-  .splash-half--light:hover ~ .splash-logo-wrap .splash-logo-half--light { clip-path: polygon(0 45%, 100% 55%, 100% 100%, 0 100%); }
   .splash-logo-img { width: 110px; }
   /* logo enters from top (dark) / bottom (light) on mobile */
   .splash-logo-img--dark  { animation-name: splash-logo-enter-dark-mobile,  splash-logo-float; }
@@ -83,9 +77,14 @@ html::-webkit-scrollbar-thumb:hover { background: #555; }
 .splash-half--dark:hover ~ .splash-logo-wrap .splash-logo-half--light { clip-path: polygon(68% 0, 100% 0, 100% 100%, 48% 100%); }
 .splash-half--light:hover ~ .splash-logo-wrap .splash-logo-half--dark { clip-path: polygon(0 0, 52% 0, 32% 100%, 0 100%); }
 .splash-half--light:hover ~ .splash-logo-wrap .splash-logo-half--light { clip-path: polygon(52% 0, 100% 0, 100% 100%, 32% 100%); }
-/* mobile size override — hover clip-paths already neutralised in the block above */
+/* mobile size + hover overrides — MUST be after desktop sibling hover rules (lines above) to win cascade */
 @media (max-width: 600px) {
   .splash-logo-img { width: 110px; }
+  .splash-half--dark:hover ~ .splash-half--light { clip-path: polygon(0 45%, 100% 55%, 100% 100%, 0 100%); }
+  .splash-half--dark:hover ~ .splash-logo-wrap .splash-logo-half--dark { clip-path: polygon(0 0, 100% 0, 100% 55%, 0 45%); }
+  .splash-half--dark:hover ~ .splash-logo-wrap .splash-logo-half--light { clip-path: polygon(0 45%, 100% 55%, 100% 100%, 0 100%); }
+  .splash-half--light:hover ~ .splash-logo-wrap .splash-logo-half--dark { clip-path: polygon(0 0, 100% 0, 100% 55%, 0 45%); }
+  .splash-half--light:hover ~ .splash-logo-wrap .splash-logo-half--light { clip-path: polygon(0 45%, 100% 55%, 100% 100%, 0 100%); }
 }
 .splash-scissors-overlay { position: absolute; inset: 0; pointer-events: none; z-index: 10; overflow: hidden; }
 .splash-scissors-mover-up { position: absolute; top: 0; left: 0; color: #888; animation: splashScissorsDiag 1.1s cubic-bezier(0.4,0,0.2,1) forwards; }
