@@ -98,11 +98,32 @@ html::-webkit-scrollbar-thumb:hover { background: #555; }
   from { transform: translate(calc(38vw - 44px), calc(110vh - 21px)) rotate(-72deg); }
   to   { transform: translate(calc(62vw - 44px), calc(-10vh - 21px)) rotate(-72deg); }
 }
+/* scissors follow whichever lane is active when clicked */
+#lang-splash[data-choice="pl"] .splash-scissors-mover-up { animation-name: splashScissorsDiagPL; }
+@keyframes splashScissorsDiagPL {
+  from { transform: translate(calc(46vw - 44px), calc(110vh - 21px)) rotate(-72deg); }
+  to   { transform: translate(calc(70vw - 44px), calc(-10vh - 21px)) rotate(-72deg); }
+}
+#lang-splash[data-choice="en"] .splash-scissors-mover-up { animation-name: splashScissorsDiagEN; }
+@keyframes splashScissorsDiagEN {
+  from { transform: translate(calc(30vw - 44px), calc(110vh - 21px)) rotate(-72deg); }
+  to   { transform: translate(calc(54vw - 44px), calc(-10vh - 21px)) rotate(-72deg); }
+}
 @media (max-width: 600px) {
   .splash-scissors-mover-up { animation-name: splashScissorsDiagMobile; }
   @keyframes splashScissorsDiagMobile {
     from { transform: translate(-110px, calc(42vh - 18px)) rotate(12deg); }
     to   { transform: translate(calc(100vw + 20px), calc(55.5vh - 18px)) rotate(12deg); }
+  }
+  #lang-splash[data-choice="pl"] .splash-scissors-mover-up { animation-name: splashScissorsDiagMobilePL; }
+  @keyframes splashScissorsDiagMobilePL {
+    from { transform: translate(-110px, calc(47vh - 18px)) rotate(12deg); }
+    to   { transform: translate(calc(100vw + 20px), calc(60.5vh - 18px)) rotate(12deg); }
+  }
+  #lang-splash[data-choice="en"] .splash-scissors-mover-up { animation-name: splashScissorsDiagMobileEN; }
+  @keyframes splashScissorsDiagMobileEN {
+    from { transform: translate(-110px, calc(37vh - 18px)) rotate(12deg); }
+    to   { transform: translate(calc(100vw + 20px), calc(50.5vh - 18px)) rotate(12deg); }
   }
 }
 .splash-half--dark.splash-splitting { transform: translateX(-110vw); }
@@ -548,7 +569,7 @@ footer.footer-pro { background: #0a0a0a; border-top: 0.5px solid #1a1a1a; paddin
   .footer-pro-nav a { font-size: 0.68rem; }
   .footer-pro-hours li { font-size: 0.62rem; padding-bottom: 0.3rem; }
   .footer-pro-address-line { font-size: 0.62rem; }
-  .footer-pro-logo { font-size: 1.8rem; }
+  .footer-pro-logo { font-size: 1.1rem; }
   .footer-logo-icon { height: 28px; }
   .footer-pro-tagline { font-size: 0.6rem; }
   .footer-pro-socials { margin-top: 0.8rem; gap: 0.7rem; }

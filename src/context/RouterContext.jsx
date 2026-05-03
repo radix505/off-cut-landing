@@ -41,7 +41,8 @@ export function RouterProvider({ children }) {
     timers.current.forEach(clearTimeout);
     timers.current = [];
 
-    setDirection(target.page === 'home' ? 'backward' : 'forward');
+    const depth = { home: 0, blog: 1, prices: 1, gallery: 1, booking: 1, privacy: 1, cookies: 1, crew: 1, barber: 2 };
+    setDirection(depth[target.page] < depth[page] ? 'backward' : 'forward');
     setPageVisible(false);
     setCutting(true);
 

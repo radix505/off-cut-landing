@@ -20,7 +20,7 @@ export default function LangSplash() {
   const splitting = phase === 'splitting';
 
   return (
-    <div id="lang-splash">
+    <div id="lang-splash" data-choice={phase !== 'idle' ? pending.current : undefined}>
       <div
         className={`splash-half splash-half--dark${splitting ? ' splash-splitting' : ''}`}
         onClick={() => handleSelect('pl')}
