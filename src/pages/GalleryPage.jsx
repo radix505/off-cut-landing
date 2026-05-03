@@ -3,6 +3,7 @@ import Nav from '../components/Nav';
 import Footer from '../components/Footer';
 import { useT } from '../context/LangContext';
 import { useIsDark } from '../hooks/useIsDark';
+import { useRouter } from '../context/RouterContext';
 
 const photos = [
   '/gallery/DSC_3460.jpeg',
@@ -42,6 +43,7 @@ const photos = [
 
 export default function GalleryPage() {
   const isDark = useIsDark();
+  const { navigate } = useRouter();
   const btnStyle = isDark
     ? { background: 'rgba(255,255,255,0.13)', borderColor: 'rgba(255,255,255,0.35)', color: '#fff' }
     : {};
@@ -118,13 +120,13 @@ export default function GalleryPage() {
 
       <Footer />
       <button
-        className="scroll-top-btn"
+        className="prices-back-circle-btn"
         style={btnStyle}
-        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-        aria-label="Back to top"
+        onClick={() => navigate('/')}
+        aria-label={useT('Powrót', 'Back')}
       >
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <polyline points="18 15 12 9 6 15" />
+          <polyline points="15 18 9 12 15 6" />
         </svg>
       </button>
     </>

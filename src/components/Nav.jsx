@@ -40,7 +40,8 @@ export default function Nav() {
   const onBlog = page === 'blog';
   const onGallery = page === 'gallery';
   const onCrew = page === 'crew' || page === 'barber';
-  const onAway = page === 'blog' || page === 'prices' || page === 'gallery' || page === 'booking' || page === 'crew' || page === 'barber' || page === 'privacy' || page === 'cookies';
+  const onContact = page === 'contact';
+  const onAway = page === 'blog' || page === 'prices' || page === 'gallery' || page === 'booking' || page === 'crew' || page === 'barber' || page === 'privacy' || page === 'cookies' || page === 'contact';
 
   function handleLogoClick() {
     if (onAway) navigate('/');
@@ -91,7 +92,7 @@ export default function Nav() {
             {useT('Galeria', 'Gallery')}
           </a>
         </li>
-        <li><a href="#footer" onClick={(e) => { e.preventDefault(); if (onAway) { navigate('/'); setTimeout(() => document.querySelector('footer')?.scrollIntoView({ behavior: 'smooth' }), 700); } else { document.querySelector('footer')?.scrollIntoView({ behavior: 'smooth' }); } close(); }}>{useT('Kontakt', 'Contact')}</a></li>
+        <li><a href="/contact" className={onContact ? 'nav-link--active' : ''} onClick={(e) => { e.preventDefault(); navigate('/contact'); close(); }}>{useT('Kontakt', 'Contact')}</a></li>
         <li><a href="#location" onClick={(e) => handleSectionClick(e, 'location')}>{useT('Lokalizacja', 'Location')}</a></li>
         <li>
           <a

@@ -13,6 +13,7 @@ const CrewPage    = lazy(() => import('./pages/CrewPage'));
 const BarberPage  = lazy(() => import('./pages/BarberPage'));
 const PrivacyPage = lazy(() => import('./pages/PrivacyPage'));
 const CookiesPage = lazy(() => import('./pages/CookiesPage'));
+const ContactPage = lazy(() => import('./pages/ContactPage'));
 
 function AppRoutes() {
   const { page, pageVisible } = useRouter();
@@ -27,6 +28,7 @@ function AppRoutes() {
          page === 'barber'  ? <BarberPage /> :
          page === 'privacy' ? <PrivacyPage /> :
          page === 'cookies' ? <CookiesPage /> :
+         page === 'contact' ? <ContactPage /> :
          <HomePage />}
       </Suspense>
     </div>

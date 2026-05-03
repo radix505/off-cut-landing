@@ -11,6 +11,7 @@ function parsePath(p) {
   if (p === '/gallery') return { page: 'gallery', crewSlug: null };
   if (p === '/privacy') return { page: 'privacy', crewSlug: null };
   if (p === '/cookies') return { page: 'cookies', crewSlug: null };
+  if (p === '/contact') return { page: 'contact', crewSlug: null };
   return { page: 'home', crewSlug: null };
 }
 
@@ -41,7 +42,7 @@ export function RouterProvider({ children }) {
     timers.current.forEach(clearTimeout);
     timers.current = [];
 
-    const depth = { home: 0, blog: 1, prices: 1, gallery: 1, booking: 1, privacy: 1, cookies: 1, crew: 1, barber: 2 };
+    const depth = { home: 0, blog: 1, prices: 1, gallery: 1, booking: 1, privacy: 1, cookies: 1, contact: 1, crew: 1, barber: 2 };
     setDirection(depth[target.page] < depth[page] ? 'backward' : 'forward');
     setPageVisible(false);
     setCutting(true);
