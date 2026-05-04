@@ -1,19 +1,3 @@
-export const BARBERS = [
-  { id: 'aleksander', name: 'Aleksander', photo: '/team/Aleksander.jpeg', titlePL: 'Senior Barber', titleEN: 'Senior Barber', keys: ['OLEK', 'ALEKSANDER'] },
-  { id: 'julia',      name: 'Julia',      photo: '/team/Julia.jpeg',      titlePL: 'Senior Barber',  titleEN: 'Senior Barber',  keys: ['JULIA'] },
-  { id: 'nico',       name: 'Nico',       photo: '/team/Nico.jpeg',       titlePL: 'Barber',         titleEN: 'Barber',         keys: ['NICO'] },
-];
-
-export const SERVICES = [
-  { id: 's1', namePL: 'Strzyżenie Krótkie',       nameEN: 'Short Cut',           durationMin: 45, duration: '45 min',   price: '100 PLN' },
-  { id: 's2', namePL: 'Strzyżenie Długie',         nameEN: 'Long Cut',            durationMin: 55, duration: '55 min',   price: '110 PLN' },
-  { id: 's3', namePL: 'Trymowanie Brody',          nameEN: 'Beard Trim',          durationMin: 30, duration: '30 min',   price: '80 PLN'  },
-  { id: 's4', namePL: 'Strzyżenie + Broda',        nameEN: 'Cut & Beard',         durationMin: 75, duration: '1h 15min', price: '140 PLN' },
-  { id: 's5', namePL: 'Golenie Głowy',             nameEN: 'Head Shave',          durationMin: 30, duration: '30 min',   price: '50 PLN'  },
-  { id: 's6', namePL: 'Golenie Głowy + Broda',     nameEN: 'Head Shave + Beard',  durationMin: 50, duration: '50 min',   price: '100 PLN' },
-  { id: 's7', namePL: 'Cięcie + Broda + Brzytwa',  nameEN: 'Cut + Beard + Razor', durationMin: 80, duration: '1h 20min', price: '170 PLN' },
-];
-
 export function buildSlots(date) {
   if (!date) return [];
   const day = date.getDay(); // 0=Sun,1=Mon,2=Tue,...,6=Sat

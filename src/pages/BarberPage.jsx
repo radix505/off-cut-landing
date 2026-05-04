@@ -1,12 +1,20 @@
 import Nav from '../components/Nav';
 import Footer from '../components/Footer';
-import { useT } from '../context/LangContext';
+import { useT, useLang } from '../context/LangContext';
 import { useRouter } from '../context/RouterContext';
-import { barbers } from '../data/barbers';
+import { useCatalog } from '../context/CatalogContext';
 
 export default function BarberPage() {
   const { crewSlug, navigate } = useRouter();
-  const barber = barbers.find((b) => b.slug === crewSlug) || barbers[0];
+  const { lang } = useLang();
+  const { barbers, loading } = useCatalog();
+
+  if (loading && barbers.length === 0) return <><Nav /></>;
+
+  const barber = barbers.find((b) => b.slug === crewSlug) ?? barbers[0];
+  if (!barber) return <><Nav /></>;
+
+  const firstNameProper = barber.name.charAt(0) + barber.name.slice(1).toLowerCase();
 
   return (
     <>
@@ -18,7 +26,7 @@ export default function BarberPage() {
             {useT('← Ekipa', '← Crew')}
           </button>
           <div className="barber-page-hero-name">{barber.name}</div>
-          <div className="barber-page-hero-title">{useT(barber.titlePL, barber.titleEN)}</div>
+          <div className="barber-page-hero-title">{lang === 'pl' ? barber.titlePL : barber.titleEN}</div>
         </div>
       </div>
 
@@ -27,14 +35,14 @@ export default function BarberPage() {
 
           <div className="barber-page-info">
             <div className="barber-page-section-label">{useT('O mnie', 'About')}</div>
-            <p className="barber-page-bio">{useT(barber.longBio.pl, barber.longBio.en)}</p>
+            <p className="barber-page-bio">{lang === 'pl' ? barber.longBio.pl : barber.longBio.en}</p>
 
             <div className="barber-page-section-label" style={{ marginTop: '2.5rem' }}>
               {useT('Specjalizacje', 'Specialities')}
             </div>
             <div className="barber-page-tags">
               {barber.tags.map((t) => (
-                <span key={t.en} className="spec-tag spec-tag--light">{useT(t.pl, t.en)}</span>
+                <span key={t.en} className="spec-tag spec-tag--light">{lang === 'pl' ? t.pl : t.en}</span>
               ))}
             </div>
 
@@ -42,7 +50,7 @@ export default function BarberPage() {
               className="barber-page-book"
               onClick={() => navigate('/booking')}
             >
-              {useT(`Zarezerwuj u ${barber.name.charAt(0) + barber.name.slice(1).toLowerCase()}`, `Book with ${barber.name.charAt(0) + barber.name.slice(1).toLowerCase()}`)}
+              {lang === 'pl' ? `Zarezerwuj u ${firstNameProper}` : `Book with ${firstNameProper}`}
             </button>
           </div>
 

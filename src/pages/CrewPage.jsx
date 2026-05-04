@@ -1,12 +1,14 @@
 import Nav from '../components/Nav';
 import Footer from '../components/Footer';
-import { useT } from '../context/LangContext';
+import { useT, useLang } from '../context/LangContext';
 import { useRouter } from '../context/RouterContext';
 import { useIsDark } from '../hooks/useIsDark';
-import { barbers } from '../data/barbers';
+import { useCatalog } from '../context/CatalogContext';
 
 export default function CrewPage() {
   const { navigate } = useRouter();
+  const { lang } = useLang();
+  const { barbers } = useCatalog();
   const isDark = useIsDark();
   const btnStyle = isDark
     ? { background: 'rgba(255,255,255,0.13)', borderColor: 'rgba(255,255,255,0.35)', color: '#fff' }
@@ -32,17 +34,17 @@ export default function CrewPage() {
                 <div className="crew-card-photo-wrap">
                   <img src={b.photo} alt={b.name} className="crew-card-photo" />
                   <div className="crew-card-bio-overlay">
-                    <p className="crew-card-bio-text">{useT(b.bio.pl, b.bio.en)}</p>
+                    <p className="crew-card-bio-text">{lang === 'pl' ? b.bio.pl : b.bio.en}</p>
                     <span className="crew-card-cta">{useT('Zobacz profil →', 'View profile →')}</span>
                   </div>
                   <div className="crew-card-name-bar">
                     <span className="crew-card-name">{b.name}</span>
-                    <span className="crew-card-title">{useT(b.titlePL, b.titleEN)}</span>
+                    <span className="crew-card-title">{lang === 'pl' ? b.titlePL : b.titleEN}</span>
                   </div>
                 </div>
                 <div className="crew-card-tags">
                   {b.tags.map((t) => (
-                    <span key={t.en} className="spec-tag">{useT(t.pl, t.en)}</span>
+                    <span key={t.en} className="spec-tag">{lang === 'pl' ? t.pl : t.en}</span>
                   ))}
                 </div>
               </div>

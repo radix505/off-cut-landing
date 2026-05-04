@@ -2,8 +2,8 @@ import { useState, useMemo, useEffect } from 'react';
 import { useT, useLang } from '../context/LangContext';
 import { useReveal } from '../hooks/useReveal';
 import { useRouter } from '../context/RouterContext';
-import { BARBERS, buildSlots } from '../data/booking-config';
-import { services as ALL_SERVICES } from './Services';
+import { buildSlots } from '../data/booking-config';
+import { useCatalog } from '../context/CatalogContext';
 
 const MONTH_PL = ['Styczeń','Luty','Marzec','Kwiecień','Maj','Czerwiec','Lipiec','Sierpień','Wrzesień','Październik','Listopad','Grudzień'];
 const MONTH_EN = ['January','February','March','April','May','June','July','August','September','October','November','December'];
@@ -27,6 +27,7 @@ export default function Booking() {
   const ref = useReveal();
   const { lang } = useLang();
   const { navState, clearNavState } = useRouter();
+  const { barbers: BARBERS, services: ALL_SERVICES } = useCatalog();
 
   const [step,      setStep]      = useState(1);
   const [barber,    setBarber]    = useState(null);
@@ -39,6 +40,7 @@ export default function Booking() {
   const [submitted, setSubmitted] = useState(false);
   const [unavailable,  setUnavailable]  = useState(() => new Set());
   const [loadingAvail, setLoadingAvail] = useState(false);
+  const [fullyBookedDates, setFullyBookedDates] = useState(() => new Set());
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMsg,     setErrorMsg]     = useState('');
   const [filteredBarberIds, setFilteredBarberIds] = useState(null);
@@ -61,14 +63,32 @@ export default function Booking() {
     return () => ctrl.abort();
   }, [barber?.id, date]);
 
+  useEffect(() => {
+    if (!barber || !service) { setFullyBookedDates(new Set()); return; }
+    const ctrl = new AbortController();
+    const params = new URLSearchParams({
+      barberId: String(barber.id),
+      serviceId: service.id,
+      year: String(calYear),
+      month: String(calMonth + 1),
+    });
+    fetch(`/api/availability/month?${params}`, { signal: ctrl.signal })
+      .then(r => r.ok ? r.json() : Promise.reject(new Error(`HTTP ${r.status}`)))
+      .then(data => setFullyBookedDates(new Set(data.fullyBookedDates ?? [])))
+      .catch(err => { if (err.name !== 'AbortError') setFullyBookedDates(new Set()); });
+    return () => ctrl.abort();
+  }, [barber?.id, service?.id, calYear, calMonth]);
+
   const today = new Date(); today.setHours(0, 0, 0, 0);
 
   useEffect(() => {
     if (!navState?.preselectedService) return;
+    if (BARBERS.length === 0) return;
     const pre = navState.preselectedService;
     clearNavState();
     setService(pre);
-    const eligible = BARBERS.filter(b => pre.barbers.some(k => b.keys.includes(k)));
+    const eligibleIds = new Set(pre.barberIds ?? []);
+    const eligible = BARBERS.filter(b => eligibleIds.has(b.id));
     if (eligible.length === 1) {
       setBarber(eligible[0]);
       setFilteredBarberIds(new Set(eligible.map(b => b.id)));
@@ -77,7 +97,7 @@ export default function Booking() {
       setFilteredBarberIds(new Set(eligible.map(b => b.id)));
       setStep(1);
     }
-  }, [navState]);
+  }, [navState, BARBERS]);
 
   const visibleSteps = useMemo(() => {
     if (!filteredBarberIds) return [1, 2, 3, 4];
@@ -102,16 +122,22 @@ export default function Booking() {
   function prevMonth() { setCalBase(b => { const d = new Date(b); d.setMonth(d.getMonth()-1); return d; }); setDate(null); setSlot(null); }
   function nextMonth() { setCalBase(b => { const d = new Date(b); d.setMonth(d.getMonth()+1); return d; }); setDate(null); setSlot(null); }
 
+  function isoFromDay(d) {
+    return `${calYear}-${String(calMonth + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+  }
+
   function pickDay(d) {
     if (!d) return;
     const picked = new Date(calYear, calMonth, d);
     if (picked < today) return;
+    if (fullyBookedDates.has(isoFromDay(d))) return;
     setDate(picked); setSlot(null);
   }
 
-  const isPast     = d => d && new Date(calYear, calMonth, d) < today;
-  const isToday    = d => { const n = new Date(); return d && n.getFullYear()===calYear && n.getMonth()===calMonth && n.getDate()===d; };
-  const isSelected = d => date && d && date.getFullYear()===calYear && date.getMonth()===calMonth && date.getDate()===d;
+  const isPast        = d => d && new Date(calYear, calMonth, d) < today;
+  const isToday       = d => { const n = new Date(); return d && n.getFullYear()===calYear && n.getMonth()===calMonth && n.getDate()===d; };
+  const isSelected    = d => date && d && date.getFullYear()===calYear && date.getMonth()===calMonth && date.getDate()===d;
+  const isFullyBooked = d => d && fullyBookedDates.has(isoFromDay(d));
 
   const canAdvance = [
     () => !!barber,
@@ -136,7 +162,7 @@ export default function Booking() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           barberId:  barber.id,
-          serviceId: service.num,
+          serviceId: service.id,
           date:      toISODate(date),
           slot,
           name:      name.trim(),
@@ -276,8 +302,8 @@ export default function Booking() {
             <div className="booking-step-body">
               <div className="bwiz-heading">{useT('Wybierz usługę','Choose a service')}</div>
               <div className="booking-services-list">
-                {ALL_SERVICES.filter(s => s.barbers.some(k => barber?.keys.includes(k))).map(s => (
-                  <button key={s.num} className={`booking-service-item${service?.num===s.num?' selected':''}`} onClick={() => setService(s)}>
+                {ALL_SERVICES.filter(s => barber && (s.barberIds ?? []).includes(barber.id)).map(s => (
+                  <button key={s.id} className={`booking-service-item${service?.id===s.id?' selected':''}`} onClick={() => setService(s)}>
                     <span className="bsi-name">{lang==='pl' ? s.namePL : s.nameEN}</span>
                     <span className="bsi-meta">
                       <span className="bsi-dur">{s.duration}</span>
@@ -308,9 +334,10 @@ export default function Booking() {
                   {calDays.map((d, i) => (
                     <button
                       key={i}
-                      className={`bcal-day${!d?' empty':''}${d&&isPast(d)?' past':''}${isToday(d)?' today':''}${isSelected(d)?' sel':''}`}
+                      className={`bcal-day${!d?' empty':''}${d&&isPast(d)?' past':''}${isToday(d)?' today':''}${isSelected(d)?' sel':''}${isFullyBooked(d)?' unavail':''}`}
                       onClick={() => pickDay(d)}
-                      disabled={!d || isPast(d)}
+                      disabled={!d || isPast(d) || isFullyBooked(d)}
+                      title={isFullyBooked(d) ? (lang==='pl' ? 'Brak wolnych terminów' : 'No slots available') : undefined}
                     >{d||''}</button>
                   ))}
                 </div>

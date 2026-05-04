@@ -1,6 +1,7 @@
 import { lazy, Suspense } from 'react';
 import { LangProvider } from './context/LangContext';
 import { RouterProvider, useRouter } from './context/RouterContext';
+import { CatalogProvider } from './context/CatalogContext';
 import LangSplash from './components/LangSplash';
 import ScissorsTransition from './components/ScissorsTransition';
 import HomePage from './pages/HomePage';
@@ -36,11 +37,13 @@ function AppRoutes() {
 export default function App() {
   return (
     <LangProvider>
-      <RouterProvider>
-        <LangSplash />
-        <ScissorsTransition />
-        <AppRoutes />
-      </RouterProvider>
+      <CatalogProvider>
+        <RouterProvider>
+          <LangSplash />
+          <ScissorsTransition />
+          <AppRoutes />
+        </RouterProvider>
+      </CatalogProvider>
     </LangProvider>
   );
 }
