@@ -16,7 +16,7 @@ export function useReveal() {
     const el = ref.current;
     if (el) {
       el.querySelectorAll('.reveal').forEach((r) => observer.observe(r));
-      if (el.classList.contains('reveal')) observer.observe(el);
+      observer.observe(el);
     }
 
     return () => observer.disconnect();
