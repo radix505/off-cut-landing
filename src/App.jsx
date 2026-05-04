@@ -2,6 +2,7 @@ import { lazy, Suspense } from 'react';
 import { LangProvider } from './context/LangContext';
 import { RouterProvider, useRouter } from './context/RouterContext';
 import LangSplash from './components/LangSplash';
+import CookieBanner from './components/CookieBanner';
 import ScissorsTransition from './components/ScissorsTransition';
 import HomePage from './pages/HomePage';
 
@@ -42,6 +43,7 @@ export default function App() {
         <LangSplash />
         <ScissorsTransition />
         <AppRoutes />
+        <CookieBanner />
       </RouterProvider>
     </LangProvider>
   );

@@ -127,7 +127,7 @@ export default function Services() {
       <div className="section-header">
         <div>
           <div className="section-number">{useT('01 / USŁUGI', '01 / SERVICES')}</div>
-          <div className="section-title">{useT('Co robimy', 'What we do')}</div>
+          <div className="section-title">{useT('Co robimy', 'Top Services')}</div>
         </div>
         <div className="services-header-right">
           <div className="view-toggle">
@@ -159,7 +159,7 @@ export default function Services() {
                 <span>{s.barbers?.[0]}</span>
               </div>
             )}
-            <div className={`service-card reveal reveal-delay-${s.delay}`} onClick={() => navigate('/booking', { preselectedService: s })} style={{ cursor: 'pointer' }}>
+            <div className={`service-card service-fly service-fly--${i % 2 === 0 ? 'left' : 'right'}`} style={{ cursor: 'pointer', animationDelay: `${i * 0.08}s` }} onClick={() => navigate('/booking', { preselectedService: s })}>
               <div className="service-num">{s.num}</div>
               <div className="service-name">{useT(s.namePL, s.nameEN)}</div>
               <div className="service-desc">{useT(s.descPL, s.descEN)}</div>

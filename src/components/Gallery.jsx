@@ -59,6 +59,33 @@ export default function Gallery() {
   const [showA, setShowA] = useState(true);
   const offsetRef = useRef(0);
 
+  const [lightboxIdx, setLightboxIdx] = useState(null);
+  const currentPhotos = showA ? layerA : layerB;
+
+  function openLightbox(src) {
+    const idx = photos.indexOf(src);
+    setLightboxIdx(idx >= 0 ? idx : 0);
+  }
+  const closeLightbox = () => setLightboxIdx(null);
+  const prevPhoto = e => { e.stopPropagation(); setLightboxIdx(i => (i - 1 + photos.length) % photos.length); };
+  const nextPhoto = e => { e.stopPropagation(); setLightboxIdx(i => (i + 1) % photos.length); };
+
+  useEffect(() => {
+    if (lightboxIdx === null) return;
+    const onKey = e => {
+      if (e.key === 'Escape')     closeLightbox();
+      if (e.key === 'ArrowLeft')  setLightboxIdx(i => (i - 1 + photos.length) % photos.length);
+      if (e.key === 'ArrowRight') setLightboxIdx(i => (i + 1) % photos.length);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [lightboxIdx]);
+
+  useEffect(() => {
+    document.body.style.overflow = lightboxIdx !== null ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
+  }, [lightboxIdx]);
+
   useEffect(() => {
     const t = setInterval(() => {
       const nextOffset = (offsetRef.current + VISIBLE) % photos.length;
@@ -92,15 +119,31 @@ export default function Gallery() {
       <div className="gallery-stage reveal">
         <div className={`gallery-grid gallery-layer${showA ? ' gallery-layer--visible' : ''}`}>
           {layerA.map((src, i) => (
-            <div key={i} className="gallery-cell" style={{ backgroundImage: `url(${src})` }} />
+            <div key={i} className="gallery-cell" style={{ backgroundImage: `url(${src})` }} onClick={() => openLightbox(src)} />
           ))}
         </div>
         <div className={`gallery-grid gallery-layer${!showA ? ' gallery-layer--visible' : ''}`}>
           {layerB.map((src, i) => (
-            <div key={i} className="gallery-cell" style={{ backgroundImage: `url(${src})` }} />
+            <div key={i} className="gallery-cell" style={{ backgroundImage: `url(${src})` }} onClick={() => openLightbox(src)} />
           ))}
         </div>
       </div>
+
+      {lightboxIdx !== null && (
+        <div className="lightbox" onClick={closeLightbox}>
+          <button className="lightbox-close" onClick={closeLightbox}>×</button>
+          <button className="lightbox-prev" onClick={prevPhoto}>‹</button>
+          <img
+            key={lightboxIdx}
+            src={photos[lightboxIdx]}
+            className="lightbox-img"
+            onClick={e => e.stopPropagation()}
+            alt=""
+          />
+          <button className="lightbox-next" onClick={nextPhoto}>›</button>
+          <div className="lightbox-counter">{lightboxIdx + 1} / {photos.length}</div>
+        </div>
+      )}
     </section>
   );
 }

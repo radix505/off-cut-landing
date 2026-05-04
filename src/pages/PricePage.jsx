@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import Nav from '../components/Nav';
 import Footer from '../components/Footer';
 import { services } from '../components/Services';
@@ -35,6 +36,13 @@ export default function PricePage() {
   const btnStyle = isDark
     ? { background: 'rgba(255,255,255,0.13)', borderColor: 'rgba(255,255,255,0.35)', color: '#fff' }
     : {};
+
+  const [atTop, setAtTop] = useState(true);
+  useEffect(() => {
+    const onScroll = () => setAtTop(window.scrollY < 80);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   const groups = groupServices(services);
 
@@ -126,7 +134,7 @@ export default function PricePage() {
       </button>
       <button
         className="scroll-top-btn"
-        style={btnStyle}
+        style={{ ...btnStyle, opacity: atTop ? 0 : undefined, pointerEvents: atTop ? 'none' : undefined, transition: 'opacity 0.3s' }}
         onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
         aria-label="Back to top"
       >

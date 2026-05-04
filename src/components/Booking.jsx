@@ -79,12 +79,22 @@ export default function Booking() {
     }
   }, [navState]);
 
+  useEffect(() => {
+    if (!navState?.preselectedBarber) return;
+    const found = BARBERS.find(b => b.id === navState.preselectedBarber);
+    clearNavState();
+    if (!found) return;
+    setBarber(found);
+    setFilteredBarberIds(new Set([found.id]));
+    setStep(2);
+  }, [navState]);
+
   const visibleSteps = useMemo(() => {
     if (!filteredBarberIds) return [1, 2, 3, 4];
-    const steps = [1, 3, 4]; // service (2) always skipped when preselected
-    if (filteredBarberIds.size <= 1) return [3, 4]; // single barber, skip 1 too
-    return steps;
-  }, [filteredBarberIds]);
+    if (filteredBarberIds.size <= 1 && service) return [3, 4];
+    if (filteredBarberIds.size <= 1) return [2, 3, 4];
+    return [1, 3, 4]; // multiple eligible barbers, service preselected
+  }, [filteredBarberIds, service]);
 
   const stepIdx = visibleSteps.indexOf(step);
 
@@ -254,6 +264,12 @@ export default function Booking() {
               </div>
             ))}
           </div>
+          {barber && filteredBarberIds?.size === 1 && (
+            <div className="bwiz-barber-tag">
+              <img src={barber.photo} alt={barber.name} className="bwiz-barber-tag-av" />
+              <span>{barber.name}</span>
+            </div>
+          )}
 
           {/* ── STEP 1: Barber ── */}
           {step === 1 && (

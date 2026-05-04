@@ -114,11 +114,13 @@ export default function Nav() {
         <button className="nav-book" onClick={handleBookClick}>
           {useT('Zarezerwuj', 'Book Now')}
         </button>
-        <div className="lang-switch">
-          <button className={`lang-switch-btn${lang === 'pl' ? ' active' : ''}`} onClick={() => selectLang('pl')}>PL</button>
-          <span className="lang-switch-sep">/</span>
-          <button className={`lang-switch-btn${lang === 'en' ? ' active' : ''}`} onClick={() => selectLang('en')}>EN</button>
-        </div>
+        <button
+          className="lang-flag-btn"
+          onClick={() => selectLang(lang === 'pl' ? 'en' : 'pl')}
+          aria-label={lang === 'pl' ? 'Switch to English' : 'Przełącz na Polski'}
+        >
+          {lang === 'pl' ? '🇵🇱' : '🇬🇧'}
+        </button>
         <button className="nav-hamburger" onClick={() => setOpen(o => !o)} aria-label="Menu">
           {open ? (
             <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">

@@ -40,7 +40,7 @@ export default function BarberPage() {
 
             <button
               className="barber-page-book"
-              onClick={() => navigate('/booking')}
+              onClick={() => navigate('/booking', { preselectedBarber: barber.slug })}
             >
               {useT(`Zarezerwuj u ${barber.name.charAt(0) + barber.name.slice(1).toLowerCase()}`, `Book with ${barber.name.charAt(0) + barber.name.slice(1).toLowerCase()}`)}
             </button>
