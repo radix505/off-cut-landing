@@ -110,6 +110,7 @@ export default function ScrollScissors() {
   return (
     <div
       ref={elRef}
+      className="scroll-scissors"
       style={{
         position: 'fixed',
         left: 0,

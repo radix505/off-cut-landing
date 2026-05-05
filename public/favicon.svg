@@ -13,7 +13,14 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:svg="http://www.w3.org/2000/svg">
   <defs
-     id="defs29" />
+     id="defs29">
+    <style>
+      path { fill: #000; }
+      @media (prefers-color-scheme: dark) {
+        path { fill: #fff; }
+      }
+    </style>
+  </defs>
   <sodipodi:namedview
      id="namedview29"
      pagecolor="#ffffff"
@@ -39,7 +46,6 @@ Created by potrace 1.16, written by Peter Selinger 2001-2019
 </metadata>
   <g
      transform="matrix(0.1,0,0,-0.1,-239.00153,704.99504)"
-     fill="#000000"
      stroke="none"
      id="g29">
     <path

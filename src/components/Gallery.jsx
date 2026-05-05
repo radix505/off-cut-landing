@@ -36,6 +36,7 @@ const photos = [
   '/gallery/IMG_3025.jpeg',
   '/gallery/319C0F08-DB22-4ABB-8F4D-F489828F6DBE.jpeg',
   '/gallery/ADEAFE12-39E6-4E6A-B8AD-E411C5EA7BAE.jpeg',
+  '/gallery/IMG_7729.jpeg',
 ];
 
 const VISIBLE = 8;
