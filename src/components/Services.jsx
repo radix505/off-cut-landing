@@ -167,7 +167,7 @@ export default function Services() {
                 <div className="service-barbers">
                   {s.barbers.map((b) => (
                     <div key={b} className="service-barber-av-wrap" title={b === 'OLEK' ? 'ALEKSANDER' : b}>
-                      <img src={BARBER_PHOTO[b]} alt={b} className="service-barber-av" />
+                      <img src={BARBER_PHOTO[b]} alt={b} className="service-barber-av" loading="lazy" decoding="async" />
                     </div>
                   ))}
                 </div>

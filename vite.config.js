@@ -9,4 +9,14 @@ export default defineConfig({
       '/api': 'http://localhost:3001',
     },
   },
+  build: {
+    target: 'es2015',
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          react: ['react', 'react-dom'],
+        },
+      },
+    },
+  },
 })

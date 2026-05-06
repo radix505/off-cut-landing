@@ -266,7 +266,7 @@ export default function Booking() {
           </div>
           {barber && filteredBarberIds?.size === 1 && (
             <div className="bwiz-barber-tag">
-              <img src={barber.photo} alt={barber.name} className="bwiz-barber-tag-av" />
+              <img src={barber.photo} alt={barber.name} className="bwiz-barber-tag-av" loading="lazy" decoding="async" />
               <span>{barber.name}</span>
             </div>
           )}
@@ -278,7 +278,7 @@ export default function Booking() {
               <div className="booking-barbers-grid">
                 {BARBERS.filter(b => !filteredBarberIds || filteredBarberIds.has(b.id)).map(b => (
                   <button key={b.id} className={`booking-barber-card${barber?.id===b.id?' selected':''}`} onClick={() => setBarber(b)}>
-                    <img className="booking-barber-av" src={b.photo} alt={b.name} />
+                    <img className="booking-barber-av" src={b.photo} alt={b.name} loading="lazy" decoding="async" />
                     <div className="booking-barber-name">{b.name}</div>
                     <div className="booking-barber-title">{lang==='pl' ? b.titlePL : b.titleEN}</div>
                   </button>
