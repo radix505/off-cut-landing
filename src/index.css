@@ -37,12 +37,12 @@ html::-webkit-scrollbar-thumb:hover { background: #555; }
   .splash-half--dark:hover { clip-path: polygon(0 0, 100% 0, 100% 55%, 0 45%); }
   .splash-half--light { clip-path: polygon(0 45%, 100% 55%, 100% 100%, 0 100%); }
   .splash-half--light:hover { clip-path: polygon(0 45%, 100% 55%, 100% 100%, 0 100%); }
-  .splash-content--dark { left: 50%; top: 28%; }
-  .splash-content--light { left: 50%; top: 72%; }
+  .splash-content--dark { left: 50%; top: 22%; }
+  .splash-content--light { left: 50%; top: 78%; }
   /* mobile splash logo — horizontal split */
   .splash-logo-half--dark { clip-path: polygon(0 0, 100% 0, 100% 55%, 0 45%); }
   .splash-logo-half--light { clip-path: polygon(0 45%, 100% 55%, 100% 100%, 0 100%); }
-  .splash-logo-img { width: 110px; }
+  .splash-logo-img { max-width: 116px; max-height: 28vh; width: auto; height: auto; }
   /* logo enters from top (dark) / bottom (light) on mobile */
   .splash-logo-img--dark  { animation-name: splash-logo-enter-dark-mobile,  splash-logo-float; }
   .splash-logo-img--light { animation-name: splash-logo-enter-light-mobile, splash-logo-float; }
@@ -79,7 +79,7 @@ html::-webkit-scrollbar-thumb:hover { background: #555; }
 .splash-half--light:hover ~ .splash-logo-wrap .splash-logo-half--light { clip-path: polygon(52% 0, 100% 0, 100% 100%, 32% 100%); }
 /* mobile size + hover overrides — MUST be after desktop sibling hover rules (lines above) to win cascade */
 @media (max-width: 600px) {
-  .splash-logo-img { width: 110px; }
+  .splash-logo-img { max-width: 116px; max-height: 28vh; width: auto; height: auto; }
   .splash-half--dark:hover ~ .splash-half--light { clip-path: polygon(0 45%, 100% 55%, 100% 100%, 0 100%); }
   .splash-half--dark:hover ~ .splash-logo-wrap .splash-logo-half--dark { clip-path: polygon(0 0, 100% 0, 100% 55%, 0 45%); }
   .splash-half--dark:hover ~ .splash-logo-wrap .splash-logo-half--light { clip-path: polygon(0 45%, 100% 55%, 100% 100%, 0 100%); }
