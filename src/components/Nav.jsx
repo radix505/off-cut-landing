@@ -20,6 +20,7 @@ export default function Nav() {
   const { lang, selectLang } = useLang();
 
   const [hidden, setHidden] = useState(false);
+  const [hovered, setHovered] = useState(false);
   const lastY = useRef(0);
 
   useEffect(() => {
@@ -29,7 +30,9 @@ export default function Nav() {
       raf = requestAnimationFrame(() => {
         const y = window.scrollY;
         setScrolled(y > 50);
-        setHidden(y > 120 && y > lastY.current);
+        const scrollingDown = y > 120 && y > lastY.current;
+        if (scrollingDown) setHovered(false);
+        setHidden(scrollingDown);
         lastY.current = y;
       });
     };
@@ -63,8 +66,21 @@ export default function Nav() {
     close();
   }
 
+  const isHidden = hidden && !hovered;
+
   return (
-    <nav ref={navRef} className={[scrolled ? 'nav-scrolled' : '', hidden ? 'nav-hidden' : ''].filter(Boolean).join(' ')}>
+    <>
+    {isHidden && (
+      <div
+        style={{ position: 'fixed', top: 0, left: 0, right: 0, height: '8px', zIndex: 101 }}
+        onMouseEnter={() => setHovered(true)}
+      />
+    )}
+    <nav
+      ref={navRef}
+      className={[scrolled ? 'nav-scrolled' : '', isHidden ? 'nav-hidden' : ''].filter(Boolean).join(' ')}
+      onMouseLeave={() => setHovered(false)}
+    >
       <div className="nav-logo" onClick={handleLogoClick} style={{ cursor: 'pointer' }}>
         <img src="/logo.svg" alt="" className="nav-logo-icon" />
         <div className="nav-logo-text">
@@ -134,5 +150,6 @@ export default function Nav() {
         </button>
       </div>
     </nav>
+    </>
   );
 }
