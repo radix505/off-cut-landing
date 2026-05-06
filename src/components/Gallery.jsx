@@ -60,6 +60,7 @@ export default function Gallery() {
   const [showA, setShowA] = useState(true);
   const offsetRef = useRef(0);
 
+  const showARef = useRef(true);
   const [lightboxIdx, setLightboxIdx] = useState(null);
   const currentPhotos = showA ? layerA : layerB;
 
@@ -93,17 +94,18 @@ export default function Gallery() {
       const nextSlice = getSlice(nextOffset);
 
       preload(nextSlice).then(() => {
-        if (showA) {
+        if (showARef.current) {
           setLayerB(nextSlice);
         } else {
           setLayerA(nextSlice);
         }
+        showARef.current = !showARef.current;
         setShowA(a => !a);
         offsetRef.current = nextOffset;
       });
     }, 5000);
     return () => clearInterval(t);
-  }, [showA]);
+  }, []);
 
   return (
     <section id="gallery" className="gallery-section" ref={ref}>
@@ -139,7 +141,7 @@ export default function Gallery() {
             src={photos[lightboxIdx]}
             className="lightbox-img"
             onClick={e => e.stopPropagation()}
-            alt=""
+            alt={`Gallery photo ${lightboxIdx + 1} of ${photos.length}`}
           />
           <button className="lightbox-next" onClick={nextPhoto}>›</button>
           <div className="lightbox-counter">{lightboxIdx + 1} / {photos.length}</div>

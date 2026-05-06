@@ -2,15 +2,10 @@ import Nav from '../components/Nav';
 import Blog from '../components/Blog';
 import Footer from '../components/Footer';
 import { useT } from '../context/LangContext';
-import { useIsDark } from '../hooks/useIsDark';
 import { useRouter } from '../context/RouterContext';
 
 export default function BlogPage() {
-  const isDark = useIsDark();
   const { navigate } = useRouter();
-  const btnStyle = isDark
-    ? { background: 'rgba(255,255,255,0.13)', borderColor: 'rgba(255,255,255,0.35)', color: '#fff' }
-    : {};
 
   return (
     <>
@@ -22,15 +17,9 @@ export default function BlogPage() {
       </div>
       <Blog />
       <Footer />
-      <button
-        className="prices-back-circle-btn"
-        style={btnStyle}
-        onClick={() => navigate('/')}
-        aria-label={useT('Powrót', 'Back')}
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <polyline points="15 18 9 12 15 6" />
-        </svg>
+      <button className="page-back-btn" onClick={() => navigate('/')}>
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        {useT('Wróć', 'Back')}
       </button>
     </>
   );

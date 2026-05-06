@@ -15,8 +15,8 @@ export default function LangSplash() {
       setTimeout(() => selectLang(l), 550);
     } else {
       setPhase('cutting');
-      setTimeout(() => setPhase('splitting'), 1050);
-      setTimeout(() => selectLang(l), 1500);
+      setTimeout(() => setPhase('splitting'), 580);
+      setTimeout(() => selectLang(l), 950);
     }
   }
 

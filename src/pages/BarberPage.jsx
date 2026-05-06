@@ -15,7 +15,8 @@ export default function BarberPage() {
       <div className="barber-page-hero">
         <div className="barber-page-hero-content">
           <button className="barber-page-back" onClick={() => navigate('/crew')}>
-            {useT('← Ekipa', '← Crew')}
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+            {useT('Ekipa', 'Crew')}
           </button>
           <div className="barber-page-hero-name">{barber.name}</div>
           <div className="barber-page-hero-title">{useT(barber.titlePL, barber.titleEN)}</div>

@@ -311,11 +311,15 @@ export default function Booking() {
 
               <div className="booking-cal">
                 <div className="bcal-header">
-                  <button className="bcal-nav" onClick={prevMonth}>‹</button>
+                  <button type="button" className="bcal-nav" onClick={prevMonth}>
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+                  </button>
                   <span className="bcal-title">
                     {lang==='pl' ? MONTH_PL[calMonth] : MONTH_EN[calMonth]} {calYear}
                   </span>
-                  <button className="bcal-nav" onClick={nextMonth}>›</button>
+                  <button type="button" className="bcal-nav" onClick={nextMonth}>
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><polyline points="9 18 15 12 9 6"/></svg>
+                  </button>
                 </div>
                 <div className="bcal-daynames">
                   {(lang==='pl' ? DAYS_PL : DAYS_EN).map(n => <div key={n} className="bcal-dn">{n}</div>)}
