@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import Nav from '../components/Nav';
 import Footer from '../components/Footer';
 import { useT, useLang } from '../context/LangContext';
@@ -26,12 +26,18 @@ export default function PricePage() {
     ? { background: 'rgba(255,255,255,0.13)', borderColor: 'rgba(255,255,255,0.35)', color: '#fff' }
     : {};
 
+  const [atTop, setAtTop] = useState(true);
+  useEffect(() => {
+    const onScroll = () => setAtTop(window.scrollY < 80);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  const groups = groupServices(services);
   const barberById = useMemo(
     () => Object.fromEntries(barbers.map(b => [b.id, b])),
     [barbers]
   );
-
-  const groups = useMemo(() => groupServices(services), [services]);
 
   return (
     <>
@@ -118,17 +124,13 @@ export default function PricePage() {
       </section>
 
       <Footer />
-      <button
-        className="prices-back-circle-btn"
-        style={btnStyle}
-        onClick={() => navigate('/')}
-        aria-label={useT('Powrót', 'Back')}
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      <button className="page-back-btn" onClick={() => navigate('/')}>
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        {useT('Wróć', 'Back')}
       </button>
       <button
         className="scroll-top-btn"
-        style={btnStyle}
+        style={{ ...btnStyle, opacity: atTop ? 0 : undefined, pointerEvents: atTop ? 'none' : undefined, transition: 'opacity 0.3s' }}
         onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
         aria-label="Back to top"
       >

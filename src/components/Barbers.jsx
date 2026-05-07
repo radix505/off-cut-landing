@@ -29,7 +29,7 @@ export default function Barbers() {
           >
             <div className="barber-portrait">
               {b.photo
-                ? <img src={b.photo} alt={b.name} className="barber-photo" />
+                ? <img src={b.photo} alt={b.name} className="barber-photo" loading="lazy" decoding="async" />
                 : <div className="barber-portrait-placeholder">
                     <div className="barber-silhouette" />
                     <span className="portrait-label">{lang === 'pl' ? 'Zdjęcie placeholder' : 'Photo placeholder'}</span>

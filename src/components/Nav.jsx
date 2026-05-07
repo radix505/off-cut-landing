@@ -20,6 +20,7 @@ export default function Nav() {
   const { lang, selectLang } = useLang();
 
   const [hidden, setHidden] = useState(false);
+  const [hovered, setHovered] = useState(false);
   const lastY = useRef(0);
 
   useEffect(() => {
@@ -29,7 +30,9 @@ export default function Nav() {
       raf = requestAnimationFrame(() => {
         const y = window.scrollY;
         setScrolled(y > 50);
-        setHidden(y > 120 && y > lastY.current);
+        const scrollingDown = y > 120 && y > lastY.current;
+        if (scrollingDown) setHovered(false);
+        setHidden(scrollingDown);
         lastY.current = y;
       });
     };
@@ -40,7 +43,8 @@ export default function Nav() {
   const onBlog = page === 'blog';
   const onGallery = page === 'gallery';
   const onCrew = page === 'crew' || page === 'barber';
-  const onAway = page === 'blog' || page === 'prices' || page === 'gallery' || page === 'booking' || page === 'crew' || page === 'barber' || page === 'privacy' || page === 'cookies';
+  const onContact = page === 'contact';
+  const onAway = page === 'blog' || page === 'prices' || page === 'gallery' || page === 'booking' || page === 'crew' || page === 'barber' || page === 'privacy' || page === 'cookies' || page === 'contact';
 
   function handleLogoClick() {
     if (onAway) navigate('/');
@@ -62,8 +66,21 @@ export default function Nav() {
     close();
   }
 
+  const isHidden = hidden && !hovered;
+
   return (
-    <nav ref={navRef} className={[scrolled ? 'nav-scrolled' : '', hidden ? 'nav-hidden' : ''].filter(Boolean).join(' ')}>
+    <>
+    {isHidden && (
+      <div
+        style={{ position: 'fixed', top: 0, left: 0, right: 0, height: '8px', zIndex: 101 }}
+        onMouseEnter={() => setHovered(true)}
+      />
+    )}
+    <nav
+      ref={navRef}
+      className={[scrolled ? 'nav-scrolled' : '', isHidden ? 'nav-hidden' : ''].filter(Boolean).join(' ')}
+      onMouseLeave={() => setHovered(false)}
+    >
       <div className="nav-logo" onClick={handleLogoClick} style={{ cursor: 'pointer' }}>
         <img src="/logo.svg" alt="" className="nav-logo-icon" />
         <div className="nav-logo-text">
@@ -91,7 +108,7 @@ export default function Nav() {
             {useT('Galeria', 'Gallery')}
           </a>
         </li>
-        <li><a href="#footer" onClick={(e) => { e.preventDefault(); if (onAway) { navigate('/'); setTimeout(() => document.querySelector('footer')?.scrollIntoView({ behavior: 'smooth' }), 700); } else { document.querySelector('footer')?.scrollIntoView({ behavior: 'smooth' }); } close(); }}>{useT('Kontakt', 'Contact')}</a></li>
+        <li><a href="/contact" className={onContact ? 'nav-link--active' : ''} onClick={(e) => { e.preventDefault(); navigate('/contact'); close(); }}>{useT('Kontakt', 'Contact')}</a></li>
         <li><a href="#location" onClick={(e) => handleSectionClick(e, 'location')}>{useT('Lokalizacja', 'Location')}</a></li>
         <li>
           <a
@@ -102,17 +119,24 @@ export default function Nav() {
             Blog
           </a>
         </li>
+        <li className="nav-mobile-book">
+          <button className="nav-book-mobile" onClick={handleBookClick}>
+            {useT('Zarezerwuj', 'Book Now')}
+          </button>
+        </li>
       </ul>
       <div className="nav-right">
         <ScissorsIcon />
         <button className="nav-book" onClick={handleBookClick}>
           {useT('Zarezerwuj', 'Book Now')}
         </button>
-        <div className="lang-switch">
-          <button className={`lang-switch-btn${lang === 'pl' ? ' active' : ''}`} onClick={() => selectLang('pl')}>PL</button>
-          <span className="lang-switch-sep">/</span>
-          <button className={`lang-switch-btn${lang === 'en' ? ' active' : ''}`} onClick={() => selectLang('en')}>EN</button>
-        </div>
+        <button
+          className="lang-flag-btn"
+          onClick={() => selectLang(lang === 'pl' ? 'en' : 'pl')}
+          aria-label={lang === 'pl' ? 'Switch to English' : 'Przełącz na Polski'}
+        >
+          {lang === 'pl' ? '🇵🇱' : '🇬🇧'}
+        </button>
         <button className="nav-hamburger" onClick={() => setOpen(o => !o)} aria-label="Menu">
           {open ? (
             <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
@@ -126,5 +150,6 @@ export default function Nav() {
         </button>
       </div>
     </nav>
+    </>
   );
 }

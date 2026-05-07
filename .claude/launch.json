@@ -4,9 +4,9 @@
     {
       "name": "off-cut-landing",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev"],
+      "runtimeArgs": ["run", "dev", "--", "--strictPort", "--port", "5173"],
       "port": 5173,
-      "autoPort": true
+      "autoPort": false
     }
   ]
 }

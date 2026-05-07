@@ -99,12 +99,22 @@ export default function Booking() {
     }
   }, [navState, BARBERS]);
 
+  useEffect(() => {
+    if (!navState?.preselectedBarber) return;
+    const found = BARBERS.find(b => b.id === navState.preselectedBarber);
+    clearNavState();
+    if (!found) return;
+    setBarber(found);
+    setFilteredBarberIds(new Set([found.id]));
+    setStep(2);
+  }, [navState]);
+
   const visibleSteps = useMemo(() => {
     if (!filteredBarberIds) return [1, 2, 3, 4];
-    const steps = [1, 3, 4]; // service (2) always skipped when preselected
-    if (filteredBarberIds.size <= 1) return [3, 4]; // single barber, skip 1 too
-    return steps;
-  }, [filteredBarberIds]);
+    if (filteredBarberIds.size <= 1 && service) return [3, 4];
+    if (filteredBarberIds.size <= 1) return [2, 3, 4];
+    return [1, 3, 4]; // multiple eligible barbers, service preselected
+  }, [filteredBarberIds, service]);
 
   const stepIdx = visibleSteps.indexOf(step);
 
@@ -280,6 +290,12 @@ export default function Booking() {
               </div>
             ))}
           </div>
+          {barber && filteredBarberIds?.size === 1 && (
+            <div className="bwiz-barber-tag">
+              <img src={barber.photo} alt={barber.name} className="bwiz-barber-tag-av" loading="lazy" decoding="async" />
+              <span>{barber.name}</span>
+            </div>
+          )}
 
           {/* ── STEP 1: Barber ── */}
           {step === 1 && (
@@ -288,7 +304,7 @@ export default function Booking() {
               <div className="booking-barbers-grid">
                 {BARBERS.filter(b => !filteredBarberIds || filteredBarberIds.has(b.id)).map(b => (
                   <button key={b.id} className={`booking-barber-card${barber?.id===b.id?' selected':''}`} onClick={() => setBarber(b)}>
-                    <img className="booking-barber-av" src={b.photo} alt={b.name} />
+                    <img className="booking-barber-av" src={b.photo} alt={b.name} loading="lazy" decoding="async" />
                     <div className="booking-barber-name">{b.name}</div>
                     <div className="booking-barber-title">{lang==='pl' ? b.titlePL : b.titleEN}</div>
                   </button>
@@ -321,11 +337,15 @@ export default function Booking() {
 
               <div className="booking-cal">
                 <div className="bcal-header">
-                  <button className="bcal-nav" onClick={prevMonth}>‹</button>
+                  <button type="button" className="bcal-nav" onClick={prevMonth}>
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+                  </button>
                   <span className="bcal-title">
                     {lang==='pl' ? MONTH_PL[calMonth] : MONTH_EN[calMonth]} {calYear}
                   </span>
-                  <button className="bcal-nav" onClick={nextMonth}>›</button>
+                  <button type="button" className="bcal-nav" onClick={nextMonth}>
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><polyline points="9 18 15 12 9 6"/></svg>
+                  </button>
                 </div>
                 <div className="bcal-daynames">
                   {(lang==='pl' ? DAYS_PL : DAYS_EN).map(n => <div key={n} className="bcal-dn">{n}</div>)}

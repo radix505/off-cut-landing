@@ -21,7 +21,7 @@ export default function Services() {
       <div className="section-header">
         <div>
           <div className="section-number">{useT('01 / USŁUGI', '01 / SERVICES')}</div>
-          <div className="section-title">{useT('Co robimy', 'What we do')}</div>
+          <div className="section-title">{useT('Co robimy', 'Top Services')}</div>
         </div>
         <div className="services-header-right">
           <div className="view-toggle">
