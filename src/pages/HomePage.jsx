@@ -15,10 +15,10 @@ import { useState, useEffect } from 'react';
 
 export default function HomePage() {
   const isDark = useIsDark();
-  const [atTop, setAtTop] = useState(true);
+  const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setAtTop(window.scrollY < 80);
+    const onScroll = () => setScrolled(window.scrollY > 200);
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
@@ -26,14 +26,6 @@ export default function HomePage() {
   const btnStyle = isDark
     ? { background: 'rgba(255,255,255,0.13)', borderColor: 'rgba(255,255,255,0.35)', color: '#fff' }
     : {};
-
-  function handleScrollBtn() {
-    if (atTop) {
-      window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-    } else {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  }
 
   return (
     <>
@@ -49,27 +41,18 @@ export default function HomePage() {
       <Blog />
       <Map />
       <Footer />
-      <button
-        className="scroll-top-btn"
-        style={btnStyle}
-        onClick={handleScrollBtn}
-        aria-label={atTop ? 'Scroll down' : 'Back to top'}
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="16"
-          height="16"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          style={{ transform: atTop ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.35s cubic-bezier(0.16,1,0.3,1)' }}
+      {scrolled && (
+        <button
+          className="scroll-top-btn"
+          style={btnStyle}
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          aria-label="Back to top"
         >
-          <polyline points="18 15 12 9 6 15" />
-        </svg>
-      </button>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="18 15 12 9 6 15" />
+          </svg>
+        </button>
+      )}
     </>
   );
 }

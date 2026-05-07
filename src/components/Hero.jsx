@@ -4,7 +4,6 @@ import { useRouter } from '../context/RouterContext';
 export default function Hero() {
   const { navigate } = useRouter();
   const subLine1 = useT('Precyzyjne strzyżenie. Ponadczasowe rzemiosło.', 'Precision cuts. Timeless craft.');
-  const subLine2 = useT('Gdzie pielęgnacja staje się rytuałem.', 'Where grooming becomes ritual.');
 
   return (
     <section className="hero" id="home">
@@ -21,12 +20,12 @@ export default function Hero() {
           <span className="hero-title-line">SHARP</span>
           <span className="hero-title-line">ART</span>
         </h1>
-        <p className="hero-sub">
-          {subLine1}<br />{subLine2}
-        </p>
+        <p className="hero-sub">{subLine1}</p>
         <div className="hero-cta">
           <button className="btn-primary" onClick={() => navigate('/booking')}>{useT('Zarezerwuj wizytę', 'Book Appointment')}</button>
-          <button className="btn-ghost" onClick={() => document.getElementById('services').scrollIntoView({ behavior: 'smooth' })}>{useT('Zobacz usługi', 'View Services')}</button>
+          <button className="btn-text-link" onClick={() => document.getElementById('services').scrollIntoView({ behavior: 'smooth' })}>
+            {useT('Zobacz usługi', 'View Services')} →
+          </button>
         </div>
       </div>
       <div className="hero-scroll-hint">

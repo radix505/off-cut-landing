@@ -34,17 +34,18 @@ export default function Barbers() {
                   </div>
               }
               <div className="barber-overlay">
-                <div className="barber-name">{b.name}</div>
-                <div className="barber-title">{useT(b.titlePL, b.titleEN)}</div>
                 <p className="barber-bio-hover">{useT(b.bio.pl, b.bio.en)}</p>
               </div>
             </div>
             <div className="barber-info">
+              <div className="barber-name barber-name--below">{b.name}</div>
+              <div className="barber-title barber-title--below">{useT(b.titlePL, b.titleEN)}</div>
               <div className="barber-spec">
                 {b.tags.map((t) => (
                   <span key={t.en} className="spec-tag">{useT(t.pl, t.en)}</span>
                 ))}
               </div>
+              <span className="barber-view-link">{useT('Zobacz profil →', 'View profile →')}</span>
             </div>
           </div>
         ))}

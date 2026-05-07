@@ -1,8 +1,10 @@
+import { useState } from 'react';
 import { useReveal } from '../hooks/useReveal';
 import { useT } from '../context/LangContext';
 
 export default function Map() {
   const ref = useReveal();
+  const [mapActive, setMapActive] = useState(false);
 
   return (
     <section id="location" className="map-section" ref={ref}>
@@ -58,6 +60,17 @@ export default function Map() {
         </div>
 
         <div className="map-frame-wrap reveal reveal-delay-2">
+          {!mapActive && (
+            <div className="map-tap-overlay" onClick={() => setMapActive(true)}>
+              <div className="map-tap-hint">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
+                  <circle cx="12" cy="9" r="2.5"/>
+                </svg>
+                {useT('Kliknij aby wejść w mapę', 'Tap to interact with map')}
+              </div>
+            </div>
+          )}
           <iframe
             className="map-frame"
             title={useT('Lokalizacja Off Cut Barbershop', 'Off Cut Barbershop Location')}

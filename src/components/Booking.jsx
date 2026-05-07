@@ -28,7 +28,7 @@ export default function Booking() {
   const { lang } = useLang();
   const { navState, clearNavState } = useRouter();
 
-  const [step,      setStep]      = useState(1);
+  const [step,      setStep]      = useState(2);
   const [barber,    setBarber]    = useState(null);
   const [service,   setService]   = useState(null);
   const [date,      setDate]      = useState(null);
@@ -42,6 +42,7 @@ export default function Booking() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMsg,     setErrorMsg]     = useState('');
   const [filteredBarberIds, setFilteredBarberIds] = useState(null);
+  const [infoOpen, setInfoOpen] = useState(false);
 
   const calYear  = calBase.getFullYear();
   const calMonth = calBase.getMonth();
@@ -90,7 +91,7 @@ export default function Booking() {
   }, [navState]);
 
   const visibleSteps = useMemo(() => {
-    if (!filteredBarberIds) return [1, 2, 3, 4];
+    if (!filteredBarberIds) return [2, 1, 3, 4];
     if (filteredBarberIds.size <= 1 && service) return [3, 4];
     if (filteredBarberIds.size <= 1) return [2, 3, 4];
     return [1, 3, 4]; // multiple eligible barbers, service preselected
@@ -131,7 +132,7 @@ export default function Booking() {
   ];
 
   function reset() {
-    setStep(1); setBarber(null); setService(null); setDate(null); setSlot(null);
+    setStep(2); setBarber(null); setService(null); setDate(null); setSlot(null);
     setName(''); setPhone(''); setSubmitted(false);
     setUnavailable(new Set()); setIsSubmitting(false); setErrorMsg('');
     setFilteredBarberIds(null);
@@ -181,8 +182,9 @@ export default function Booking() {
   }
 
   const stepLabels = [
-    useT('Barber','Barber'), useT('Usługa','Service'), useT('Termin','Date'), useT('Dane','Details')
+    useT('Barber','Barber'), useT('Usługa','Service'), useT('Termin','Date'), useT('Dane','Details'),
   ];
+  const stepLabelMap = { 1: stepLabels[0], 2: stepLabels[1], 3: stepLabels[2], 4: stepLabels[3] };
 
   const dateLabel = date
     ? date.toLocaleDateString(lang==='pl'?'pl-PL':'en-GB', { weekday:'short', day:'numeric', month:'short' })
@@ -231,8 +233,11 @@ export default function Booking() {
             {useT('SWÓJ','YOUR')}<br />
             {useT('TERMIN','SLOT')}
           </h2>
-          <p>{useT('Wizyty walk-in dostępne gdy mamy wolne miejsca. Aby mieć pewność co do wybranego barbera, rezerwuj z wyprzedzeniem.','Walk-ins welcome when available. For guaranteed access to your preferred barber, book ahead.')}</p>
-          <div className="booking-info-row">
+          <button className="booking-info-toggle" onClick={() => setInfoOpen(o => !o)} aria-expanded={infoOpen}>
+            {infoOpen ? useT('Ukryj informacje ↑', 'Hide info ↑') : useT('Godziny i kontakt ↓', 'Hours & contact ↓')}
+          </button>
+          <p className="booking-text-desc">{useT('Wizyty walk-in dostępne gdy mamy wolne miejsca. Aby mieć pewność co do wybranego barbera, rezerwuj z wyprzedzeniem.','Walk-ins welcome when available. For guaranteed access to your preferred barber, book ahead.')}</p>
+          <div className={`booking-info-row${infoOpen ? ' booking-info-row--open' : ''}`}>
             <div className="booking-info-item">
               <span className="booking-info-label">{useT('Godziny','Hours')}</span>
               <span className="booking-info-value">{useT('Pon–Sob 9–20','Mon–Sat 9–20')}</span>
@@ -260,7 +265,7 @@ export default function Booking() {
             {visibleSteps.map((vs, i) => (
               <div key={vs} className={`bpstep${stepIdx > i ? ' done' : step === vs ? ' active' : ''}`}>
                 <div className="bpstep-dot">{stepIdx > i ? '✓' : i + 1}</div>
-                <span className="bpstep-label">{stepLabels[vs - 1]}</span>
+                <span className="bpstep-label">{stepLabelMap[vs]}</span>
               </div>
             ))}
           </div>

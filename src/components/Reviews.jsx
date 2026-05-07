@@ -36,6 +36,7 @@ export default function Reviews() {
   const [page, setPage]     = useState(0);
   const [fading, setFading] = useState(false);
   const pageRef = useRef(0);
+  const touchStartX = useRef(null);
 
   function goTo(next) {
     setFading(true);
@@ -49,9 +50,23 @@ export default function Reviews() {
   useEffect(() => {
     const t = setInterval(() => {
       goTo((pageRef.current + 1) % TOTAL_PAGES);
-    }, 60000);
+    }, 8000);
     return () => clearInterval(t);
   }, []);
+
+  function handleTouchStart(e) {
+    touchStartX.current = e.touches[0].clientX;
+  }
+
+  function handleTouchEnd(e) {
+    if (touchStartX.current === null) return;
+    const diff = touchStartX.current - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) {
+      if (diff > 0) goTo((pageRef.current + 1) % TOTAL_PAGES);
+      else goTo((pageRef.current - 1 + TOTAL_PAGES) % TOTAL_PAGES);
+    }
+    touchStartX.current = null;
+  }
 
   const visible = reviews.slice(page * PER_PAGE, page * PER_PAGE + PER_PAGE);
 
@@ -68,19 +83,23 @@ export default function Reviews() {
       </div>
 
       <div className="reviews-aggregate reveal">
-        <div className="reviews-aggregate-score">5.0</div>
+        <div className="reviews-aggregate-score reviews-aggregate-score--large">5.0</div>
         <div className="reviews-aggregate-middle">
-          <div className="reviews-aggregate-stars">★★★★★</div>
+          <div className="reviews-aggregate-stars reviews-aggregate-stars--large">★★★★★</div>
           <div className="reviews-aggregate-label">{useT('Ocena w Google', 'Google rating')}</div>
         </div>
         <div className="reviews-aggregate-divider" />
         <div className="reviews-aggregate-right">
-          <GoogleG size={22} />
+          <GoogleG size={26} />
           <span className="reviews-aggregate-google">Google Maps</span>
         </div>
       </div>
 
-      <div className={`reviews-grid${fading ? ' reviews-fading' : ''}`}>
+      <div
+        className={`reviews-grid${fading ? ' reviews-fading' : ''}`}
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+      >
         {visible.map((r) => (
           <a className="review-card" key={r.name} href="https://share.google/YjV0HAKR6jNQyiiHg" target="_blank" rel="noopener noreferrer">
             <div className="review-card-top">

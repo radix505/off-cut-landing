@@ -152,7 +152,7 @@ export default function Services() {
         </div>
       </div>
       <div className={view === 'list' ? 'services-list' : 'services-grid'}>
-        {services.slice(0, 6).map((s, i) => (
+        {services.slice(0, 4).map((s, i) => (
           <React.Fragment key={s.num}>
             {view === 'list' && i > 0 && services[i - 1].barbers?.[0] !== s.barbers?.[0] && (
               <div className="services-list-separator">
@@ -179,6 +179,11 @@ export default function Services() {
             </div>
           </React.Fragment>
         ))}
+      </div>
+      <div className="services-see-all">
+        <button className="services-see-all-btn" onClick={() => navigate('/prices')}>
+          {useT('Zobacz wszystkie usługi →', 'See all services →')}
+        </button>
       </div>
     </section>
   );

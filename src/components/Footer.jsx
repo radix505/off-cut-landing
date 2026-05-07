@@ -84,7 +84,7 @@ export default function Footer() {
             <li><span>{useT('Czwartek', 'Thursday')}</span><span>09:00 – 19:00</span></li>
             <li><span>{useT('Piątek', 'Friday')}</span><span>09:00 – 19:00</span></li>
             <li><span>{useT('Sobota', 'Saturday')}</span><span>08:00 – 18:00</span></li>
-            <li><span>{useT('Niedziela', 'Sunday')}</span><span>{useT('Zamknięte', 'Closed')}</span></li>
+            <li><span>{useT('Niedziela', 'Sunday')}</span><span>10:00 – 16:00</span></li>
           </ul>
         </div>
 
