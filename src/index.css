@@ -27,75 +27,78 @@ html::-webkit-scrollbar-thumb:hover { background: #555; }
 .splash-content { position: absolute; top: 50%; text-align: center; pointer-events: none; z-index: 6; }
 .splash-content--dark { left: 25%; transform: translate(-50%, -50%); color: #fff; }
 .splash-content--light { left: 73%; transform: translate(-50%, -50%); color: #0a0a0a; }
-.splash-brand { font-family: 'Let Me Ride', 'Bebas Neue', sans-serif; font-size: clamp(30px,5vw,64px); letter-spacing: 0.08em; line-height: 1; white-space: nowrap; }
-.splash-sub { font-size: 0.55rem; letter-spacing: 0.45em; text-transform: uppercase; opacity: 0.5; margin-top: 0.4rem; }
-.splash-divider { width: 1px; height: 30px; background: currentColor; opacity: 0.2; margin: 1.5rem auto; }
-.splash-lang { font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; letter-spacing: 0.25em; }
-.splash-lang-hint { font-size: 0.45rem; letter-spacing: 0.3em; text-transform: uppercase; opacity: 0.35; margin-top: 0.5rem; }
-@media (max-width: 600px) {
+/* Splash content sizing — clamp() with min(vw, vh) so content scales down on
+   BOTH narrow widths AND short heights. Works universally on phones, foldables,
+   landscape orientations, etc. without device-specific breakpoints. */
+.splash-brand { font-family: 'Let Me Ride', 'Bebas Neue', sans-serif; font-size: clamp(22px, min(5vw, 8vh), 64px); letter-spacing: 0.08em; line-height: 1; white-space: nowrap; }
+.splash-sub { font-size: clamp(8px, 1.6vh, 9px); letter-spacing: 0.45em; text-transform: uppercase; opacity: 0.5; margin-top: clamp(0.2rem, 0.8vh, 0.4rem); }
+.splash-divider { width: 1px; height: clamp(12px, 3vh, 30px); background: currentColor; opacity: 0.2; margin: clamp(0.5rem, 2vh, 1.5rem) auto; }
+.splash-lang { font-family: 'Bebas Neue', sans-serif; font-size: clamp(14px, min(3vw, 4.5vh), 22px); letter-spacing: 0.25em; }
+.splash-lang-hint { font-size: clamp(7px, 1.2vh, 8px); letter-spacing: 0.3em; text-transform: uppercase; opacity: 0.35; margin-top: clamp(0.25rem, 1vh, 0.5rem); }
+/* Mobile-style splash for ALL non-desktop devices: small phones, tablets, touch laptops, landscape phones.
+   Desktop is the only place that gets the diagonal "color push" cut. */
+@media (max-width: 600px),
+       (pointer: coarse),
+       (hover: none),
+       (orientation: landscape) and (max-height: 700px) {
   .splash-half--dark { clip-path: polygon(0 0, 100% 0, 100% 55%, 0 45%); }
   .splash-half--dark:hover { clip-path: polygon(0 0, 100% 0, 100% 55%, 0 45%); }
   .splash-half--light { clip-path: polygon(0 45%, 100% 55%, 100% 100%, 0 100%); }
   .splash-half--light:hover { clip-path: polygon(0 45%, 100% 55%, 100% 100%, 0 100%); }
   .splash-content--dark { left: 50%; top: 22%; }
   .splash-content--light { left: 50%; top: 78%; }
-  /* mobile splash logo — horizontal split */
-  .splash-logo-half--dark { clip-path: polygon(0 0, 100% 0, 100% 55%, 0 45%); }
-  .splash-logo-half--light { clip-path: polygon(0 45%, 100% 55%, 100% 100%, 0 100%); }
+  /* Single seamless logo — color split is automatic via mix-blend-mode on .splash-logo-img */
   .splash-logo-img { max-width: 116px; max-height: 28vh; width: auto; height: auto; }
-  /* logo enters from top (dark) / bottom (light) on mobile */
-  .splash-logo-img--dark  { animation-name: splash-logo-enter-dark-mobile,  splash-logo-float; }
-  .splash-logo-img--light { animation-name: splash-logo-enter-light-mobile, splash-logo-float; }
-  @keyframes splash-logo-enter-dark-mobile  { from { transform: translate(-50%, calc(-50% - 20px)); opacity: 0; } to { transform: translate(-50%, -50%); opacity: 1; } }
-  @keyframes splash-logo-enter-light-mobile { from { transform: translate(-50%, calc(-50% + 20px)); opacity: 0; } to { transform: translate(-50%, -50%); opacity: 1; } }
+  .splash-logo-img--dark { animation-name: splash-logo-enter-dark-mobile, splash-logo-float; }
 }
-/* Splash logo — full-viewport container so clip-path % matches the half polygons exactly */
-.splash-logo-wrap { position: absolute; inset: 0; z-index: 5; pointer-events: none; transition: opacity 0.45s ease 0.25s; }
+/* Keyframes defined at top level so they're reusable by the landscape-phone query below */
+@keyframes splash-logo-enter-dark-mobile  { from { transform: translate(-50%, calc(-50% - 20px)); opacity: 0; } to { transform: translate(-50%, -50%); opacity: 1; } }
+@keyframes splash-logo-enter-light-mobile { from { transform: translate(-50%, calc(-50% + 20px)); opacity: 0; } to { transform: translate(-50%, -50%); opacity: 1; } }
+/* Splash logo — full-viewport container so clip-path % matches the half polygons exactly.
+   No z-index here so the child <img>'s mix-blend-mode can blend against the splash bgs. */
+.splash-logo-wrap { position: absolute; inset: 0; pointer-events: none; transition: opacity 0.45s ease 0.25s; }
 .splash-logo-wrap.splash-logo-splitting { opacity: 1; transition: none; }
 .splash-logo-wrap.splash-logo-splitting .splash-logo-img--dark  { animation: logo-crash-down 0.32s ease-in 0.06s both; }
 .splash-logo-wrap.splash-logo-splitting .splash-logo-img--light { animation: logo-crash-up   0.32s ease-in 0.1s  both; }
 @keyframes logo-crash-down { from { transform: translate(-50%,-50%) rotate(0deg); opacity:1; } to { transform: translate(calc(-50% - 170px), calc(-50% + 170px)) rotate( 14deg); opacity:0; } }
 @keyframes logo-crash-up   { from { transform: translate(-50%,-50%) rotate(0deg); opacity:1; } to { transform: translate(calc(-50% + 170px), calc(-50% - 170px)) rotate(-14deg); opacity:0; } }
-.splash-logo-half { position: absolute; inset: 0; overflow: hidden; transition: clip-path 0.4s cubic-bezier(0.4,0,0.2,1); }
-.splash-logo-half--dark { clip-path: polygon(0 0, 60% 0, 40% 100%, 0 100%); }
-.splash-logo-half--light { clip-path: polygon(60% 0, 100% 0, 100% 100%, 40% 100%); }
-/* mobile must come AFTER the desktop defaults to win the cascade */
-@media (max-width: 600px) {
-  .splash-logo-half--dark { clip-path: polygon(0 0, 100% 0, 100% 55%, 0 45%); }
-  .splash-logo-half--light { clip-path: polygon(0 45%, 100% 55%, 100% 100%, 0 100%); }
-}
-.splash-logo-img { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 170px; height: auto; display: block; }
-.splash-logo-img--dark  { filter: invert(1); animation: splash-logo-enter-dark 0.9s cubic-bezier(0.16,1,0.3,1) 0.2s both, splash-logo-float 2.2s ease-in-out 1.1s infinite; }
-.splash-logo-img--light { filter: none;      animation: splash-logo-enter-light 0.9s cubic-bezier(0.16,1,0.3,1) 0.2s both, splash-logo-float 2.2s ease-in-out 1.1s infinite; }
+/* Single seamless logo — no clip-paths. The "color split" effect is handled
+   entirely by mix-blend-mode: difference on the img itself, so there's no
+   geometric seam to misalign on any device (foldables, sub-pixel renderers, etc). */
+.splash-logo-half { position: absolute; inset: 0; overflow: visible; }
+.splash-logo-half--light { display: none; } /* second copy not needed with blend-mode */
+/* No mobile clip-path overrides needed — single logo + mix-blend-mode handles all sizes. */
+/* Logo is forced white via filter, then mix-blend-mode: difference auto-inverts it
+   against whatever bg pixel is under it — universal, no clip-path color matching. */
+.splash-logo-img { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 170px; height: auto; display: block; filter: brightness(0) invert(1); mix-blend-mode: difference; }
+.splash-logo-img--dark  { animation: splash-logo-enter-dark  0.9s cubic-bezier(0.16,1,0.3,1) 0.2s both, splash-logo-float 2.2s ease-in-out 1.1s infinite; }
+.splash-logo-img--light { animation: splash-logo-enter-light 0.9s cubic-bezier(0.16,1,0.3,1) 0.2s both, splash-logo-float 2.2s ease-in-out 1.1s infinite; }
 @keyframes splash-logo-enter-dark  { from { transform: translate(calc(-50% - 24px), -50%); opacity: 0; } to { transform: translate(-50%, -50%); opacity: 1; } }
 @keyframes splash-logo-enter-light { from { transform: translate(calc(-50% + 24px), -50%); opacity: 0; } to { transform: translate(-50%, -50%); opacity: 1; } }
 @keyframes splash-logo-float { 0%, 100% { transform: translate(-50%, -50%); } 50% { transform: translate(-50%, calc(-50% - 14px)); } }
-/* Hover: pull back the light bg when dark is hovered so the actual visual boundary shifts */
+/* Hover: pull back the light bg when dark is hovered so the actual visual boundary shifts.
+   Logo no longer needs clip-path mirroring — mix-blend-mode auto-tracks the bg shift. */
 .splash-half--dark:hover ~ .splash-half--light { clip-path: polygon(68% 0, 100% 0, 100% 100%, 48% 100%); }
-/* Mirror the half polygons to logo clips exactly */
-.splash-half--dark:hover ~ .splash-logo-wrap .splash-logo-half--dark { clip-path: polygon(0 0, 68% 0, 48% 100%, 0 100%); }
-.splash-half--dark:hover ~ .splash-logo-wrap .splash-logo-half--light { clip-path: polygon(68% 0, 100% 0, 100% 100%, 48% 100%); }
-.splash-half--light:hover ~ .splash-logo-wrap .splash-logo-half--dark { clip-path: polygon(0 0, 52% 0, 32% 100%, 0 100%); }
-.splash-half--light:hover ~ .splash-logo-wrap .splash-logo-half--light { clip-path: polygon(52% 0, 100% 0, 100% 100%, 32% 100%); }
-/* mobile size + hover overrides — MUST be after desktop sibling hover rules (lines above) to win cascade */
-@media (max-width: 600px) {
+/* Non-desktop: smaller logo. (Hover-related clip-path overrides no longer needed.) */
+@media (max-width: 600px),
+       (pointer: coarse),
+       (hover: none),
+       (orientation: landscape) and (max-height: 700px) {
   .splash-logo-img { max-width: 116px; max-height: 28vh; width: auto; height: auto; }
   .splash-half--dark:hover ~ .splash-half--light { clip-path: polygon(0 45%, 100% 55%, 100% 100%, 0 100%); }
-  .splash-half--dark:hover ~ .splash-logo-wrap .splash-logo-half--dark { clip-path: polygon(0 0, 100% 0, 100% 55%, 0 45%); }
-  .splash-half--dark:hover ~ .splash-logo-wrap .splash-logo-half--light { clip-path: polygon(0 45%, 100% 55%, 100% 100%, 0 100%); }
-  .splash-half--light:hover ~ .splash-logo-wrap .splash-logo-half--dark { clip-path: polygon(0 0, 100% 0, 100% 55%, 0 45%); }
-  .splash-half--light:hover ~ .splash-logo-wrap .splash-logo-half--light { clip-path: polygon(0 45%, 100% 55%, 100% 100%, 0 100%); }
 }
-.splash-scissors-overlay { position: absolute; inset: 0; pointer-events: none; z-index: 10; overflow: hidden; }
-.splash-scissors-mover-up { position: absolute; top: 0; left: 0; color: #888; animation: splashScissorsDiag 0.6s cubic-bezier(0.4,0,0.2,1) forwards; }
+/* Splash cutting animation — hidden by default, shown ONLY on desktop (mouse + wide screen). */
+.splash-scissors-overlay { display: none; position: absolute; inset: 0; pointer-events: none; z-index: 10; overflow: hidden; }
+.splash-scissors-mover-up { display: none; position: absolute; top: 0; left: 0; color: #888; }
 .splash-scissors-mover-up svg { width: 90px; height: 36px; display: block; }
 @keyframes splashScissorsDiag {
   from { transform: translate(calc(38vw - 44px), calc(110vh - 21px)) rotate(-72deg); }
   to   { transform: translate(calc(62vw - 44px), calc(-10vh - 21px)) rotate(-72deg); }
 }
-@media (max-width: 600px) {
-  /* JS drives mobile scissors precisely — cancel CSS animation */
-  .splash-scissors-mover-up { animation: none; }
+/* Desktop only: real mouse pointer + width ≥ 1025px. Excludes phones, tablets, touch laptops. */
+@media (pointer: fine) and (hover: hover) and (min-width: 1025px) {
+  .splash-scissors-overlay { display: block; }
+  .splash-scissors-mover-up { display: block; animation: splashScissorsDiag 0.6s cubic-bezier(0.4,0,0.2,1) forwards; }
 }
 .splash-half--dark.splash-splitting { transform: translateX(-110vw); }
 .splash-half--light.splash-splitting { transform: translateX(110vw); }
@@ -992,3 +995,78 @@ footer.footer-pro { background: #0a0a0a; border-top: 0.5px solid #1a1a1a; paddin
 /* SINGLE TOGGLE FLAG BUTTON */
 .lang-flag-btn { background: none; border: none; cursor: pointer; font-size: 1.25rem; padding: 0; line-height: 1; display: flex; align-items: center; transition: transform 0.15s; }
 .lang-flag-btn:hover { transform: scale(1.15); }
+
+/* ── LANDSCAPE PHONE ──────────────────────────────────────────────────────────
+   Phones in landscape have height < 500 px but width > 768 px, which causes
+   width-only breakpoints to apply desktop styles unintentionally.
+   This block re-applies the key mobile overrides without touching other rules.
+   iPad landscape (height ≥ 768 px) is not affected.
+   ──────────────────────────────────────────────────────────────────────────── */
+@media (orientation: landscape) and (max-height: 700px),
+       (orientation: landscape) and (max-width: 1024px) and (pointer: coarse) {
+
+  /* Splash — horizontal split (mirrors the ≤600px mobile treatment) */
+  .splash-half--dark,
+  .splash-half--dark:hover { clip-path: polygon(0 0, 100% 0, 100% 55%, 0 45%); }
+  .splash-half--light,
+  .splash-half--light:hover { clip-path: polygon(0 45%, 100% 55%, 100% 100%, 0 100%); }
+  .splash-content--dark { left: 50%; top: 22%; }
+  .splash-content--light { left: 50%; top: 78%; }
+  /* Single seamless logo — no clip-paths needed (mix-blend-mode handles colors). */
+  .splash-logo-img { max-width: 116px; max-height: 28vh; width: auto; height: auto; }
+  .splash-logo-img--dark { animation-name: splash-logo-enter-dark-mobile, splash-logo-float; }
+  .splash-half--dark:hover ~ .splash-half--light { clip-path: polygon(0 45%, 100% 55%, 100% 100%, 0 100%); }
+
+  /* Nav — hamburger mode */
+  nav { padding: 1.1rem 1.5rem 1.1rem 1rem; }
+  .nav-hamburger { display: flex; position: relative; z-index: 10000; }
+  .nav-book { display: none; }
+  .nav-scissors { display: none; }
+  .nav-links {
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    background: rgba(10,10,10,0.88);
+    backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+    flex-direction: column; align-items: center; justify-content: center;
+    gap: 0; list-style: none;
+    opacity: 0; visibility: hidden; pointer-events: none;
+    transition: opacity 0.3s, visibility 0.3s;
+    z-index: 9999;
+  }
+  .nav-links--open { opacity: 1; visibility: visible; pointer-events: all; }
+  .nav-mobile-book { display: block !important; }
+
+  /* Splash scissors — kill the cutting animation in landscape (mirrors mobile) */
+  .splash-scissors-overlay,
+  .splash-scissors-mover-up { display: none !important; animation: none !important; }
+
+  /* Sections — tight padding, edge-to-edge */
+  section { padding: 4rem 1rem; }
+  .section-header { flex-direction: column; align-items: flex-start; gap: 0.75rem; margin-bottom: 2.5rem; }
+
+  /* Nav */
+  nav { padding: 1.1rem 1rem; }
+
+  /* Services */
+  .services-grid { grid-template-columns: 1fr; }
+  .view-toggle { display: none; }
+
+  /* Barbers — single column, no wavy clip-path, no scroll scissors */
+  .barbers-grid { grid-template-columns: 1fr; }
+  .barbers-section { padding-top: 5rem; margin-top: 0; clip-path: none; }
+  .scroll-scissors { display: none !important; }
+
+  /* Gallery */
+  .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+
+  /* Booking */
+  .booking-layout { grid-template-columns: 1fr; gap: 2.5rem; }
+
+  /* Footer — single-column stacked */
+  .footer-pro-inner { grid-template-columns: 1fr; }
+  .footer-col { padding: 2rem 1rem; border-right: none; border-bottom: 0.5px solid #1a1a1a; }
+  .footer-col:last-child { border-bottom: none; }
+  .footer-col--brand { display: flex; flex-direction: column; align-items: center; text-align: center; }
+  .footer-pro-logo-wrap { justify-content: center; }
+  .footer-pro-hours li { font-size: 0.7rem; }
+  .footer-pro-bottom { padding: 1.25rem 1rem; flex-direction: column; align-items: center; gap: 0.75rem; }
+}
