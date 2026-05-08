@@ -24,6 +24,7 @@ ENV DB_PATH=/data/bookings.sqlite
 COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/dist ./dist
 COPY --from=build /app/server ./server
+COPY --from=build /app/src/data ./src/data
 COPY --from=build /app/package.json ./package.json
 
 RUN mkdir -p /data
