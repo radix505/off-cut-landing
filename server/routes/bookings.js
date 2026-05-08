@@ -2,6 +2,8 @@ import { stmts, beginImmediate, commit, rollback } from '../db.js';
 import { computeUnavailable, blockOverlapsExisting } from '../availability.js';
 import { getBarberIdSet, getServiceById } from '../catalog.js';
 import { buildSlotsForISODate } from '../../src/data/booking-config.js';
+import { getBookingById } from '../bot/queries.js';
+import { notifyNewBooking } from '../bot/index.js';
 
 const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
 const SLOT     = /^\d{2}:\d{2}$/;
@@ -141,6 +143,10 @@ export default async function bookingsRoutes(fastify) {
           barberId, serviceId, service.duration_min, date, slot, name.trim(), phone.trim()
         );
         commit.run();
+        const created = getBookingById(result.lastInsertRowid);
+        if (created) {
+          notifyNewBooking(created).catch((err) => req.log.warn({ err }, 'notifyNewBooking failed'));
+        }
         return reply.code(201).send({ id: result.lastInsertRowid, status: 'pending' });
       } catch (err) {
         try { rollback.run(); } catch {}

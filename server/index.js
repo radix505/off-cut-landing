@@ -8,6 +8,7 @@ import fastifyStatic from '@fastify/static';
 import bookingsRoutes from './routes/bookings.js';
 import catalogRoutes from './routes/catalog.js';
 import { seedCatalogIfEmpty, backfillBarberDetailsIfMissing } from './seed-catalog.js';
+import { startBot, stopBot } from './bot/index.js';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const isProd = process.env.NODE_ENV === 'production';
@@ -48,7 +49,17 @@ const HOST = process.env.HOST ?? (isProd ? '0.0.0.0' : '127.0.0.1');
 
 try {
   await fastify.listen({ port: PORT, host: HOST });
+  await startBot({ log: fastify.log });
 } catch (err) {
   fastify.log.error(err);
   process.exit(1);
+}
+
+for (const sig of ['SIGINT', 'SIGTERM']) {
+  process.on(sig, async () => {
+    fastify.log.info({ sig }, 'shutting down');
+    await stopBot();
+    await fastify.close();
+    process.exit(0);
+  });
 }
