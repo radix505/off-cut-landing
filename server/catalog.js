@@ -16,7 +16,7 @@ const selectBarberTags = db.prepare(`
 
 const selectServices = db.prepare(`
   SELECT id, name_pl, name_en, desc_pl, desc_en,
-         duration_min, duration_label, price_pln, delay, sort_order
+         duration_min, duration_label, price_pln, delay, sort_order, category
   FROM services
   WHERE active = 1
   ORDER BY sort_order, id
@@ -78,6 +78,7 @@ export function getCatalog() {
     durationMin: r.duration_min,
     price: formatPrice(r.price_pln),
     delay: r.delay,
+    category: r.category,
     barberIds: linksByService.get(r.id) ?? [],
   }));
 

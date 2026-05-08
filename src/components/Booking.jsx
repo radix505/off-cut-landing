@@ -4,6 +4,7 @@ import { useReveal } from '../hooks/useReveal';
 import { useRouter } from '../context/RouterContext';
 import { buildSlots } from '../data/booking-config';
 import { useCatalog } from '../context/CatalogContext';
+import BookingTimeWheel from './BookingTimeWheel';
 
 const MONTH_PL = ['Styczeń','Luty','Marzec','Kwiecień','Maj','Czerwiec','Lipiec','Sierpień','Wrzesień','Październik','Listopad','Grudzień'];
 const MONTH_EN = ['January','February','March','April','May','June','July','August','September','October','November','December'];
@@ -23,6 +24,68 @@ function buildCalDays(year, month) {
   return days;
 }
 
+function categorize(svc) {
+  if (!svc) return null;
+  if (svc.category) return svc.category;
+  const txt = `${svc.namePL || ''} ${svc.nameEN || ''}`.toLowerCase();
+  const hasBeard = /(brod|beard)/.test(txt);
+  const hasHair  = /(strzy|włos|wlos|cut|hair|golenie głowy|head shave)/.test(txt);
+  if (hasBeard && hasHair) return 'combo';
+  if (hasBeard) return 'beard';
+  return 'hair';
+}
+
+function pluralPL(n, one, few, many) {
+  if (n === 1) return one;
+  const mod10 = n % 10, mod100 = n % 100;
+  if (mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14)) return few;
+  return many;
+}
+
+const CATEGORY_DEFS = [
+  {
+    key: 'hair',
+    namePL: 'Włosy', nameEN: 'Hair',
+    subPL: 'Strzyżenie',  subEN: 'Cuts & Shaves',
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <circle cx="6" cy="6" r="3"/>
+        <circle cx="6" cy="18" r="3"/>
+        <line x1="20" y1="4" x2="8.12" y2="15.88"/>
+        <line x1="14.47" y1="14.48" x2="20" y2="20"/>
+        <line x1="8.12" y1="8.12" x2="12" y2="12"/>
+      </svg>
+    ),
+  },
+  {
+    key: 'beard',
+    namePL: 'Broda', nameEN: 'Beard',
+    subPL: 'Trymowanie',  subEN: 'Trim & Edge',
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <path d="M4 9 Q7 7, 9.5 9 Q11 10, 12 9.5 Q13 10, 14.5 9 Q17 7, 20 9"/>
+        <path d="M5 12 Q5 17, 9 19 Q12 20.5, 15 19 Q19 17, 19 12"/>
+        <line x1="10" y1="13" x2="14" y2="13"/>
+      </svg>
+    ),
+  },
+  {
+    key: 'combo',
+    namePL: 'Combo', nameEN: 'Combo',
+    subPL: 'Włosy + Broda', subEN: 'Cut + Beard',
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <circle cx="6" cy="4" r="1.6"/>
+        <circle cx="14" cy="4" r="1.6"/>
+        <line x1="7.35" y1="5.4" x2="14" y2="13"/>
+        <line x1="12.65" y1="5.4" x2="6" y2="13"/>
+        <path d="M5 16.6 Q7.5 15, 9.7 16.4 Q10.5 16.9, 11.5 16.6 Q12.5 16.9, 13.3 16.4 Q15.5 15, 18 16.6"/>
+        <path d="M6 18.4 Q6 21.5, 10 22.1 Q14 21.5, 14 18.4"/>
+      </svg>
+    ),
+  },
+];
+
 export default function Booking() {
   const ref = useReveal();
   const { lang } = useLang();
@@ -31,6 +94,7 @@ export default function Booking() {
 
   const [step,      setStep]      = useState(1);
   const [barber,    setBarber]    = useState(null);
+  const [category,  setCategory]  = useState(null);
   const [service,   setService]   = useState(null);
   const [date,      setDate]      = useState(null);
   const [slot,      setSlot]      = useState(null);
@@ -87,6 +151,7 @@ export default function Booking() {
     const pre = navState.preselectedService;
     clearNavState();
     setService(pre);
+    setCategory(categorize(pre));
     const eligibleIds = new Set(pre.barberIds ?? []);
     const eligible = BARBERS.filter(b => eligibleIds.has(b.id));
     if (eligible.length === 1) {
@@ -119,6 +184,7 @@ export default function Booking() {
   const stepIdx = visibleSteps.indexOf(step);
 
   function goBack() {
+    if (step === 2 && category) { setCategory(null); setService(null); return; }
     if (stepIdx <= 0) return;
     setStep(visibleSteps[stepIdx - 1]);
   }
@@ -152,12 +218,12 @@ export default function Booking() {
   const canAdvance = [
     () => !!barber,
     () => !!service,
-    () => !!date && !!slot,
+    () => !!date && !!slot && !unavailable.has(slot),
     () => name.trim().length > 1 && phone.trim().length > 5,
   ];
 
   function reset() {
-    setStep(1); setBarber(null); setService(null); setDate(null); setSlot(null);
+    setStep(1); setBarber(null); setCategory(null); setService(null); setDate(null); setSlot(null);
     setName(''); setPhone(''); setSubmitted(false);
     setUnavailable(new Set()); setIsSubmitting(false); setErrorMsg('');
     setFilteredBarberIds(null);
@@ -303,7 +369,14 @@ export default function Booking() {
               <div className="bwiz-heading">{useT('Wybierz barbera','Choose your barber')}</div>
               <div className="booking-barbers-grid">
                 {BARBERS.filter(b => !filteredBarberIds || filteredBarberIds.has(b.id)).map(b => (
-                  <button key={b.id} className={`booking-barber-card${barber?.id===b.id?' selected':''}`} onClick={() => setBarber(b)}>
+                  <button
+                    key={b.id}
+                    className={`booking-barber-card${barber?.id===b.id?' selected':''}`}
+                    onClick={() => {
+                      if (barber?.id !== b.id) { setCategory(null); setService(null); }
+                      setBarber(b);
+                    }}
+                  >
                     <img className="booking-barber-av" src={b.photo} alt={b.name} loading="lazy" decoding="async" />
                     <div className="booking-barber-name">{b.name}</div>
                     <div className="booking-barber-title">{lang==='pl' ? b.titlePL : b.titleEN}</div>
@@ -313,21 +386,76 @@ export default function Booking() {
             </div>
           )}
 
-          {/* ── STEP 2: Service ── */}
+          {/* ── STEP 2: Category → Service ── */}
           {step === 2 && (
             <div className="booking-step-body">
-              <div className="bwiz-heading">{useT('Wybierz usługę','Choose a service')}</div>
-              <div className="booking-services-list">
-                {ALL_SERVICES.filter(s => barber && (s.barberIds ?? []).includes(barber.id)).map(s => (
-                  <button key={s.id} className={`booking-service-item${service?.id===s.id?' selected':''}`} onClick={() => setService(s)}>
-                    <span className="bsi-name">{lang==='pl' ? s.namePL : s.nameEN}</span>
-                    <span className="bsi-meta">
-                      <span className="bsi-dur">{s.duration}</span>
-                      <span className="bsi-price">{s.price}</span>
+              {!category ? (
+                <>
+                  <div className="bwiz-heading">{useT('Wybierz kategorię','Choose a category')}</div>
+                  <div className="booking-categories-grid">
+                    {CATEGORY_DEFS.map((cat, i) => {
+                      const count = ALL_SERVICES.filter(s =>
+                        barber && (s.barberIds ?? []).includes(barber.id) && categorize(s) === cat.key
+                      ).length;
+                      const empty = count === 0;
+                      const countLabel = lang === 'pl'
+                        ? `${count} ${pluralPL(count, 'usługa', 'usługi', 'usług')}`
+                        : `${count} ${count === 1 ? 'service' : 'services'}`;
+                      return (
+                        <button
+                          key={cat.key}
+                          type="button"
+                          className={`booking-category-card${empty ? ' off' : ''}`}
+                          onClick={() => !empty && setCategory(cat.key)}
+                          disabled={empty}
+                        >
+                          <span className="bcat-num">{`0${i + 1}`}</span>
+                          <span className="bcat-icon" aria-hidden="true">{cat.icon}</span>
+                          <span className="bcat-name">{lang === 'pl' ? cat.namePL : cat.nameEN}</span>
+                          <span className="bcat-sub">{lang === 'pl' ? cat.subPL : cat.subEN}</span>
+                          <span className="bcat-count">{countLabel}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </>
+              ) : (
+                <>
+                  <button
+                    type="button"
+                    className="booking-cat-pill"
+                    onClick={() => { setCategory(null); setService(null); }}
+                    aria-label={lang==='pl' ? 'Zmień kategorię' : 'Change category'}
+                  >
+                    <span className="booking-cat-pill-arrow" aria-hidden="true">←</span>
+                    <span className="booking-cat-pill-label">{lang==='pl' ? 'Kategoria' : 'Category'}</span>
+                    <span className="booking-cat-pill-name">
+                      {(() => {
+                        const def = CATEGORY_DEFS.find(c => c.key === category);
+                        return lang === 'pl' ? def?.namePL : def?.nameEN;
+                      })()}
                     </span>
                   </button>
-                ))}
-              </div>
+                  <div className="bwiz-heading">{useT('Wybierz usługę','Choose a service')}</div>
+                  <div className="booking-services-list">
+                    {ALL_SERVICES
+                      .filter(s => barber && (s.barberIds ?? []).includes(barber.id) && categorize(s) === category)
+                      .map(s => (
+                        <button
+                          key={s.id}
+                          className={`booking-service-item${service?.id===s.id?' selected':''}`}
+                          onClick={() => setService(s)}
+                        >
+                          <span className="bsi-name">{lang==='pl' ? s.namePL : s.nameEN}</span>
+                          <span className="bsi-meta">
+                            <span className="bsi-dur">{s.duration}</span>
+                            <span className="bsi-price">{s.price}</span>
+                          </span>
+                        </button>
+                      ))}
+                  </div>
+                </>
+              )}
             </div>
           )}
 
@@ -370,19 +498,14 @@ export default function Booking() {
                     : useT('Najpierw wybierz dzień','Select a day first')}
                 </div>
                 {date && (
-                  <div className="bslots-grid" aria-busy={loadingAvail || undefined}>
-                    {slots.map(s => {
-                      const taken = unavailable.has(s);
-                      return (
-                        <button
-                          key={s}
-                          className={`bslot${taken?' unavail':''}${slot===s?' sel':''}`}
-                          onClick={() => !taken && setSlot(s)}
-                          disabled={taken || loadingAvail}
-                        >{s}</button>
-                      );
-                    })}
-                  </div>
+                  <BookingTimeWheel
+                    slots={slots}
+                    unavailable={unavailable}
+                    value={slot}
+                    onChange={setSlot}
+                    loading={loadingAvail}
+                    lang={lang}
+                  />
                 )}
               </div>
 
@@ -424,7 +547,7 @@ export default function Booking() {
 
           {/* Navigation */}
           <div className="booking-wizard-nav">
-            {stepIdx > 0
+            {(stepIdx > 0 || (step === 2 && category))
               ? <button className="bwiz-back" onClick={goBack} disabled={isSubmitting}>← {useT('Wróć','Back')}</button>
               : <span />}
             <button

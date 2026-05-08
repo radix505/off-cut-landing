@@ -43,7 +43,9 @@ const SCHEMA = [
     price_pln      INTEGER NOT NULL,
     delay          INTEGER NOT NULL DEFAULT 0,
     sort_order     INTEGER NOT NULL,
-    active         INTEGER NOT NULL DEFAULT 1
+    active         INTEGER NOT NULL DEFAULT 1,
+    category       TEXT NOT NULL DEFAULT 'hair'
+                    CHECK(category IN ('hair','beard','combo'))
   )`,
 
   `CREATE TABLE IF NOT EXISTS bookings (
@@ -79,6 +81,27 @@ const SCHEMA = [
 for (const sql of SCHEMA) run(sql);
 
 migrateBarbersToIntegerId();
+migrateServicesAddCategory();
+
+function categorizeFromName(namePl, nameEn) {
+  const txt = `${namePl ?? ''} ${nameEn ?? ''}`.toLowerCase();
+  const hasBeard = /(brod|beard)/.test(txt);
+  const hasHair  = /(strzy|włos|wlos|cut|hair|golenie głowy|head shave)/.test(txt);
+  if (hasBeard && hasHair) return 'combo';
+  if (hasBeard) return 'beard';
+  return 'hair';
+}
+
+function migrateServicesAddCategory() {
+  const cols = db.prepare(`PRAGMA table_info(services)`).all().map(c => c.name);
+  if (cols.includes('category')) return;
+  db.transaction(() => {
+    run(`ALTER TABLE services ADD COLUMN category TEXT NOT NULL DEFAULT 'hair'`);
+    const rows = db.prepare(`SELECT id, name_pl, name_en FROM services`).all();
+    const upd = db.prepare(`UPDATE services SET category = ? WHERE id = ?`);
+    for (const r of rows) upd.run(categorizeFromName(r.name_pl, r.name_en), r.id);
+  })();
+}
 
 function migrateBarbersToIntegerId() {
   const probe = db.prepare(`SELECT typeof(id) AS t FROM barbers LIMIT 1`).get();
