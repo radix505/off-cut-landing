@@ -89,7 +89,7 @@ export default function Nav() {
         </div>
       </div>
       <ul className={`nav-links${open ? ' nav-links--open' : ''}`}>
-        <li><a href="/prices" onClick={(e) => { e.preventDefault(); navigate('/prices'); close(); }}>{useT('Usługi', 'Services')}</a></li>
+        <li><a href="#services" onClick={(e) => handleSectionClick(e, 'services')}>{useT('Usługi', 'Services')}</a></li>
         <li>
           <a
             href="/crew"
@@ -109,7 +109,7 @@ export default function Nav() {
           </a>
         </li>
         <li><a href="/contact" className={onContact ? 'nav-link--active' : ''} onClick={(e) => { e.preventDefault(); navigate('/contact'); close(); }}>{useT('Kontakt', 'Contact')}</a></li>
-        <li><a href="#location" onClick={(e) => handleSectionClick(e, 'location')}>{useT('Lokalizacja', 'Location')}</a></li>
+
         <li>
           <a
             href="/blog"
