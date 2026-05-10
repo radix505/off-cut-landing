@@ -89,7 +89,7 @@ export default function Nav() {
         </div>
       </div>
       <ul className={`nav-links${open ? ' nav-links--open' : ''}`}>
-        <li><a href="#services" onClick={(e) => handleSectionClick(e, 'services')}>{useT('Usługi', 'Services')}</a></li>
+        <li><a href="/prices" onClick={(e) => { e.preventDefault(); navigate('/prices'); close(); }}>{useT('Usługi', 'Services')}</a></li>
         <li>
           <a
             href="/crew"

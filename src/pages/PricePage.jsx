@@ -51,7 +51,7 @@ export default function PricePage() {
       <Nav />
       <div className="prices-page-hero">
         <div className="blog-page-eyebrow">Off Cut — Barbershop</div>
-        <h1 className="blog-page-title">{useT('Cennik', 'Prices')}</h1>
+        <h1 className="blog-page-title">{useT('Usługi', 'Services')}</h1>
         <p className="blog-page-sub">
           {useT(
             'Wszystkie usługi w jednym miejscu. Czas i cena — bez niespodzianek.',
