@@ -629,10 +629,10 @@ footer.footer-pro { background: #0a0a0a; border-top: 0.5px solid #1a1a1a; paddin
 .blog-email-btn:hover { background: #DC5030; border-color: #DC5030; }
 
 /* BLOG PAGE */
-.blog-page-hero { background: #f5f3ef; padding: 10rem 3rem 5rem; border-bottom: 0.5px solid #ddd9d0; }
-.blog-page-eyebrow { font-size: 0.6rem; letter-spacing: 0.4em; text-transform: uppercase; color: #bbb; margin-bottom: 1.5rem; }
-.blog-page-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(64px, 10vw, 130px); letter-spacing: 0.02em; color: #0a0a0a; line-height: 0.9; white-space: pre-line; }
-.blog-page-sub { font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: #aaa; margin-top: 2rem; max-width: 380px; line-height: 1.8; }
+.blog-page-hero { background: #0a0a0a; padding: 10rem 3rem 5rem; border-bottom: 0.5px solid #1a1a1a; }
+.blog-page-eyebrow { font-size: 0.6rem; letter-spacing: 0.4em; text-transform: uppercase; color: #555; margin-bottom: 1.5rem; }
+.blog-page-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(64px, 10vw, 130px); letter-spacing: 0.02em; color: #fff; line-height: 0.9; white-space: pre-line; }
+.blog-page-sub { font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: #666; margin-top: 2rem; max-width: 380px; line-height: 1.8; }
 
 /* GALLERY PAGE */
 .gallery-page-hero { position: relative; overflow: hidden; background: #0a0a0a; padding: 10rem 3rem 5rem; border-bottom: 0.5px solid #1a1a1a; }
