@@ -1,10 +1,10 @@
 import { useReveal } from '../hooks/useReveal';
-import { useT } from '../context/LangContext';
+import { useT, useLang } from '../context/LangContext';
 import { HOURS_SUMMARY } from '../data/businessHours';
 
 export default function Map() {
   const ref = useReveal();
-  const { primary, secondary } = HOURS_SUMMARY;
+  const { lang } = useLang();
 
   return (
     <section id="location" className="map-section" ref={ref}>
@@ -49,14 +49,16 @@ export default function Map() {
 
           <div className="map-info-block">
             <div className="map-info-label">{useT('Godziny otwarcia', 'Opening Hours')}</div>
-            <div className="map-info-value">
-              {useT(primary.labelPL, primary.labelEN)}<br />
-              <span className="map-info-hours">{primary.range}</span>
-            </div>
-            <div className="map-info-value" style={{ marginTop: '0.75rem' }}>
-              {useT(secondary.labelPL, secondary.labelEN)}<br />
-              <span className="map-info-hours">{secondary.range}</span>
-            </div>
+            {HOURS_SUMMARY.map((slot, i) => (
+              <div
+                key={slot.labelEN}
+                className="map-info-value"
+                style={i > 0 ? { marginTop: '0.75rem' } : undefined}
+              >
+                {lang === 'pl' ? slot.labelPL : slot.labelEN}<br />
+                <span className="map-info-hours">{slot.range}</span>
+              </div>
+            ))}
           </div>
 
           <div className="map-info-block">

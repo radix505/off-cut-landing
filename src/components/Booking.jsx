@@ -346,8 +346,15 @@ export default function Booking() {
           <div className="booking-info-row">
             <div className="booking-info-item">
               <span className="booking-info-label">{useT('Godziny','Hours')}</span>
-              <span className="booking-info-value">{useT(HOURS_SUMMARY.primary.shortPL, HOURS_SUMMARY.primary.shortEN)}</span>
-              <span className="booking-info-value" style={{ color:'var(--text-muted-dark)', fontSize:'0.78rem' }}>{useT(HOURS_SUMMARY.secondary.shortPL, HOURS_SUMMARY.secondary.shortEN)}</span>
+              {HOURS_SUMMARY.map((slot, i) => (
+                <span
+                  key={slot.labelEN}
+                  className="booking-info-value"
+                  style={i === 0 ? undefined : { color:'var(--text-muted-dark)', fontSize:'0.78rem' }}
+                >
+                  {lang === 'pl' ? slot.shortPL : slot.shortEN}
+                </span>
+              ))}
             </div>
             <div className="booking-info-item">
               <span className="booking-info-label">{useT('Telefon','Phone')}</span>

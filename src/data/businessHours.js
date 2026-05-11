@@ -1,15 +1,23 @@
 // Single source of truth for opening hours.
 // Day index per Date.getDay(): 0=Sun, 1=Mon, ..., 6=Sat.
 // `null` = closed. start/end are integer hours (24h).
+//
+// NOTE: this file is imported by both the React app AND the Node server
+// (via src/data/booking-config.js → server/routes/bookings.js). Keep it
+// React-free — no JSX, no .jsx imports — or `node server/index.js` will
+// crash with ERR_UNKNOWN_FILE_EXTENSION.
+
 export const BUSINESS_HOURS = {
-  0: { start: 10, end: 16 }, // Sunday
-  1: { start: 9,  end: 20 }, // Monday
-  2: { start: 9,  end: 20 }, // Tuesday
-  3: { start: 9,  end: 20 }, // Wednesday
-  4: { start: 9,  end: 20 }, // Thursday
-  5: { start: 9,  end: 20 }, // Friday
-  6: { start: 9,  end: 20 }, // Saturday
+  0: null,                   // Sunday — closed
+  1: { start: 10, end: 19 }, // Monday
+  2: { start: 9,  end: 19 }, // Tuesday
+  3: { start: 9,  end: 19 }, // Wednesday
+  4: { start: 9,  end: 19 }, // Thursday
+  5: { start: 9,  end: 19 }, // Friday
+  6: { start: 8,  end: 18 }, // Saturday
 };
+
+
 
 export const SLOT_STEP_MIN = 30;
 
@@ -37,24 +45,32 @@ export const HOURS_DISPLAY = DAYS.map(({ idx, pl, en }) => {
 });
 
 // Compact summary for Map + Booking sidebar.
-// Hand-authored copy — if hours change shape (e.g. Monday becomes the exception),
-// rewrite this object to reflect the new grouping.
-export const HOURS_SUMMARY = {
-  primary: {
-    labelPL: 'Pon – Sob',
-    labelEN: 'Mon – Sat',
-    range: '09:00 – 20:00',
-    shortPL: 'Pon–Sob 9–20',
-    shortEN: 'Mon–Sat 9–20',
+// Hand-authored copy — rewrite when the underlying hours change shape.
+// Only open windows are listed; closed days are implied by omission
+// (the Footer + Contact tables render the full week including closures).
+export const HOURS_SUMMARY = [
+  {
+    labelPL: 'Poniedziałek',
+    labelEN: 'Monday',
+    range: '10:00 – 19:00',
+    shortPL: 'Pon 10–19',
+    shortEN: 'Mon 10–19',
   },
-  secondary: {
-    labelPL: 'Niedziela',
-    labelEN: 'Sunday',
-    range: '10:00 – 16:00',
-    shortPL: 'Nie 10–16',
-    shortEN: 'Sun 10–16',
+  {
+    labelPL: 'Wt – Pt',
+    labelEN: 'Tue – Fri',
+    range: '09:00 – 19:00',
+    shortPL: 'Wt–Pt 9–19',
+    shortEN: 'Tue–Fri 9–19',
   },
-};
+  {
+    labelPL: 'Sobota',
+    labelEN: 'Saturday',
+    range: '08:00 – 18:00',
+    shortPL: 'Sob 8–18',
+    shortEN: 'Sat 8–18',
+  },
+];
 
 const SCHEMA_DAYS = {
   0: 'Sunday',

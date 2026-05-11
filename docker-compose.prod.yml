@@ -17,28 +17,21 @@ services:
       retries: 10
 
   app:
-    build:
-      context: .
-      dockerfile: Dockerfile.dev
+    build: .
     restart: unless-stopped
     depends_on:
       postgres:
         condition: service_healthy
     environment:
       DATABASE_URL: postgres://offcut:offcut@postgres:5432/offcut
-      NODE_ENV: development
+      NODE_ENV: production
       HOST: 0.0.0.0
       PORT: "3001"
       LOG_LEVEL: ${LOG_LEVEL:-info}
       TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN:-}
       TELEGRAM_MANAGER_IDS: ${TELEGRAM_MANAGER_IDS:-}
     ports:
-      - "5173:5173"   # Vite dev server (open this URL in the browser)
-      - "3001:3001"   # Fastify API (Vite proxies /api/* here)
-    volumes:
-      - .:/app:cached         # live source — HMR picks up changes
-      - /app/node_modules     # mask host node_modules with container-installed deps
-    command: npm run dev:all
+      - "3001:3001"
 
 volumes:
   postgres-data:

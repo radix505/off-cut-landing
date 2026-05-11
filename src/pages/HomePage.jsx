@@ -38,7 +38,7 @@ export default function HomePage() {
       <Gallery />
       <Reviews />
       <Booking />
-      <Blog />
+      {/* <Blog /> */}
       <Map />
       <Footer />
       {scrolled && (
