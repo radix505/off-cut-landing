@@ -38,7 +38,7 @@ export default function Barbers() {
               <div className="barber-overlay">
                 <div className="barber-name">{b.name}</div>
                 <div className="barber-title">{lang === 'pl' ? b.titlePL : b.titleEN}</div>
-                <p className="barber-bio-hover">{lang === 'pl' ? b.bio.pl : b.bio.en}</p>
+                <p className="barber-bio-hover"><span>{lang === 'pl' ? b.bio.pl : b.bio.en}</span></p>
               </div>
             </div>
             <div className="barber-info">

@@ -3,6 +3,7 @@ import { useT, useLang } from '../context/LangContext';
 import { useReveal } from '../hooks/useReveal';
 import { useRouter } from '../context/RouterContext';
 import { buildSlots } from '../data/booking-config';
+import { HOURS_SUMMARY } from '../data/businessHours';
 import { useCatalog } from '../context/CatalogContext';
 import BookingTimeWheel from './BookingTimeWheel';
 
@@ -33,6 +34,13 @@ function categorize(svc) {
   if (hasBeard && hasHair) return 'combo';
   if (hasBeard) return 'beard';
   return 'hair';
+}
+
+function pickVariantForBarber(svc, barberId) {
+  if (!svc?.variants?.length) return svc;
+  const variant = svc.variants.find((v) => (v.barberIds ?? []).includes(barberId));
+  if (!variant) return svc;
+  return { ...variant, variants: svc.variants };
 }
 
 function pluralPL(n, one, few, many) {
@@ -150,15 +158,17 @@ export default function Booking() {
     if (BARBERS.length === 0) return;
     const pre = navState.preselectedService;
     clearNavState();
-    setService(pre);
     setCategory(categorize(pre));
     const eligibleIds = new Set(pre.barberIds ?? []);
     const eligible = BARBERS.filter(b => eligibleIds.has(b.id));
     if (eligible.length === 1) {
-      setBarber(eligible[0]);
-      setFilteredBarberIds(new Set(eligible.map(b => b.id)));
+      const only = eligible[0];
+      setBarber(only);
+      setService(pickVariantForBarber(pre, only.id));
+      setFilteredBarberIds(new Set([only.id]));
       setStep(3);
     } else {
+      setService(pre);
       setFilteredBarberIds(new Set(eligible.map(b => b.id)));
       setStep(1);
     }
@@ -245,7 +255,18 @@ export default function Booking() {
           phone:     phone.trim(),
         }),
       });
-      if (res.ok) { setSubmitted(true); return; }
+      if (res.ok) {
+        try {
+          localStorage.setItem('offcut-last-booking', JSON.stringify({
+            barberId: barber.id,
+            barberName: barber.name,
+            serviceId: service.id,
+            completedAt: Date.now(),
+          }));
+        } catch {}
+        setSubmitted(true);
+        return;
+      }
       let body = {};
       try { body = await res.json(); } catch {}
       if (res.status === 409) {
@@ -285,7 +306,6 @@ export default function Booking() {
       <div className="section-header">
         <div>
           <div className="section-number">{useT('05 / REZERWACJA','05 / BOOKING')}</div>
-          <div className="section-title">{useT('Zarezerwuj fotel','Reserve your chair')}</div>
         </div>
       </div>
       <div className="booking-success reveal">
@@ -310,7 +330,6 @@ export default function Booking() {
       <div className="section-header">
         <div>
           <div className="section-number">{useT('05 / REZERWACJA','05 / BOOKING')}</div>
-          <div className="section-title">{useT('Zarezerwuj fotel','Reserve your chair')}</div>
         </div>
       </div>
 
@@ -327,12 +346,12 @@ export default function Booking() {
           <div className="booking-info-row">
             <div className="booking-info-item">
               <span className="booking-info-label">{useT('Godziny','Hours')}</span>
-              <span className="booking-info-value">{useT('Pon–Sob 9–20','Mon–Sat 9–20')}</span>
-              <span className="booking-info-value" style={{ color:'#555', fontSize:'0.7rem' }}>{useT('Nie 10–16','Sun 10–16')}</span>
+              <span className="booking-info-value">{useT(HOURS_SUMMARY.primary.shortPL, HOURS_SUMMARY.primary.shortEN)}</span>
+              <span className="booking-info-value" style={{ color:'var(--text-muted-dark)', fontSize:'0.78rem' }}>{useT(HOURS_SUMMARY.secondary.shortPL, HOURS_SUMMARY.secondary.shortEN)}</span>
             </div>
             <div className="booking-info-item">
               <span className="booking-info-label">{useT('Telefon','Phone')}</span>
-              <span className="booking-info-value">+48 513 340 013</span>
+              <a className="booking-info-link" href="tel:+48513340013">+48 513 340 013</a>
             </div>
             <div className="booking-info-item">
               <span className="booking-info-label">{useT('Adres','Location')}</span>
@@ -347,7 +366,7 @@ export default function Booking() {
           {/* Progress */}
           <div className="booking-progress">
             <div className="booking-progress-track">
-              <div className="booking-progress-fill" style={{ width: `${(stepIdx / (visibleSteps.length - 1)) * 100}%` }} />
+              <div className="booking-progress-fill" style={{ transform: `scaleX(${stepIdx / (visibleSteps.length - 1)})` }} />
             </div>
             {visibleSteps.map((vs, i) => (
               <div key={vs} className={`bpstep${stepIdx > i ? ' done' : step === vs ? ' active' : ''}`}>
@@ -373,7 +392,12 @@ export default function Booking() {
                     key={b.id}
                     className={`booking-barber-card${barber?.id===b.id?' selected':''}`}
                     onClick={() => {
-                      if (barber?.id !== b.id) { setCategory(null); setService(null); }
+                      if (service?.variants?.length) {
+                        setService(pickVariantForBarber(service, b.id));
+                      } else if (barber?.id !== b.id) {
+                        setCategory(null);
+                        setService(null);
+                      }
                       setBarber(b);
                     }}
                   >

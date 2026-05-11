@@ -1,6 +1,6 @@
 import { stmts, beginImmediate, commit, rollback } from '../db.js';
 import { computeUnavailable, blockOverlapsExisting } from '../availability.js';
-import { getBarberIdSet, getServiceById } from '../catalog.js';
+import { getBarberIdSet, getServiceById, isBarberLinkedToService } from '../catalog.js';
 import { buildSlotsForISODate } from '../../src/data/booking-config.js';
 import { getBookingById } from '../bot/queries.js';
 import { notifyNewBooking } from '../bot/index.js';
@@ -117,6 +117,9 @@ export default async function bookingsRoutes(fastify) {
       if (!getBarberIdSet().has(barberId)) return reply.code(422).send({ error: 'unknown_barber' });
       const service = getServiceById(serviceId);
       if (!service) return reply.code(422).send({ error: 'unknown_service' });
+      if (!isBarberLinkedToService(barberId, serviceId)) {
+        return reply.code(422).send({ error: 'barber_service_mismatch' });
+      }
 
       if (date < todayInWarsaw()) {
         return reply.code(400).send({ error: 'date_in_past' });

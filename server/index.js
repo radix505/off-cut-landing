@@ -7,7 +7,7 @@ import cors from '@fastify/cors';
 import fastifyStatic from '@fastify/static';
 import bookingsRoutes from './routes/bookings.js';
 import catalogRoutes from './routes/catalog.js';
-import { seedCatalogIfEmpty, backfillBarberDetailsIfMissing } from './seed-catalog.js';
+import { seedCatalogIfEmpty, backfillBarberDetailsIfMissing, cleanServiceCopyIfNeeded } from './seed-catalog.js';
 import { startBot, stopBot } from './bot/index.js';
 
 const here = dirname(fileURLToPath(import.meta.url));
@@ -19,6 +19,7 @@ const fastify = Fastify({
 
 seedCatalogIfEmpty(fastify.log);
 backfillBarberDetailsIfMissing(fastify.log);
+cleanServiceCopyIfNeeded(fastify.log);
 
 if (!isProd) {
   await fastify.register(cors, { origin: true });

@@ -1,10 +1,17 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useT } from '../context/LangContext';
 import { useRouter } from '../context/RouterContext';
 
 export default function CookieBanner() {
   const [visible, setVisible] = useState(() => !localStorage.getItem('offcut-consent'));
   const { navigate } = useRouter();
+
+  useEffect(() => {
+    if (visible) {
+      document.body.classList.add('cookie-open');
+      return () => document.body.classList.remove('cookie-open');
+    }
+  }, [visible]);
 
   if (!visible) return null;
 

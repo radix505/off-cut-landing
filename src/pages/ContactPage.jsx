@@ -2,19 +2,16 @@ import Nav from '../components/Nav';
 import Footer from '../components/Footer';
 import { useT, useLang } from '../context/LangContext';
 import { useRouter } from '../context/RouterContext';
+import { HOURS_DISPLAY } from '../data/businessHours';
 
 export default function ContactPage() {
   const { navigate } = useRouter();
+  const { lang } = useLang();
 
-  const hours = [
-    { day: useT('Poniedziałek', 'Monday'),   h: '10:00 – 19:00' },
-    { day: useT('Wtorek',       'Tuesday'),   h: '09:00 – 19:00' },
-    { day: useT('Środa',        'Wednesday'), h: '09:00 – 19:00' },
-    { day: useT('Czwartek',     'Thursday'),  h: '09:00 – 19:00' },
-    { day: useT('Piątek',       'Friday'),    h: '09:00 – 19:00' },
-    { day: useT('Sobota',       'Saturday'),  h: '08:00 – 18:00' },
-    { day: useT('Niedziela',    'Sunday'),    h: useT('Zamknięte', 'Closed') },
-  ];
+  const hours = HOURS_DISPLAY.map((row) => ({
+    day: lang === 'pl' ? row.dayPL : row.dayEN,
+    h:   lang === 'pl' ? row.rangePL : row.rangeEN,
+  }));
 
   return (
     <>

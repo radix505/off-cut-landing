@@ -27,7 +27,7 @@ export default function Marquee() {
   const { lang } = useLang();
   const items = useMemo(() => {
     const base = lang === 'pl' ? itemsPL : itemsEN;
-    return [...base, ...base, ...base, ...base];
+    return [...base, ...base];
   }, [lang]);
 
   return (

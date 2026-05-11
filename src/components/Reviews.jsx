@@ -17,6 +17,8 @@ const LocalGuideIcon = () => (
   </svg>
 );
 
+// NOTE: static review wall — copy is paraphrased from real Google reviews of Off Cut Szczecin.
+// Replace with live Google Places API data before launch if authenticity becomes a concern.
 const reviews = [
   { initials: 'B', name: 'Bartosz K.',   color: '#1A73E8', datePL: '2 miesiące temu',  dateEN: '2 months ago',  localGuide: true,  reviewCount: 14, textPL: 'Cięcie idealne, atmosfera luźna, Aleksander to prawdziwy profesjonalista.',            textEN: 'Perfect cut, relaxed atmosphere — Aleksander is a true professional.' },
   { initials: 'W', name: 'Wojtek M.',    color: '#34A853', datePL: 'miesiąc temu',      dateEN: '1 month ago',   localGuide: false, reviewCount: 3,  textPL: 'Świetny barber shop z profesjonalnym podejściem do klienta.',                  textEN: 'Great barbershop with a professional approach to every client.' },
@@ -71,12 +73,12 @@ const reviews = [
   { initials: 'E', name: 'Emil S.',      color: '#0D47A1', datePL: '4 dni temu',        dateEN: '4 days ago',    localGuide: true,  reviewCount: 44, textPL: 'Próbowałem wielu barberów — Off Cut wygrywa precyzją i atmosferą.',        textEN: 'Tried many barbershops — Off Cut wins on precision and atmosphere.' },
 ];
 
-function ReviewCard({ r, lang, style }) {
+function ReviewCard({ r, lang, style, accent = false }) {
   const pick = (pl, en) => (lang === 'pl' ? pl : en);
   return (
-    <a className="review-card" style={style} href="https://share.google/YjV0HAKR6jNQyiiHg" target="_blank" rel="noopener noreferrer">
+    <div className="review-card" style={style}>
       <div className="review-card-top">
-        <div className="review-avatar" style={{ background: r.color }}>{r.initials}</div>
+        <div className={`review-avatar${accent ? ' review-avatar--accent' : ''}`}>{r.initials}</div>
         <div className="review-meta">
           <div className="review-author">{r.name}</div>
           <div className="review-submeta">
@@ -92,7 +94,7 @@ function ReviewCard({ r, lang, style }) {
         <span className="review-date">{pick(r.datePL, r.dateEN)}</span>
       </div>
       <p className="review-text">{pick(r.textPL, r.textEN)}</p>
-    </a>
+    </div>
   );
 }
 
@@ -144,6 +146,7 @@ export default function Reviews() {
         key={`${col}-${row}`}
         r={r}
         lang={lang}
+        accent={i % 5 === 2}
         style={{ '--order': order }}
       />
     );

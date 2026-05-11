@@ -1,8 +1,10 @@
 import { useReveal } from '../hooks/useReveal';
 import { useT } from '../context/LangContext';
+import { HOURS_SUMMARY } from '../data/businessHours';
 
 export default function Map() {
   const ref = useReveal();
+  const { primary, secondary } = HOURS_SUMMARY;
 
   return (
     <section id="location" className="map-section" ref={ref}>
@@ -28,6 +30,14 @@ export default function Map() {
             <div className="map-info-value">
               Bolesława Krzywoustego 27 U4<br />70-316 Szczecin
             </div>
+            <a
+              className="map-directions-cta"
+              href="https://www.google.com/maps/dir/?api=1&destination=Bole%C5%82awa+Krzywoustego+27+U4%2C+Szczecin"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {useT('Wyznacz trasę', 'Get directions')} →
+            </a>
           </div>
 
           <div className="map-info-block">
@@ -40,12 +50,12 @@ export default function Map() {
           <div className="map-info-block">
             <div className="map-info-label">{useT('Godziny otwarcia', 'Opening Hours')}</div>
             <div className="map-info-value">
-              {useT('Pon – Sob', 'Mon – Sat')}<br />
-              <span className="map-info-hours">09:00 – 20:00</span>
+              {useT(primary.labelPL, primary.labelEN)}<br />
+              <span className="map-info-hours">{primary.range}</span>
             </div>
             <div className="map-info-value" style={{ marginTop: '0.75rem' }}>
-              {useT('Niedziela', 'Sunday')}<br />
-              <span className="map-info-hours">10:00 – 16:00</span>
+              {useT(secondary.labelPL, secondary.labelEN)}<br />
+              <span className="map-info-hours">{secondary.range}</span>
             </div>
           </div>
 

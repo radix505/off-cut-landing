@@ -38,6 +38,13 @@ const selectActiveBarberIds = db.prepare(`
   SELECT id FROM barbers WHERE active = 1
 `);
 
+const selectServiceBarberLink = db.prepare(`
+  SELECT 1
+  FROM service_barbers sb
+  JOIN barbers b ON b.id = sb.barber_id
+  WHERE sb.service_id = ? AND sb.barber_id = ? AND b.active = 1
+`);
+
 function formatPrice(pln) {
   return `${pln} PLN`;
 }
@@ -91,4 +98,8 @@ export function getBarberIdSet() {
 
 export function getServiceById(id) {
   return selectServiceById.get(id) ?? null;
+}
+
+export function isBarberLinkedToService(barberId, serviceId) {
+  return !!selectServiceBarberLink.get(serviceId, barberId);
 }

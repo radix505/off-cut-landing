@@ -52,11 +52,11 @@ const BARBERS = [
 ];
 
 const SERVICES = [
-  { num: '001', namePL: 'Strzyżenie Męskie Włosy Krótkie', nameEN: "Men's Cut — Short Hair",
+  { num: '001', namePL: 'Strzyżenie Męskie Włosy Krótkie', nameEN: 'Short Hair Cut',
     descPL: 'Precyzyjne strzyżenie krótkich włosów. Czyste linie, dopasowane do kształtu głowy.',
     descEN: 'Precise short hair cut. Clean lines, shaped to your head.',
     duration: '50 min', durationMin: 50, pricePLN: 100, delay: 1, category: 'hair', barbers: ['OLEK', 'JULIA'] },
-  { num: '002', namePL: 'Strzyżenie Męskie Włosy Długie', nameEN: "Men's Cut — Long Hair",
+  { num: '002', namePL: 'Strzyżenie Męskie Włosy Długie', nameEN: 'Long Hair Cut',
     descPL: 'Strzyżenie długich włosów z dbałością o teksturę i ruch.',
     descEN: 'Long hair cut with attention to texture and movement.',
     duration: '1h', durationMin: 60, pricePLN: 110, delay: 2, category: 'hair', barbers: ['OLEK', 'JULIA'] },
@@ -68,7 +68,7 @@ const SERVICES = [
     descPL: 'Kompletna wizyta. Włosy i broda w jednym czasie, przez jednego rzemieślnika.',
     descEN: 'Full visit. Hair and beard in one sitting, by one craftsman.',
     duration: '1h 10min', durationMin: 70, pricePLN: 140, delay: 1, category: 'combo', barbers: ['OLEK', 'JULIA'] },
-  { num: '005', namePL: 'Golenie Głowy Maszynką', nameEN: 'Head Shave — One Length',
+  { num: '005', namePL: 'Golenie Głowy Maszynką', nameEN: 'Clipper Head Shave',
     descPL: 'Gładkie golenie maszynką na jedną długość. Szybko, czysto, równo.',
     descEN: 'Clean machine shave at one length. Fast, precise, even.',
     duration: '10 min', durationMin: 10, pricePLN: 50, delay: 2, category: 'hair', barbers: ['OLEK', 'JULIA'] },
@@ -80,11 +80,11 @@ const SERVICES = [
     descPL: 'Pełne doświadczenie. Strzyżenie, broda i wykończenie brzytwą.',
     descEN: 'The full experience. Cut, beard, and straight razor finish.',
     duration: '1h 15min', durationMin: 75, pricePLN: 170, delay: 2, category: 'combo', barbers: ['OLEK', 'JULIA'] },
-  { num: '008', namePL: 'Strzyżenie Męskie Włosy Krótkie', nameEN: "Men's Cut — Short Hair",
+  { num: '008', namePL: 'Strzyżenie Męskie Włosy Krótkie', nameEN: 'Short Hair Cut',
     descPL: 'Precyzyjne strzyżenie krótkich włosów. Czyste linie, dopasowane do kształtu głowy.',
     descEN: 'Precise short hair cut. Clean lines, shaped to your head.',
     duration: '1h', durationMin: 60, pricePLN: 80, delay: 3, category: 'hair', barbers: ['NICO'] },
-  { num: '009', namePL: 'Strzyżenie Męskie Włosy Długie', nameEN: "Men's Cut — Long Hair",
+  { num: '009', namePL: 'Strzyżenie Męskie Włosy Długie', nameEN: 'Long Hair Cut',
     descPL: 'Strzyżenie długich włosów z dbałością o teksturę i ruch.',
     descEN: 'Long hair cut with attention to texture and movement.',
     duration: '1h 20min', durationMin: 80, pricePLN: 90, delay: 1, category: 'hair', barbers: ['NICO'] },
@@ -96,7 +96,7 @@ const SERVICES = [
     descPL: 'Kompletna wizyta. Włosy i broda w jednym czasie, przez jednego rzemieślnika.',
     descEN: 'Full visit. Hair and beard in one sitting, by one craftsman.',
     duration: '1h 30min', durationMin: 90, pricePLN: 130, delay: 3, category: 'combo', barbers: ['NICO'] },
-  { num: '012', namePL: 'Golenie Głowy Maszynką', nameEN: 'Head Shave — One Length',
+  { num: '012', namePL: 'Golenie Głowy Maszynką', nameEN: 'Clipper Head Shave',
     descPL: 'Gładkie golenie maszynką na jedną długość. Szybko, czysto, równo.',
     descEN: 'Clean machine shave at one length. Fast, precise, even.',
     duration: '30 min', durationMin: 30, pricePLN: 40, delay: 1, category: 'hair', barbers: ['NICO'] },
@@ -175,6 +175,23 @@ export function seedCatalogIfEmpty(logger) {
   tx();
 
   logger?.info({ barbers: BARBERS.length, services: SERVICES.length }, 'catalog seeded');
+  return true;
+}
+
+// Idempotent: rewrites EN service names that still carry the legacy em-dash form.
+// Source-of-truth is the SERVICES array above; this just propagates source edits
+// to a previously-seeded database without forcing a full reseed.
+export function cleanServiceCopyIfNeeded(logger) {
+  const stale = db.prepare(`SELECT COUNT(*) AS n FROM services WHERE name_en LIKE '% — %'`).get().n;
+  if (stale === 0) return false;
+
+  const update = db.prepare('UPDATE services SET name_en = ? WHERE id = ?');
+  const tx = db.transaction(() => {
+    for (const s of SERVICES) update.run(s.nameEN, s.num);
+  });
+  tx();
+
+  logger?.info({ rows: stale }, 'service EN names cleaned');
   return true;
 }
 
