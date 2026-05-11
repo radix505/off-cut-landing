@@ -81,8 +81,8 @@ export default function Gallery() {
           <div className="section-number">{useT('03 / GALERIA', '03 / GALLERY')}</div>
           <div className="section-title">{useT('Nasza praca', 'The Work')}</div>
         </div>
-        <a className="gallery-instagram-cta" href="https://www.instagram.com/off_cut_barbershop/" target="_blank" rel="noopener noreferrer">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <a className="section-link" href="https://www.instagram.com/off_cut_barbershop/" target="_blank" rel="noopener noreferrer">
+          <svg className="section-link-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
             <defs>
               <linearGradient id="ig-grad-g" x1="0%" y1="100%" x2="100%" y2="0%">
                 <stop offset="0%" stopColor="#F58529"/>

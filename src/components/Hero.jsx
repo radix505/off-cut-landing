@@ -46,7 +46,7 @@ export default function Hero() {
         </p>
         <div className="hero-cta">
           <button className="btn-primary" onClick={() => navigate('/booking')}>{useT('Zarezerwuj wizytę', 'Book Appointment')}</button>
-          <button className="hero-services-link" onClick={() => navigate('/services')}>{useT('Zobacz usługi', 'View Services')}<span className="svc-arrow" aria-hidden="true">→</span></button>
+          <button className="section-link" onClick={() => navigate('/services')}>{useT('Zobacz usługi →', 'View Services →')}</button>
         </div>
         {lastBooking && (
           <button
