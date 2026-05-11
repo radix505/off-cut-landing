@@ -6,13 +6,16 @@ const STATUS = {
 
 const DOW_PL = ['niedz', 'pon', 'wt', 'śr', 'czw', 'pt', 'sob'];
 const MONTHS_PL = ['stycznia','lutego','marca','kwietnia','maja','czerwca',
-                   'lipca','sierpnia','września','października','listopada','grudnia'];
+  'lipca','sierpnia','września','października','listopada','grudnia'];
+const MONTHS_PL_NOM = ['Styczeń','Luty','Marzec','Kwiecień','Maj','Czerwiec',
+  'Lipiec','Sierpień','Wrzesień','Październik','Listopad','Grudzień'];
+const DOW_PL_SHORT = ['Pn', 'Wt', 'Śr', 'Cz', 'Pt', 'So', 'Nd']; // Mon-first ordering
 
 export function escapeHtml(s) {
   return String(s ?? '')
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;');
+      .replaceAll('&', '&amp;')
+      .replaceAll('<', '&lt;')
+      .replaceAll('>', '&gt;');
 }
 
 export function todayInWarsaw() {
@@ -43,6 +46,9 @@ export function formatStatus(status) {
 }
 
 function formatBookingLine(b) {
+  if (b.is_block) {
+    return `🚫 <b>${escapeHtml(b.slot)}</b> <i>${escapeHtml(b.duration_min)}min</i> · <i>Zablokowane</i> · #${b.id}`;
+  }
   const parts = [
     `${STATUS[b.status]?.emoji ?? '•'} <b>${escapeHtml(b.slot)}</b>`,
     `<i>${escapeHtml(b.duration_min)}min</i>`,
@@ -156,6 +162,9 @@ export function helpMessage() {
   return [
     `🤖 <b>Off-Cut Manager Bot</b>`,
     ``,
+    `<b>Kalendarz:</b>`,
+    `/calendar — interaktywny kalendarz (przegląd, blokowanie czasu)`,
+    ``,
     `<b>Rezerwacje:</b>`,
     `/today — dziś`,
     `/tomorrow — jutro`,
@@ -173,4 +182,59 @@ export function helpMessage() {
     `<b>Pomoc:</b>`,
     `/help — ta wiadomość`,
   ].join('\n');
+}
+
+export function monthHeaderPl(year, month) {
+  return `${MONTHS_PL_NOM[month - 1]} ${year}`;
+}
+
+export function dowHeaderRowPl() {
+  return DOW_PL_SHORT;
+}
+
+export function formatCalendarDayView({ isoDate, barberName, bookings, freeSlots, isClosed }) {
+  const header = `📅 <b>${escapeHtml(isoToHumanPl(isoDate))}</b> · ✂️ ${escapeHtml(barberName)}`;
+  if (isClosed) {
+    return `${header}\n\n<i>Lokal zamknięty.</i>`;
+  }
+  const lines = [header, ''];
+  if (bookings.length === 0) {
+    lines.push('<i>Brak rezerwacji ani blokad.</i>');
+  } else {
+    for (const b of bookings) lines.push(formatBookingLine(b));
+  }
+  lines.push('');
+  if (freeSlots.length === 0) {
+    lines.push('<i>Brak wolnych slotów.</i>');
+  } else {
+    lines.push(`🟢 <b>Wolne sloty (${freeSlots.length}):</b> ${freeSlots.join(', ')}`);
+  }
+  return lines.join('\n');
+}
+
+export function formatBlockConfirm({ isoDate, barberName, slot, durationMin }) {
+  return [
+    `🚫 <b>Zablokować czas?</b>`,
+    ``,
+    `📅 <b>${escapeHtml(isoToHumanPl(isoDate))}</b>`,
+    `✂️ ${escapeHtml(barberName)}`,
+    `⏰ <b>${escapeHtml(slot)}</b> · ${durationMin} min`,
+  ].join('\n');
+}
+
+export function isoDateParts(iso) {
+  const [y, m, d] = iso.split('-').map(Number);
+  return { y, m, d };
+}
+
+export function buildIso(y, m, d) {
+  return `${y}-${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+}
+
+export function daysInMonth(year, month) {
+  return new Date(year, month, 0).getDate();
+}
+
+export function jsDayOfWeek(year, month, day) {
+  return new Date(Date.UTC(year, month - 1, day)).getUTCDay();
 }

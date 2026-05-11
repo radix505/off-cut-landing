@@ -1,5 +1,6 @@
 import { Bot, GrammyError, HttpError } from 'grammy';
 import { registerHandlers } from './handlers.js';
+import { registerCalendar } from './calendar.js';
 import { formatNewBookingNotification } from './format.js';
 
 let bot = null;
@@ -9,11 +10,11 @@ let logger = console;
 function parseManagerIds(raw) {
   if (!raw) return new Set();
   return new Set(
-    raw.split(',')
-      .map((s) => s.trim())
-      .filter(Boolean)
-      .map(Number)
-      .filter((n) => Number.isInteger(n) && n > 0),
+      raw.split(',')
+          .map((s) => s.trim())
+          .filter(Boolean)
+          .map(Number)
+          .filter((n) => Number.isInteger(n) && n > 0),
   );
 }
 
@@ -47,6 +48,7 @@ export async function startBot({ log } = {}) {
   });
 
   registerHandlers(bot);
+  registerCalendar(bot);
 
   bot.catch((err) => {
     const ctx = err.ctx;
@@ -80,11 +82,11 @@ export async function notifyManagers(text, opts = {}) {
   if (!bot || managerIds.size === 0) return;
   const payload = { parse_mode: 'HTML', ...opts };
   await Promise.all(
-    [...managerIds].map((id) =>
-      bot.api.sendMessage(id, text, payload).catch((err) =>
-        logger.warn?.({ err, manager_id: id }, 'failed to notify manager'),
+      [...managerIds].map((id) =>
+          bot.api.sendMessage(id, text, payload).catch((err) =>
+              logger.warn?.({ err, manager_id: id }, 'failed to notify manager'),
+          ),
       ),
-    ),
   );
 }
 
