@@ -100,7 +100,7 @@ export default function Footer() {
             <li><a onClick={(e) => { e.preventDefault(); navigate('/'); }} href="/">{useT('Strona główna', 'Home')}</a></li>
             <li><a onClick={(e) => { e.preventDefault(); navigate('/crew'); }} href="/crew">{useT('Ekipa', 'Meet Crew')}</a></li>
             <li><a onClick={(e) => { e.preventDefault(); navigate('/gallery'); }} href="/gallery">{useT('Galeria', 'Gallery')}</a></li>
-            <li><a onClick={(e) => { e.preventDefault(); navigate('/prices'); }} href="/prices">{useT('Cennik', 'Prices')}</a></li>
+            <li><a onClick={(e) => { e.preventDefault(); navigate('/services'); }} href="/services">{useT('Usługi', 'Services')}</a></li>
             <li><a onClick={(e) => { e.preventDefault(); navigate('/booking'); }} href="/booking">{useT('Rezerwacja', 'Booking')}</a></li>
             <li><a onClick={(e) => { e.preventDefault(); navigate('/blog'); }} href="/blog">Blog</a></li>
           </ul>

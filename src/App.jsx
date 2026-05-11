@@ -44,7 +44,7 @@ function AppRoutes() {
     <div className={`page-content${pageVisible ? ' visible' : ''}`}>
       <Suspense fallback={null}>
         {page === 'blog'    ? <BlogPage /> :
-         page === 'prices'  ? <PricePage /> :
+         page === 'services'  ? <PricePage /> :
          page === 'booking' ? <BookingPage /> :
          page === 'gallery' ? <GalleryPage /> :
          page === 'crew'    ? <CrewPage /> :

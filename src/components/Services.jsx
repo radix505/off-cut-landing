@@ -163,7 +163,7 @@ export default function Services() {
           <div className="section-number">{sectionNumber}</div>
           <div className="section-title">{sectionTitle}</div>
         </div>
-        <a className="section-link" onClick={() => navigate('/prices')} style={{ cursor: 'pointer' }}>
+        <a className="section-link" onClick={() => navigate('/services')} style={{ cursor: 'pointer' }}>
           {fullPriceLink}
         </a>
       </div>

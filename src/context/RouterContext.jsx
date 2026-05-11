@@ -6,7 +6,7 @@ function parsePath(p) {
   if (p.startsWith('/crew/')) return { page: 'barber', crewSlug: p.split('/')[2] || null };
   if (p === '/crew') return { page: 'crew', crewSlug: null };
   if (p === '/blog') return { page: 'blog', crewSlug: null };
-  if (p === '/prices') return { page: 'prices', crewSlug: null };
+  if (p === '/services') return { page: 'services', crewSlug: null };
   if (p === '/booking') return { page: 'booking', crewSlug: null };
   if (p === '/gallery') return { page: 'gallery', crewSlug: null };
   if (p === '/privacy') return { page: 'privacy', crewSlug: null };
@@ -42,7 +42,7 @@ export function RouterProvider({ children }) {
     timers.current.forEach(clearTimeout);
     timers.current = [];
 
-    const depth = { home: 0, blog: 1, prices: 1, gallery: 1, privacy: 1, cookies: 1, contact: 1, crew: 1, barber: 2, booking: 3 };
+    const depth = { home: 0, blog: 1, services: 1, gallery: 1, privacy: 1, cookies: 1, contact: 1, crew: 1, barber: 2, booking: 3 };
     setDirection(depth[target.page] < depth[page] ? 'backward' : 'forward');
     setPageVisible(false);
     setCutting(true);

@@ -44,7 +44,7 @@ export default function Nav() {
   const onGallery = page === 'gallery';
   const onCrew = page === 'crew' || page === 'barber';
   const onContact = page === 'contact';
-  const onAway = page === 'blog' || page === 'prices' || page === 'gallery' || page === 'booking' || page === 'crew' || page === 'barber' || page === 'privacy' || page === 'cookies' || page === 'contact';
+  const onAway = page === 'blog' || page === 'services' || page === 'gallery' || page === 'booking' || page === 'crew' || page === 'barber' || page === 'privacy' || page === 'cookies' || page === 'contact';
 
   function handleLogoClick() {
     if (onAway) navigate('/');
@@ -89,7 +89,7 @@ export default function Nav() {
         </div>
       </div>
       <ul className={`nav-links${open ? ' nav-links--open' : ''}`}>
-        <li><a href="/prices" onClick={(e) => { e.preventDefault(); navigate('/prices'); close(); }}>{useT('Usługi', 'Services')}</a></li>
+        <li><a href="/services" onClick={(e) => { e.preventDefault(); navigate('/services'); close(); }}>{useT('Usługi', 'Services')}</a></li>
         <li>
           <a
             href="/crew"
