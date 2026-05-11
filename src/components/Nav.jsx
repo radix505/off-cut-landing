@@ -109,8 +109,8 @@ export default function Nav() {
           </a>
         </li>
         <li><a href="/contact" className={onContact ? 'nav-link--active' : ''} onClick={(e) => { e.preventDefault(); navigate('/contact'); close(); }}>{useT('Kontakt', 'Contact')}</a></li>
-
-        <li>
+        <li className="nav-li--mobile-only"><a href="#location" onClick={(e) => handleSectionClick(e, 'location')}>{useT('Lokalizacja', 'Location')}</a></li>
+        <li className="nav-li--mobile-only">
           <a
             href="/blog"
             className={onBlog ? 'nav-link--active' : ''}

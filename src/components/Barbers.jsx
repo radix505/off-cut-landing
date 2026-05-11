@@ -1,11 +1,13 @@
-import { useT } from '../context/LangContext';
+import { useT, useLang } from '../context/LangContext';
 import { useReveal } from '../hooks/useReveal';
 import { useRouter } from '../context/RouterContext';
-import { barbers } from '../data/barbers';
+import { useCatalog } from '../context/CatalogContext';
 
 export default function Barbers() {
   const ref = useReveal();
   const { navigate } = useRouter();
+  const { lang } = useLang();
+  const { barbers } = useCatalog();
   return (
     <section id="barbers" className="barbers-section" ref={ref}>
       <div className="section-header">
@@ -20,7 +22,7 @@ export default function Barbers() {
       <div className="barbers-grid">
         {barbers.map((b) => (
           <div
-            key={b.name}
+            key={b.id}
             className={`barber-card reveal reveal-delay-${b.delay}`}
             onClick={() => navigate('/crew/' + b.slug)}
             style={{ cursor: 'pointer' }}
@@ -30,22 +32,21 @@ export default function Barbers() {
                 ? <img src={b.photo} alt={b.name} className="barber-photo" loading="lazy" decoding="async" />
                 : <div className="barber-portrait-placeholder">
                     <div className="barber-silhouette" />
-                    <span className="portrait-label">{useT('Zdjęcie placeholder', 'Photo placeholder')}</span>
+                    <span className="portrait-label">{lang === 'pl' ? 'Zdjęcie placeholder' : 'Photo placeholder'}</span>
                   </div>
               }
               <div className="barber-overlay">
-                <p className="barber-bio-hover">{useT(b.bio.pl, b.bio.en)}</p>
+                <div className="barber-name">{b.name}</div>
+                <div className="barber-title">{lang === 'pl' ? b.titlePL : b.titleEN}</div>
+                <p className="barber-bio-hover"><span>{lang === 'pl' ? b.bio.pl : b.bio.en}</span></p>
               </div>
             </div>
             <div className="barber-info">
-              <div className="barber-name barber-name--below">{b.name}</div>
-              <div className="barber-title barber-title--below">{useT(b.titlePL, b.titleEN)}</div>
               <div className="barber-spec">
                 {b.tags.map((t) => (
-                  <span key={t.en} className="spec-tag">{useT(t.pl, t.en)}</span>
+                  <span key={t.en} className="spec-tag">{lang === 'pl' ? t.pl : t.en}</span>
                 ))}
               </div>
-              <span className="barber-view-link">{useT('Zobacz profil →', 'View profile →')}</span>
             </div>
           </div>
         ))}

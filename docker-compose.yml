@@ -1,0 +1,37 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: offcut
+      POSTGRES_PASSWORD: offcut
+      POSTGRES_DB: offcut
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U offcut -d offcut"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  app:
+    build: .
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgres://offcut:offcut@postgres:5432/offcut
+      NODE_ENV: production
+      HOST: 0.0.0.0
+      PORT: "3001"
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN:-}
+      TELEGRAM_MANAGER_IDS: ${TELEGRAM_MANAGER_IDS:-}
+    ports:
+      - "3001:3001"
+
+volumes:
+  postgres-data:

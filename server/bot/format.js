@@ -1,0 +1,176 @@
+const STATUS = {
+  pending:   { emoji: '🕒', label: 'oczekuje' },
+  confirmed: { emoji: '✅', label: 'potwierdzona' },
+  cancelled: { emoji: '❌', label: 'anulowana' },
+};
+
+const DOW_PL = ['niedz', 'pon', 'wt', 'śr', 'czw', 'pt', 'sob'];
+const MONTHS_PL = ['stycznia','lutego','marca','kwietnia','maja','czerwca',
+                   'lipca','sierpnia','września','października','listopada','grudnia'];
+
+export function escapeHtml(s) {
+  return String(s ?? '')
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;');
+}
+
+export function todayInWarsaw() {
+  const fmt = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Europe/Warsaw',
+    year: 'numeric', month: '2-digit', day: '2-digit',
+  });
+  return fmt.format(new Date());
+}
+
+export function addDaysIso(iso, days) {
+  const [y, m, d] = iso.split('-').map(Number);
+  const dt = new Date(Date.UTC(y, m - 1, d));
+  dt.setUTCDate(dt.getUTCDate() + days);
+  return dt.toISOString().slice(0, 10);
+}
+
+export function isoToHumanPl(iso) {
+  const [y, m, d] = iso.split('-').map(Number);
+  const dt = new Date(Date.UTC(y, m - 1, d));
+  const dow = DOW_PL[dt.getUTCDay()];
+  return `${dow}, ${d} ${MONTHS_PL[m - 1]} ${y}`;
+}
+
+export function formatStatus(status) {
+  const s = STATUS[status] ?? { emoji: '•', label: status };
+  return `${s.emoji} ${s.label}`;
+}
+
+function formatBookingLine(b) {
+  const parts = [
+    `${STATUS[b.status]?.emoji ?? '•'} <b>${escapeHtml(b.slot)}</b>`,
+    `<i>${escapeHtml(b.duration_min)}min</i>`,
+    `${escapeHtml(b.service_name ?? b.service_id)}`,
+    `· ${escapeHtml(b.customer_name)}`,
+    `· <code>${escapeHtml(b.phone)}</code>`,
+  ];
+  return `#${b.id} ${parts.join(' ')}`;
+}
+
+export function formatDayOverview(isoDate, bookings) {
+  if (bookings.length === 0) {
+    return `📅 <b>${escapeHtml(isoToHumanPl(isoDate))}</b>\n\n<i>Brak rezerwacji.</i>`;
+  }
+  const byBarber = new Map();
+  for (const b of bookings) {
+    if (!byBarber.has(b.barber_id)) {
+      byBarber.set(b.barber_id, { name: b.barber_name, items: [] });
+    }
+    byBarber.get(b.barber_id).items.push(b);
+  }
+  const lines = [`📅 <b>${escapeHtml(isoToHumanPl(isoDate))}</b>`];
+  for (const { name, items } of byBarber.values()) {
+    lines.push('');
+    lines.push(`✂️ <b>${escapeHtml(name)}</b> — ${items.length}`);
+    for (const b of items) lines.push(formatBookingLine(b));
+  }
+  return lines.join('\n');
+}
+
+export function formatRangeOverview(bookings, headerLabel) {
+  if (bookings.length === 0) {
+    return `📅 <b>${escapeHtml(headerLabel)}</b>\n\n<i>Brak rezerwacji.</i>`;
+  }
+  const byDate = new Map();
+  for (const b of bookings) {
+    if (!byDate.has(b.date)) byDate.set(b.date, []);
+    byDate.get(b.date).push(b);
+  }
+  const lines = [`📅 <b>${escapeHtml(headerLabel)}</b>`];
+  for (const [date, items] of byDate) {
+    lines.push('');
+    lines.push(`<b>${escapeHtml(isoToHumanPl(date))}</b> — ${items.length}`);
+    for (const b of items) {
+      lines.push(`${formatBookingLine(b)} · ✂️ ${escapeHtml(b.barber_name)}`);
+    }
+  }
+  return lines.join('\n');
+}
+
+export function formatBookingCard(b) {
+  return [
+    `🧾 <b>Rezerwacja #${b.id}</b> — ${formatStatus(b.status)}`,
+    ``,
+    `📅 <b>${escapeHtml(isoToHumanPl(b.date))}</b> · ⏰ <b>${escapeHtml(b.slot)}</b> (${b.duration_min}min)`,
+    `✂️ ${escapeHtml(b.barber_name)}`,
+    `💈 ${escapeHtml(b.service_name ?? b.service_id)}`,
+    `👤 ${escapeHtml(b.customer_name)}`,
+    `📞 <code>${escapeHtml(b.phone)}</code>`,
+  ].join('\n');
+}
+
+export function formatNewBookingNotification(b) {
+  return [
+    `🔔 <b>Nowa rezerwacja</b>`,
+    ``,
+    `📅 <b>${escapeHtml(isoToHumanPl(b.date))}</b> · ⏰ <b>${escapeHtml(b.slot)}</b> (${b.duration_min}min)`,
+    `✂️ ${escapeHtml(b.barber_name)}`,
+    `💈 ${escapeHtml(b.service_name ?? b.service_id)}`,
+    `👤 ${escapeHtml(b.customer_name)}`,
+    `📞 <code>${escapeHtml(b.phone)}</code>`,
+    ``,
+    `<i>ID: #${b.id}</i>`,
+  ].join('\n');
+}
+
+export function formatStats(label, stats) {
+  const total = stats.pending + stats.confirmed + stats.cancelled;
+  const active = stats.pending + stats.confirmed;
+  return [
+    `📊 <b>${escapeHtml(label)}</b>`,
+    ``,
+    `Łącznie: <b>${total}</b>`,
+    `🕒 Oczekuje: <b>${stats.pending}</b>`,
+    `✅ Potwierdzone: <b>${stats.confirmed}</b>`,
+    `❌ Anulowane: <b>${stats.cancelled}</b>`,
+    ``,
+    `💰 Aktywny przychód: <b>${stats.revenuePln} PLN</b> (${active} rez.)`,
+  ].join('\n');
+}
+
+export function formatBarbers(barbers) {
+  if (barbers.length === 0) return '<i>Brak aktywnych fryzjerów.</i>';
+  const lines = ['✂️ <b>Fryzjerzy</b>', ''];
+  for (const b of barbers) {
+    lines.push(`#${b.id} · <b>${escapeHtml(b.name)}</b> — ${escapeHtml(b.title_pl)}`);
+  }
+  return lines.join('\n');
+}
+
+export function formatServices(services) {
+  if (services.length === 0) return '<i>Brak aktywnych usług.</i>';
+  const lines = ['💈 <b>Usługi</b>', ''];
+  for (const s of services) {
+    lines.push(`<code>${escapeHtml(s.id)}</code> · <b>${escapeHtml(s.name_pl)}</b> — ${escapeHtml(s.duration_label)} · ${s.price_pln} PLN`);
+  }
+  return lines.join('\n');
+}
+
+export function helpMessage() {
+  return [
+    `🤖 <b>Off-Cut Manager Bot</b>`,
+    ``,
+    `<b>Rezerwacje:</b>`,
+    `/today — dziś`,
+    `/tomorrow — jutro`,
+    `/week — następne 7 dni`,
+    `/date YYYY-MM-DD — wybrana data`,
+    `/pending — oczekujące (z przyciskami)`,
+    `/find &lt;imię/telefon&gt; — szukaj`,
+    `/booking &lt;id&gt; — pokaż rezerwację`,
+    ``,
+    `<b>Statystyki / katalog:</b>`,
+    `/stats — dziś + 7 dni`,
+    `/barbers — lista fryzjerów`,
+    `/services — cennik`,
+    ``,
+    `<b>Pomoc:</b>`,
+    `/help — ta wiadomość`,
+  ].join('\n');
+}
