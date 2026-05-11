@@ -1,0 +1,324 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-05-10T00:00:00.000Z",
+  "title": "Design System: Off Cut",
+  "extensions": {
+    "colorMeta": {
+      "ink": {
+        "role": "neutral",
+        "displayName": "Workshop Ink",
+        "canonical": "oklch(8% 0.005 40)",
+        "tonalRamp": [
+          "oklch(8% 0.005 40)",
+          "oklch(14% 0.005 40)",
+          "oklch(22% 0.006 40)",
+          "oklch(35% 0.008 40)",
+          "oklch(50% 0.006 40)",
+          "oklch(65% 0.006 40)",
+          "oklch(78% 0.006 40)",
+          "oklch(92% 0.005 40)"
+        ]
+      },
+      "paper": {
+        "role": "neutral",
+        "displayName": "Bench Paper",
+        "canonical": "oklch(95% 0.005 40)",
+        "tonalRamp": [
+          "oklch(20% 0.006 40)",
+          "oklch(35% 0.008 40)",
+          "oklch(55% 0.007 40)",
+          "oklch(72% 0.006 40)",
+          "oklch(85% 0.005 40)",
+          "oklch(91% 0.005 40)",
+          "oklch(95% 0.005 40)",
+          "oklch(98% 0.006 40)"
+        ]
+      },
+      "pure-white": {
+        "role": "neutral",
+        "displayName": "Citation White",
+        "canonical": "#ffffff",
+        "tonalRamp": [
+          "#ffffff",
+          "#fcfaf6",
+          "#f5f3ef",
+          "#e8e5df",
+          "#ddd9d0",
+          "#cfcbc1",
+          "#b3afa8",
+          "#7a766f"
+        ]
+      },
+      "accent-orange": {
+        "role": "primary",
+        "displayName": "Off Cut Orange",
+        "canonical": "oklch(65% 0.17 38)",
+        "tonalRamp": [
+          "oklch(28% 0.10 38)",
+          "oklch(38% 0.13 38)",
+          "oklch(48% 0.16 38)",
+          "oklch(58% 0.17 38)",
+          "oklch(65% 0.17 38)",
+          "oklch(72% 0.15 38)",
+          "oklch(82% 0.10 38)",
+          "oklch(92% 0.05 38)"
+        ]
+      },
+      "accent-warm": {
+        "role": "primary",
+        "displayName": "Selection Ember",
+        "canonical": "oklch(60% 0.16 35)",
+        "tonalRamp": [
+          "oklch(28% 0.10 35)",
+          "oklch(38% 0.13 35)",
+          "oklch(48% 0.15 35)",
+          "oklch(54% 0.16 35)",
+          "oklch(60% 0.16 35)",
+          "oklch(70% 0.14 35)",
+          "oklch(80% 0.10 35)",
+          "oklch(90% 0.05 35)"
+        ]
+      },
+      "line-paper": {
+        "role": "neutral",
+        "displayName": "Hairline (Paper)",
+        "canonical": "oklch(86% 0.006 40)",
+        "tonalRamp": []
+      },
+      "line-paper-soft": {
+        "role": "neutral",
+        "displayName": "Hairline Soft (Paper)",
+        "canonical": "oklch(91% 0.005 40)",
+        "tonalRamp": []
+      },
+      "line-ink": {
+        "role": "neutral",
+        "displayName": "Hairline (Ink)",
+        "canonical": "oklch(15% 0.005 40)",
+        "tonalRamp": []
+      },
+      "ink-weak": {
+        "role": "neutral",
+        "displayName": "Body Ink",
+        "canonical": "oklch(35% 0.008 40)",
+        "tonalRamp": []
+      },
+      "text-muted-light": {
+        "role": "neutral",
+        "displayName": "Muted on Paper",
+        "canonical": "oklch(50% 0.006 40)",
+        "tonalRamp": []
+      },
+      "text-muted-dark": {
+        "role": "neutral",
+        "displayName": "Muted on Ink",
+        "canonical": "oklch(72% 0.006 40)",
+        "tonalRamp": []
+      }
+    },
+    "typographyMeta": {
+      "brand": {
+        "displayName": "Brand Wordmark",
+        "purpose": "Off Cut wordmark only. Splash screen and nav logo. Never for content."
+      },
+      "display": {
+        "displayName": "Hero Display",
+        "purpose": "Reserved for the hero THE / SHARP / ART lockup. The middle line is outline-only via -webkit-text-stroke."
+      },
+      "display-section": {
+        "displayName": "Section Display",
+        "purpose": "Every section title (Co robimy, Załoga, Co mówią klienci, Umów wizytę). Always paired with a tracked section number eyebrow."
+      },
+      "title": {
+        "displayName": "Inline Title",
+        "purpose": "Service names, barber names, prices, calendar month label. Condensed all-caps inline emphasis."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "All running text. Capped at --measure 70ch. Inter weight 300; never below 300, never above 500 except inverted on ink."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Buttons, nav links, eyebrows, section numbers. Uppercase, 0.20–0.25em tracked. The system's primary affordance language."
+      },
+      "micro-label": {
+        "displayName": "Micro-Label",
+        "purpose": "Smallest UI metadata (section numbers, barber subtitles, slot durations). Wider tracking (0.25–0.35em) compensates for size."
+      }
+    },
+    "shadows": [
+      {
+        "name": "glass-bubble",
+        "value": "none",
+        "purpose": "The scroll-to-top floats with backdrop-filter blur and a 0.5px border, no box-shadow. Reserved for over-content floating affordances."
+      },
+      {
+        "name": "avatar-stamp-ring",
+        "value": "0 0 0 0.5px rgba(0,0,0,0.18)",
+        "purpose": "Hairline ring around stacked avatars on light surfaces. Reads as a stamped tag, not as elevation."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-out-expo",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Default for entrances, reveals, slide-ups, fade-ups, hero title slideUp. The system's signature easing."
+      },
+      {
+        "name": "ease-out-quart",
+        "value": "cubic-bezier(0.165, 0.84, 0.44, 1)",
+        "purpose": "State transitions on persistent elements (nav logo scale, splash clip-path)."
+      },
+      {
+        "name": "ease-mild-cubic",
+        "value": "cubic-bezier(0.4, 0, 0.2, 1)",
+        "purpose": "Reserved for material-style transitions (splash hover/exit, button sheen sweep, scissors cut transition)."
+      },
+      {
+        "name": "duration-reveal",
+        "value": "0.9s",
+        "purpose": "Standard reveal duration on scroll-into-view (.reveal class)."
+      },
+      {
+        "name": "duration-state",
+        "value": "0.2-0.3s",
+        "purpose": "Hover state, color, border, background transitions across the system."
+      },
+      {
+        "name": "duration-marquee",
+        "value": "16s linear infinite",
+        "purpose": "Marquee scroll rate. Slow enough to read each item before it leaves the viewport."
+      },
+      {
+        "name": "duration-brick-step",
+        "value": "70ms",
+        "purpose": "Stagger between successive bricks in the reviews wall fall animation."
+      }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "560px" },
+      { "name": "md", "value": "820px" },
+      { "name": "lg", "value": "1100px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Off Cut Orange CTA. Carries every primary booking action. Diagonal sheen sweeps across on hover.",
+      "html": "<button class=\"ds-btn-primary\">ZAREZERWUJ WIZYTĘ</button>",
+      "css": ".ds-btn-primary { font-family: 'Inter', sans-serif; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.25em; text-transform: uppercase; background-color: #E85A2A; background-image: linear-gradient(115deg, transparent 30%, rgba(255,255,255,0.45) 50%, transparent 70%); background-size: 50% 100%; background-position: -150% 0; background-repeat: no-repeat; color: #0a0a0a; border: none; border-radius: 0; padding: 1rem 2.2rem; cursor: pointer; transition: background-color 0.3s, background-position 0.7s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s; } .ds-btn-primary:hover { background-color: #ff6a3a; background-position: 250% 0; transform: translateY(-2px); } .ds-btn-primary:focus-visible { outline: 2px solid #fcfaf6; outline-offset: 2px; }"
+    },
+    {
+      "name": "Ghost Button",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "Secondary action. Transparent fill with hairline border. Used alongside primary in hero CTA group.",
+      "html": "<button class=\"ds-btn-ghost\">ZOBACZ USŁUGI</button>",
+      "css": ".ds-btn-ghost { font-family: 'Inter', sans-serif; font-size: 0.72rem; font-weight: 500; letter-spacing: 0.25em; text-transform: uppercase; background: transparent; color: oklch(72% 0.006 40); border: 0.5px solid oklch(72% 0.006 40); border-radius: 0; padding: 1rem 2.2rem; cursor: pointer; transition: color 0.3s, border-color 0.3s; } .ds-btn-ghost:hover { color: #fcfaf6; border-color: #fcfaf6; } .ds-btn-ghost:focus-visible { outline: 2px solid #fcfaf6; outline-offset: 2px; }"
+    },
+    {
+      "name": "Service Card (Dark)",
+      "kind": "card",
+      "refersTo": "service-card-dark",
+      "description": "Service tile on the dark surface. Glass-on-ink with a workshop-blueprint dot grid background.",
+      "html": "<article class=\"ds-service-card-dark\"><div class=\"ds-service-num\">01</div><h3 class=\"ds-service-name\">CLASSIC CUT</h3><p class=\"ds-service-desc\">Precision shears, scissors over finger, taper finished by clipper.</p><div class=\"ds-service-price\"><span>45 MIN</span><span class=\"ds-service-price-amount\">160 ZŁ</span></div></article>",
+      "css": ".ds-service-card-dark { background: rgba(255,255,255,0.05); border: 0.5px solid rgba(255,255,255,0.1); border-radius: 0; padding: 1.6rem 1.5rem; backdrop-filter: blur(8px); background-image: radial-gradient(rgba(255,255,255,0.04) 1px, transparent 1px); background-size: 18px 18px; color: #fcfaf6; transition: background 0.4s; } .ds-service-card-dark:hover { background-color: rgba(255,255,255,0.09); } .ds-service-num { font-family: 'Bebas Neue', sans-serif; font-size: 0.85rem; letter-spacing: 0.30em; color: oklch(72% 0.006 40); margin-bottom: 1rem; } .ds-service-name { font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; font-weight: 400; letter-spacing: 0.05em; color: #fcfaf6; margin: 0 0 0.8rem; } .ds-service-desc { font-family: 'Inter', sans-serif; font-size: 0.88rem; font-weight: 300; letter-spacing: 0.04em; color: oklch(72% 0.006 40); line-height: 1.7; margin: 0 0 1.2rem; } .ds-service-price { font-family: 'Inter', sans-serif; font-size: 0.72rem; letter-spacing: 0.20em; text-transform: uppercase; color: oklch(72% 0.006 40); display: flex; justify-content: space-between; align-items: center; border-top: 0.5px solid #1a1a1a; padding-top: 1.2rem; } .ds-service-price-amount { font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; letter-spacing: 0.05em; color: #fcfaf6; }"
+    },
+    {
+      "name": "Spec Tag",
+      "kind": "chip",
+      "refersTo": "spec-tag",
+      "description": "Specialty tag on barber cards. Square. Hairline border. Wide-tracked uppercase metadata.",
+      "html": "<span class=\"ds-spec-tag\">SKIN FADE</span>",
+      "css": ".ds-spec-tag { display: inline-block; font-family: 'Inter', sans-serif; font-size: 0.72rem; font-weight: 400; letter-spacing: 0.15em; text-transform: uppercase; color: oklch(72% 0.006 40); background: transparent; border: 0.5px solid oklch(72% 0.006 40); border-radius: 0; padding: 0.3rem 0.7rem; }"
+    },
+    {
+      "name": "Section Header",
+      "kind": "custom",
+      "refersTo": "section-header",
+      "description": "The opening rhythm of every section. Number eyebrow + display title with a hairline rule below.",
+      "html": "<header class=\"ds-section-header\"><div><div class=\"ds-section-number\">01 / USŁUGI</div><h2 class=\"ds-section-title\">Co robimy</h2></div><a class=\"ds-section-link\">Pełny cennik →</a></header>",
+      "css": ".ds-section-header { display: flex; align-items: flex-end; justify-content: space-between; padding-bottom: 1.5rem; margin-bottom: 4rem; border-bottom: 0.5px solid #ddd9d0; } .ds-section-number { font-family: 'Bebas Neue', sans-serif; font-size: 0.8rem; letter-spacing: 0.30em; color: oklch(50% 0.006 40); margin-bottom: 0.5rem; } .ds-section-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(36px, 5vw, 60px); font-weight: 400; letter-spacing: 0.04em; color: #0a0a0a; line-height: 1; margin: 0; } .ds-section-link { font-family: 'Inter', sans-serif; font-size: 0.72rem; letter-spacing: 0.20em; text-transform: uppercase; color: oklch(50% 0.006 40); cursor: pointer; text-decoration: none; border-bottom: 0.5px solid oklch(50% 0.006 40); padding-bottom: 2px; transition: color 0.3s, border-color 0.3s; } .ds-section-link:hover { color: #0a0a0a; border-color: #0a0a0a; }"
+    },
+    {
+      "name": "Top Nav",
+      "kind": "nav",
+      "refersTo": "nav",
+      "description": "Fixed glass nav. Tracked uppercase links with a 3px dot active indicator. Two states: at-rest blur, scrolled solid.",
+      "html": "<nav class=\"ds-nav\"><a class=\"ds-nav-logo\">OFF CUT</a><ul class=\"ds-nav-links\"><li><a>Usługi</a></li><li><a>Załoga</a></li><li><a class=\"ds-active\">Galeria</a></li><li><a>Opinie</a></li></ul><button class=\"ds-nav-book\">UMÓW</button></nav>",
+      "css": ".ds-nav { display: flex; justify-content: space-between; align-items: center; padding: 0.85rem 3rem 0.85rem 1.2rem; background: rgba(10,10,10,0.96); border-bottom: 0.5px solid #1a1a1a; color: #fcfaf6; } .ds-nav-logo { font-family: 'Let Me Ride', 'Bebas Neue', sans-serif; font-size: 1.3rem; letter-spacing: 0.25em; color: #fff; text-decoration: none; } .ds-nav-links { list-style: none; display: flex; gap: 2.5rem; margin: 0; padding: 0; } .ds-nav-links a { position: relative; font-family: 'Inter', sans-serif; font-size: 0.72rem; letter-spacing: 0.20em; text-transform: uppercase; color: oklch(78% 0.006 40); text-decoration: none; transition: color 0.3s; } .ds-nav-links a:hover { color: #fcfaf6; } .ds-nav-links a.ds-active { color: #fff; } .ds-nav-links a.ds-active::after { content: ''; position: absolute; bottom: -5px; left: 50%; transform: translateX(-50%); width: 3px; height: 3px; background: #fff; border-radius: 50%; } .ds-nav-book { font-family: 'Inter', sans-serif; font-weight: 500; font-size: 0.72rem; letter-spacing: 0.20em; text-transform: uppercase; background: #fcfaf6; color: #0a0a0a; border: 0.5px solid #fcfaf6; padding: 0.6rem 1.4rem; cursor: pointer; transition: all 0.3s; } .ds-nav-book:hover { background: transparent; color: #fcfaf6; }"
+    },
+    {
+      "name": "Calendar Day",
+      "kind": "input",
+      "refersTo": "bcal-day",
+      "description": "Booking wizard date cell. Circular hit area. Today marked with a 3px accent-warm dot, never a ring. Selected fills with accent-warm.",
+      "html": "<div class=\"ds-bcal-grid\"><button class=\"ds-bcal-day\">12</button><button class=\"ds-bcal-day ds-today\">13</button><button class=\"ds-bcal-day ds-sel\">14</button><button class=\"ds-bcal-day ds-past\">15</button></div>",
+      "css": ".ds-bcal-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 3px; padding: 1rem; background: rgba(255,255,255,0.04); border: 0.5px solid rgba(255,255,255,0.12); } .ds-bcal-day { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-family: 'Inter', sans-serif; font-size: 0.82rem; color: oklch(72% 0.006 40); background: transparent; border: none; border-radius: 50%; cursor: pointer; position: relative; transition: background 0.15s, color 0.15s; } .ds-bcal-day:not(.ds-past):not(.ds-sel):hover { background: rgba(255,255,255,0.1); color: #fff; } .ds-bcal-day.ds-today { color: #fff; } .ds-bcal-day.ds-today::after { content: ''; position: absolute; bottom: 14%; left: 50%; transform: translateX(-50%); width: 3px; height: 3px; border-radius: 50%; background: #DC5030; } .ds-bcal-day.ds-sel { background: #DC5030; color: #fff; font-weight: 600; } .ds-bcal-day.ds-past { color: #2e2e2e; cursor: default; }"
+    },
+    {
+      "name": "Review Card (Brick)",
+      "kind": "card",
+      "refersTo": "review-card",
+      "description": "One brick in the reviews wall. Pure white surface (citation-by-reference to Google Maps). Non-interactive: pointer-events: none.",
+      "html": "<div class=\"ds-review-card\"><div class=\"ds-review-top\"><div class=\"ds-review-avatar\">B</div><div class=\"ds-review-meta\"><div class=\"ds-review-author\">Bartosz K.</div><div class=\"ds-review-submeta\">Local Guide · 14 reviews</div></div></div><div class=\"ds-review-stars-row\"><span class=\"ds-review-stars\">★★★★★</span><span class=\"ds-review-date\">2 months ago</span></div><p class=\"ds-review-text\">Perfect cut, relaxed atmosphere, Aleksander is a true professional.</p></div>",
+      "css": ".ds-review-card { background: #fff; border: 0.5px solid #e8eaed; border-radius: 0; padding: 1rem 1.05rem; display: flex; flex-direction: column; gap: 0.55rem; pointer-events: none; max-width: 280px; } .ds-review-top { display: flex; align-items: flex-start; gap: 0.7rem; } .ds-review-avatar { width: 36px; height: 36px; border-radius: 50%; background: #0a0a0a; color: #f5f3ef; font-family: 'Inter', sans-serif; font-size: 0.95rem; font-weight: 600; display: flex; align-items: center; justify-content: center; flex-shrink: 0; } .ds-review-meta { flex: 1; display: flex; flex-direction: column; gap: 0.15rem; min-width: 0; } .ds-review-author { font-family: 'Inter', sans-serif; font-size: 0.82rem; font-weight: 600; color: #0a0a0a; } .ds-review-submeta { font-family: 'Inter', sans-serif; font-size: 0.7rem; color: oklch(50% 0.006 40); } .ds-review-stars-row { display: flex; align-items: center; gap: 0.6rem; } .ds-review-stars { color: #FBBC04; font-size: 0.85rem; letter-spacing: 0.04em; line-height: 1; } .ds-review-date { font-family: 'Inter', sans-serif; font-size: 0.7rem; color: oklch(50% 0.006 40); } .ds-review-text { font-family: 'Inter', sans-serif; font-size: 0.78rem; font-weight: 300; line-height: 1.6; color: oklch(35% 0.008 40); margin: 0; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Razor Edge",
+    "overview": "Off Cut is what happens when a barbershop adopts both Carhartt's workshop-honesty and Aesop's atelier-discipline, then sharpens the result until nothing decorative survives. The interface reads like a workbench: hairline rules instead of borders, exposed metadata instead of badges, deliberate uppercase tracking instead of soft sentence case, sharp corners instead of pillowed radii. The orange accent is a foreman's pencil mark on a tag, never a button gradient. Restraint is the loudness; what is left out carries as much weight as what stays.\n\nThe system rejects every soft adjacent register: vintage barber pastiche, generic chain-barbershop dark-grey-with-gold gloss, salon-and-parlour ornament, and the gradient-blob hero of every SaaS template. If the visual could be mistaken for any of those, it is wrong and must be redrawn. The voice of the spec is the voice of a workshop foreman: prescriptions, not preferences.",
+    "keyCharacteristics": [
+      "Two surfaces, two registers: warm paper carrying brand and content, near-black ink carrying conversion.",
+      "Hairline 0.5px rules everywhere as connective tissue. Heavier rules reserved for moments that earn weight.",
+      "Sharp corners by default. Circles only for avatars, dots, and calendar cells.",
+      "Section numbers (01 / USŁUGI) treat content like inventory. Workshop tagging, not editorial flourish.",
+      "Letter-spacing carries as much hierarchy as size. Smaller text gets more air.",
+      "One accent. Off Cut Orange (#E85A2A) on ≤8% of any visible surface. It must read as an event.",
+      "Motion is exponential ease-out. Never bounce, never elastic.",
+      "Density earns its weight. Reviews wall, gallery, marquee earn it through tight rhythm and shared baselines."
+    ],
+    "rules": [
+      { "name": "The One Accent Rule", "body": "Off Cut Orange used on ≤8% of any given screen. Hover-states, focus rings, links, and decorative flourishes do not get to use it. Only conversion and event moments.", "section": "colors" },
+      { "name": "The No Pure Black, No Pure White Rule", "body": "#000 and #fff are forbidden as surfaces. Every neutral is tinted toward warm hue 40 (chroma 0.005–0.01). Two named exceptions: review-card backgrounds and Bebas Neue text on the dark hero.", "section": "colors" },
+      { "name": "The Tinted Neutrals Rule", "body": "Every grey, every divider, every muted text colour is OKLCH with the warm hue baked in. There are no neutral neutrals.", "section": "colors" },
+      { "name": "The Wider-On-Smaller Rule", "body": "Letter-spacing scales inversely to font size. Body 0.04em, 0.85rem labels 0.20em, 0.70rem metadata 0.30em, 0.55rem micro-tags 0.35em. The smaller the text, the more breath.", "section": "typography" },
+      { "name": "The Uppercase Label Rule", "body": "All affordances are uppercase. Sentence-case for body, headings, proper nouns. No SemiCase, no Title Case.", "section": "typography" },
+      { "name": "The Display-Only Bebas Rule", "body": "Bebas Neue is for display, titles, and prices. Forbidden for body, paragraphs, or anything longer than ~6 words. Inter does paragraphs.", "section": "typography" },
+      { "name": "The Tiny-Text Floor Rule", "body": "Below 9px on touch devices, label legibility breaks. CSS floor promotes 0.55rem labels to 0.625rem on (max-width: 768px) or (pointer: coarse).", "section": "typography" },
+      { "name": "The Flat-By-Default Rule", "body": "Surfaces are flat. Shadows are forbidden as decoration; appear only as a response to a specific state (the floating scroll-to-top bubble) or as a hairline ring (avatar stamps), never to imply hierarchy.", "section": "elevation" },
+      { "name": "The Backdrop-Blur Reservation", "body": "backdrop-filter exists in three places only: top nav at-rest, scroll-to-top bubble, dark service cards. Anywhere else, blur is forbidden.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do keep border-radius: 0 as the system default. Circles are the only sanctioned exception.",
+      "Do use 0.5px borders for hairline rules. Use 1px only when the rule must read as deliberate weight, 2px only for the hero accent rule.",
+      "Do scale letter-spacing inversely with font size. Smaller text gets wider tracking.",
+      "Do use Bebas Neue for display, titles, and prices only. Inter does paragraphs.",
+      "Do treat Off Cut Orange (#E85A2A) as a foreman's pencil mark. ≤8% of any visible surface.",
+      "Do tint every neutral toward the warm hue (oklch chroma 0.005–0.01 at hue 40°).",
+      "Do ease motion with cubic-bezier(0.16, 1, 0.3, 1) for entrances, cubic-bezier(0.165, 0.84, 0.44, 1) for state transitions.",
+      "Do test type and rhythm in both Polish and English. They are first-class siblings.",
+      "Do label content with section numbers. Workshop tagging is the brand.",
+      "Do hold to WCAG 2.2 AA: 4.5:1 text, 3:1 UI, visible focus rings, full keyboard nav, prefers-reduced-motion respected."
+    ],
+    "donts": [
+      "Don't use border-radius greater than 0 except for explicitly circular elements. No subtle 4px radius, no softened corners, no pill chips.",
+      "Don't use #000 or #fff as a surface, ever. The two pure-white exceptions are named and not generalisable.",
+      "Don't apply Off Cut Orange to anything that is not a primary action, a booking selection, or the hero accent rule.",
+      "Don't use border-left or border-right greater than 1px as a coloured stripe. Side-stripe borders are forbidden.",
+      "Don't use gradient text. Emphasis comes from weight, scale, or letter-spacing, never from a gradient.",
+      "Don't add glassmorphism beyond the three sanctioned uses (top nav, scroll-to-top, dark service cards).",
+      "Don't reach for box-shadow to imply elevation. The system is flat. Hover changes tint, not depth.",
+      "Don't introduce new fonts. Bebas Neue + Inter + Let Me Ride is the complete vocabulary.",
+      "Don't use bouncy or elastic easings. Exponential ease-out only.",
+      "Don't lay out identical icon-and-text card grids that repeat without rhythm.",
+      "Don't perform heritage. No Established 1872 lockups when the shop opened in 2019.",
+      "Don't import salon codes. No script display fonts, no floral curls, no soft-pink accents, no candle-warm gradients.",
+      "Don't drift toward generic chain-barbershop dark-grey-with-gold gloss.",
+      "Don't import SaaS landing tropes. No gradient hero blob, no hero-metric template, no spot illustrations, no trusted-by social-proof bars.",
+      "Don't use em dashes or --. Use commas, colons, semicolons, periods, or parentheses."
+    ]
+  }
+}
