@@ -1,4 +1,6 @@
-import { db } from './db.js';
+import { withTransaction } from './db.js';
+import * as barbersRepo from './data/barbersRepo.js';
+import * as servicesRepo from './data/servicesRepo.js';
 
 const BARBERS = [
   {
@@ -106,47 +108,29 @@ const SERVICES = [
     duration: '1h', durationMin: 60, pricePLN: 100, delay: 2, category: 'combo', barbers: ['NICO'] },
 ];
 
-const insertBarber = db.prepare(`
-  INSERT INTO barbers
-    (name, photo, title_pl, title_en, sort_order, slug, bio_pl, bio_en, long_bio_pl, long_bio_en, delay)
-  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-`);
-const updateBarberDetailsBySlug = db.prepare(`
-  UPDATE barbers
-  SET slug = ?, bio_pl = ?, bio_en = ?, long_bio_pl = ?, long_bio_en = ?, delay = ?
-  WHERE slug = ?
-`);
-const selectBarberIdBySlug = db.prepare(`SELECT id FROM barbers WHERE slug = ?`);
-const deleteBarberTags = db.prepare(`DELETE FROM barber_tags WHERE barber_id = ?`);
-const insertBarberTag  = db.prepare(`
-  INSERT INTO barber_tags (barber_id, tag_pl, tag_en, sort_order) VALUES (?, ?, ?, ?)
-`);
-const insertService = db.prepare(`
-  INSERT INTO services
-    (id, name_pl, name_en, desc_pl, desc_en, duration_min, duration_label, price_pln, delay, sort_order, category)
-  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-`);
-const insertServiceLink = db.prepare(`
-  INSERT INTO service_barbers (service_id, barber_id) VALUES (?, ?)
-`);
-
-function writeBarberTags(barberId, barber) {
-  deleteBarberTags.run(barberId);
-  barber.tags.forEach((t, i) => insertBarberTag.run(barberId, t.pl, t.en, i));
+async function writeBarberTags(client, barberId, barber) {
+  await barbersRepo.deleteTags(barberId, { client });
+  for (let i = 0; i < barber.tags.length; i++) {
+    const t = barber.tags[i];
+    await barbersRepo.insertTag(
+      { barberId, pl: t.pl, en: t.en, sortOrder: i },
+      { client },
+    );
+  }
 }
 
-function buildSlugToIdMap() {
+async function buildSlugToIdMap(client) {
   const map = new Map();
   for (const b of BARBERS) {
-    const row = selectBarberIdBySlug.get(b.slug);
-    if (row) map.set(b.slug, row.id);
+    const id = await barbersRepo.getIdBySlug(b.slug, { client });
+    if (id != null) map.set(b.slug, id);
   }
   return map;
 }
 
 function resolveBarberIds(keys, slugToId) {
-  return keys.map(key => {
-    const match = BARBERS.find(b => b.keys.includes(key));
+  return keys.map((key) => {
+    const match = BARBERS.find((b) => b.keys.includes(key));
     if (!match) throw new Error(`seed-catalog: unknown barber key "${key}"`);
     const id = slugToId.get(match.slug);
     if (id == null) throw new Error(`seed-catalog: no id for slug "${match.slug}"`);
@@ -154,60 +138,94 @@ function resolveBarberIds(keys, slugToId) {
   });
 }
 
-export function seedCatalogIfEmpty(logger) {
-  const count = db.prepare('SELECT COUNT(*) AS n FROM services').get().n;
-  if (count > 0) return false;
+export async function seedCatalogIfEmpty(logger) {
+  if ((await servicesRepo.count()) > 0) return false;
 
-  const tx = db.transaction(() => {
+  await withTransaction(async (client) => {
     for (const [i, b] of BARBERS.entries()) {
-      const result = insertBarber.run(
-        b.name, b.photo, b.titlePL, b.titleEN, i,
-        b.slug, b.bioPL, b.bioEN, b.longBioPL, b.longBioEN, b.delay
+      const barberId = await barbersRepo.insert(
+        {
+          name: b.name,
+          photo: b.photo,
+          titlePL: b.titlePL,
+          titleEN: b.titleEN,
+          sortOrder: i,
+          slug: b.slug,
+          bioPL: b.bioPL,
+          bioEN: b.bioEN,
+          longBioPL: b.longBioPL,
+          longBioEN: b.longBioEN,
+          delay: b.delay,
+        },
+        { client },
       );
-      writeBarberTags(result.lastInsertRowid, b);
+      await writeBarberTags(client, barberId, b);
     }
-    const slugToId = buildSlugToIdMap();
+    const slugToId = await buildSlugToIdMap(client);
     for (const [i, s] of SERVICES.entries()) {
-      insertService.run(s.num, s.namePL, s.nameEN, s.descPL, s.descEN, s.durationMin, s.duration, s.pricePLN, s.delay, i, s.category);
-      for (const id of resolveBarberIds(s.barbers, slugToId)) insertServiceLink.run(s.num, id);
+      await servicesRepo.insert(
+        {
+          id: s.num,
+          namePL: s.namePL,
+          nameEN: s.nameEN,
+          descPL: s.descPL,
+          descEN: s.descEN,
+          durationMin: s.durationMin,
+          durationLabel: s.duration,
+          pricePLN: s.pricePLN,
+          delay: s.delay,
+          sortOrder: i,
+          category: s.category,
+        },
+        { client },
+      );
+      for (const id of resolveBarberIds(s.barbers, slugToId)) {
+        await servicesRepo.linkBarber(s.num, id, { client });
+      }
     }
   });
-  tx();
 
-  logger?.info({ barbers: BARBERS.length, services: SERVICES.length }, 'catalog seeded');
+  logger?.info?.({ barbers: BARBERS.length, services: SERVICES.length }, 'catalog seeded');
   return true;
 }
 
 // Idempotent: rewrites EN service names that still carry the legacy em-dash form.
-// Source-of-truth is the SERVICES array above; this just propagates source edits
-// to a previously-seeded database without forcing a full reseed.
-export function cleanServiceCopyIfNeeded(logger) {
-  const stale = db.prepare(`SELECT COUNT(*) AS n FROM services WHERE name_en LIKE '% — %'`).get().n;
+export async function cleanServiceCopyIfNeeded(logger) {
+  const stale = await servicesRepo.countLegacyNameEn();
   if (stale === 0) return false;
 
-  const update = db.prepare('UPDATE services SET name_en = ? WHERE id = ?');
-  const tx = db.transaction(() => {
-    for (const s of SERVICES) update.run(s.nameEN, s.num);
+  await withTransaction(async (client) => {
+    for (const s of SERVICES) {
+      await servicesRepo.updateNameEn(s.num, s.nameEN, { client });
+    }
   });
-  tx();
 
-  logger?.info({ rows: stale }, 'service EN names cleaned');
+  logger?.info?.({ rows: stale }, 'service EN names cleaned');
   return true;
 }
 
-export function backfillBarberDetailsIfMissing(logger) {
-  const missing = db.prepare(`SELECT COUNT(*) AS n FROM barbers WHERE slug IS NULL OR bio_pl IS NULL`).get().n;
+export async function backfillBarberDetailsIfMissing(logger) {
+  const missing = await barbersRepo.countMissingDetails();
   if (missing === 0) return false;
 
-  const tx = db.transaction(() => {
+  await withTransaction(async (client) => {
     for (const b of BARBERS) {
-      updateBarberDetailsBySlug.run(b.slug, b.bioPL, b.bioEN, b.longBioPL, b.longBioEN, b.delay, b.slug);
-      const row = selectBarberIdBySlug.get(b.slug);
-      if (row) writeBarberTags(row.id, b);
+      await barbersRepo.updateDetailsBySlug(
+        {
+          slug: b.slug,
+          bioPL: b.bioPL,
+          bioEN: b.bioEN,
+          longBioPL: b.longBioPL,
+          longBioEN: b.longBioEN,
+          delay: b.delay,
+        },
+        { client },
+      );
+      const id = await barbersRepo.getIdBySlug(b.slug, { client });
+      if (id != null) await writeBarberTags(client, id, b);
     }
   });
-  tx();
 
-  logger?.info({ barbers: BARBERS.length }, 'barber details backfilled');
+  logger?.info?.({ barbers: BARBERS.length }, 'barber details backfilled');
   return true;
 }

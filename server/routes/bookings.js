@@ -1,8 +1,8 @@
-import { stmts, beginImmediate, commit, rollback } from '../db.js';
+import { withTransaction } from '../db.js';
 import { computeUnavailable, blockOverlapsExisting } from '../availability.js';
 import { getBarberIdSet, getServiceById, isBarberLinkedToService } from '../catalog.js';
 import { buildSlotsForISODate } from '../../src/data/booking-config.js';
-import { getBookingById } from '../bot/queries.js';
+import * as bookingsRepo from '../data/bookingsRepo.js';
 import { notifyNewBooking } from '../bot/index.js';
 
 const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
@@ -29,12 +29,13 @@ export default async function bookingsRoutes(fastify) {
         },
       },
     },
-    handler: (req, reply) => {
+    handler: async (req, reply) => {
       const { barberId, date } = req.query;
-      if (!getBarberIdSet().has(barberId)) {
+      const ids = await getBarberIdSet();
+      if (!ids.has(barberId)) {
         return reply.code(422).send({ error: 'unknown_barber' });
       }
-      const rows = stmts.bookingsForBarberDate.all(barberId, date);
+      const rows = await bookingsRepo.findActiveByBarberAndDate(barberId, date);
       const unavailable = [...computeUnavailable(rows, date)].sort();
       return { unavailable };
     },
@@ -53,10 +54,11 @@ export default async function bookingsRoutes(fastify) {
         },
       },
     },
-    handler: (req, reply) => {
+    handler: async (req, reply) => {
       const { barberId, serviceId, year, month } = req.query;
-      if (!getBarberIdSet().has(barberId)) return reply.code(422).send({ error: 'unknown_barber' });
-      const service = getServiceById(serviceId);
+      const ids = await getBarberIdSet();
+      if (!ids.has(barberId)) return reply.code(422).send({ error: 'unknown_barber' });
+      const service = await getServiceById(serviceId);
       if (!service) return reply.code(422).send({ error: 'unknown_service' });
 
       const mm = String(month).padStart(2, '0');
@@ -64,7 +66,7 @@ export default async function bookingsRoutes(fastify) {
       const firstISO = `${year}-${mm}-01`;
       const lastISO  = `${year}-${mm}-${String(lastDay).padStart(2, '0')}`;
 
-      const rows = stmts.bookingsForBarberRange.all(barberId, firstISO, lastISO);
+      const rows = await bookingsRepo.findActiveByBarberAndRange(barberId, firstISO, lastISO);
       const byDate = new Map();
       for (const r of rows) {
         if (!byDate.has(r.date)) byDate.set(r.date, []);
@@ -79,7 +81,7 @@ export default async function bookingsRoutes(fastify) {
         const iso = `${year}-${mm}-${String(d).padStart(2, '0')}`;
         if (iso < today) continue;
         const grid = buildSlotsForISODate(iso);
-        if (grid.length === 0) continue; // closed day; FE handles
+        if (grid.length === 0) continue;
         const dayBookings = byDate.get(iso) ?? [];
         let hasFreeStart = false;
         for (let i = 0; i + blocks <= grid.length; i++) {
@@ -111,13 +113,14 @@ export default async function bookingsRoutes(fastify) {
         },
       },
     },
-    handler: (req, reply) => {
+    handler: async (req, reply) => {
       const { barberId, serviceId, date, slot, name, phone } = req.body;
 
-      if (!getBarberIdSet().has(barberId)) return reply.code(422).send({ error: 'unknown_barber' });
-      const service = getServiceById(serviceId);
+      const ids = await getBarberIdSet();
+      if (!ids.has(barberId)) return reply.code(422).send({ error: 'unknown_barber' });
+      const service = await getServiceById(serviceId);
       if (!service) return reply.code(422).send({ error: 'unknown_service' });
-      if (!isBarberLinkedToService(barberId, serviceId)) {
+      if (!(await isBarberLinkedToService(barberId, serviceId))) {
         return reply.code(422).send({ error: 'barber_service_mismatch' });
       }
 
@@ -135,25 +138,35 @@ export default async function bookingsRoutes(fastify) {
         return reply.code(400).send({ error: 'service_exceeds_hours' });
       }
 
-      beginImmediate.run();
       try {
-        const existing = stmts.bookingsForBarberDate.all(barberId, date);
-        if (blockOverlapsExisting(slot, service.duration_min, existing, date)) {
-          rollback.run();
-          return reply.code(409).send({ error: 'slot_taken' });
-        }
-        const result = stmts.insertBooking.run(
-          barberId, serviceId, service.duration_min, date, slot, name.trim(), phone.trim()
-        );
-        commit.run();
-        const created = getBookingById(result.lastInsertRowid);
+        const newId = await withTransaction(async (client) => {
+          const existing = await bookingsRepo.findActiveByBarberAndDate(barberId, date, { client });
+          if (blockOverlapsExisting(slot, service.duration_min, existing, date)) {
+            const err = new Error('slot_taken');
+            err.code = 'SLOT_TAKEN';
+            throw err;
+          }
+          return bookingsRepo.insert(
+            {
+              barberId,
+              serviceId,
+              durationMin: service.duration_min,
+              date,
+              slot,
+              name: name.trim(),
+              phone: phone.trim(),
+            },
+            { client },
+          );
+        });
+
+        const created = await bookingsRepo.findById(newId);
         if (created) {
           notifyNewBooking(created).catch((err) => req.log.warn({ err }, 'notifyNewBooking failed'));
         }
-        return reply.code(201).send({ id: result.lastInsertRowid, status: 'pending' });
+        return reply.code(201).send({ id: newId, status: 'pending' });
       } catch (err) {
-        try { rollback.run(); } catch {}
-        if (err && err.code === 'SQLITE_CONSTRAINT_UNIQUE') {
+        if (err?.code === 'SLOT_TAKEN' || err?.code === '23505') {
           return reply.code(409).send({ error: 'slot_taken' });
         }
         req.log.error(err);

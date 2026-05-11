@@ -1,9 +1,7 @@
 import { InlineKeyboard } from 'grammy';
-import {
-  getBookingById, getBookingsByDate, getBookingsByRange,
-  getPendingFrom, searchBookings, getStats, setBookingStatus,
-  listBarbers, listServices,
-} from './queries.js';
+import * as bookingsRepo from '../data/bookingsRepo.js';
+import * as barbersRepo from '../data/barbersRepo.js';
+import * as servicesRepo from '../data/servicesRepo.js';
 import {
   helpMessage, formatDayOverview, formatRangeOverview,
   formatBookingCard, formatStats, formatBarbers, formatServices,
@@ -46,20 +44,20 @@ export function registerHandlers(bot) {
 
   bot.command('today', async (ctx) => {
     const date = todayInWarsaw();
-    const rows = getBookingsByDate(date);
+    const rows = await bookingsRepo.findByDate(date);
     await ctx.reply(formatDayOverview(date, rows), HTML);
   });
 
   bot.command('tomorrow', async (ctx) => {
     const date = addDaysIso(todayInWarsaw(), 1);
-    const rows = getBookingsByDate(date);
+    const rows = await bookingsRepo.findByDate(date);
     await ctx.reply(formatDayOverview(date, rows), HTML);
   });
 
   bot.command('week', async (ctx) => {
     const from = todayInWarsaw();
     const to = addDaysIso(from, 6);
-    const rows = getBookingsByRange(from, to);
+    const rows = await bookingsRepo.findByRange(from, to);
     await ctx.reply(
       formatRangeOverview(rows, `Następne 7 dni (${isoToHumanPl(from)} → ${isoToHumanPl(to)})`),
       HTML,
@@ -71,12 +69,12 @@ export function registerHandlers(bot) {
     if (!ISO_DATE_RE.test(arg)) {
       return ctx.reply('Użycie: <code>/date YYYY-MM-DD</code>', HTML);
     }
-    const rows = getBookingsByDate(arg);
+    const rows = await bookingsRepo.findByDate(arg);
     await ctx.reply(formatDayOverview(arg, rows), HTML);
   });
 
   bot.command('pending', async (ctx) => {
-    const rows = getPendingFrom(todayInWarsaw());
+    const rows = await bookingsRepo.findPendingFrom(todayInWarsaw());
     if (rows.length === 0) {
       return ctx.reply('🎉 Brak oczekujących rezerwacji.', HTML);
     }
@@ -88,7 +86,7 @@ export function registerHandlers(bot) {
     if (q.length < 2) {
       return ctx.reply('Użycie: <code>/find &lt;imię lub telefon&gt;</code>', HTML);
     }
-    const rows = searchBookings(q, todayInWarsaw());
+    const rows = await bookingsRepo.search(q, todayInWarsaw());
     if (rows.length === 0) {
       return ctx.reply(`Brak wyników dla: <b>${q}</b>`, HTML);
     }
@@ -100,7 +98,7 @@ export function registerHandlers(bot) {
     if (!Number.isInteger(id) || id <= 0) {
       return ctx.reply('Użycie: <code>/booking &lt;id&gt;</code>', HTML);
     }
-    const b = getBookingById(id);
+    const b = await bookingsRepo.findById(id);
     if (!b) return ctx.reply(`Nie znaleziono rezerwacji #${id}.`);
     await sendBookingCard(ctx, b);
   });
@@ -108,16 +106,22 @@ export function registerHandlers(bot) {
   bot.command('stats', async (ctx) => {
     const today = todayInWarsaw();
     const weekTo = addDaysIso(today, 6);
-    const todayStats = getStats(today, today);
-    const weekStats = getStats(today, weekTo);
+    const [todayStats, weekStats] = await Promise.all([
+      bookingsRepo.getStats(today, today),
+      bookingsRepo.getStats(today, weekTo),
+    ]);
     await ctx.reply(
       `${formatStats('Dziś', todayStats)}\n\n${formatStats('Następne 7 dni', weekStats)}`,
       HTML,
     );
   });
 
-  bot.command('barbers', async (ctx) => ctx.reply(formatBarbers(listBarbers()), HTML));
-  bot.command('services', async (ctx) => ctx.reply(formatServices(listServices()), HTML));
+  bot.command('barbers', async (ctx) =>
+    ctx.reply(formatBarbers(await barbersRepo.listActiveBrief()), HTML),
+  );
+  bot.command('services', async (ctx) =>
+    ctx.reply(formatServices(await servicesRepo.listActiveBrief()), HTML),
+  );
 
   bot.callbackQuery(/^bk:(confirm|cancel|pending):(\d+)$/, async (ctx) => {
     const action = ctx.match[1];
@@ -126,7 +130,7 @@ export function registerHandlers(bot) {
       action === 'confirm' ? 'confirmed' :
       action === 'cancel' ? 'cancelled' : 'pending';
 
-    const before = getBookingById(id);
+    const before = await bookingsRepo.findById(id);
     if (!before) {
       await ctx.answerCallbackQuery({ text: `Brak rezerwacji #${id}`, show_alert: true });
       return;
@@ -136,8 +140,8 @@ export function registerHandlers(bot) {
       return;
     }
 
-    setBookingStatus(id, status);
-    const after = getBookingById(id);
+    await bookingsRepo.updateStatus(id, status);
+    const after = await bookingsRepo.findById(id);
     await ctx.editMessageText(formatBookingCard(after), {
       ...HTML,
       reply_markup: bookingKeyboard(after),
@@ -151,11 +155,11 @@ export function registerHandlers(bot) {
       return ctx.reply('Nieznana komenda. Wpisz /help.');
     }
     if (ISO_DATE_RE.test(txt)) {
-      const rows = getBookingsByDate(txt);
+      const rows = await bookingsRepo.findByDate(txt);
       return ctx.reply(formatDayOverview(txt, rows), HTML);
     }
     if (txt.length >= 2) {
-      const rows = searchBookings(txt, todayInWarsaw());
+      const rows = await bookingsRepo.search(txt, todayInWarsaw());
       if (rows.length === 0) {
         return ctx.reply(`Brak wyników dla: <b>${txt}</b>\n\nWpisz /help, aby zobaczyć komendy.`, HTML);
       }

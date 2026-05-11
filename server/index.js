@@ -5,6 +5,7 @@ import { existsSync } from 'node:fs';
 import Fastify from 'fastify';
 import cors from '@fastify/cors';
 import fastifyStatic from '@fastify/static';
+import { initSchema, waitForDb, pool, ping } from './db.js';
 import bookingsRoutes from './routes/bookings.js';
 import catalogRoutes from './routes/catalog.js';
 import { seedCatalogIfEmpty, backfillBarberDetailsIfMissing, cleanServiceCopyIfNeeded } from './seed-catalog.js';
@@ -17,9 +18,11 @@ const fastify = Fastify({
   logger: { level: process.env.LOG_LEVEL ?? 'info' },
 });
 
-seedCatalogIfEmpty(fastify.log);
-backfillBarberDetailsIfMissing(fastify.log);
-cleanServiceCopyIfNeeded(fastify.log);
+await waitForDb({ log: fastify.log });
+await initSchema();
+await seedCatalogIfEmpty(fastify.log);
+await backfillBarberDetailsIfMissing(fastify.log);
+await cleanServiceCopyIfNeeded(fastify.log);
 
 if (!isProd) {
   await fastify.register(cors, { origin: true });
@@ -28,7 +31,10 @@ if (!isProd) {
 await fastify.register(catalogRoutes);
 await fastify.register(bookingsRoutes);
 
-fastify.get('/api/health', () => ({ ok: true }));
+fastify.get('/api/health', async () => {
+  await ping(pool);
+  return { ok: true };
+});
 
 if (isProd) {
   const distRoot = resolve(here, '..', 'dist');
@@ -61,6 +67,7 @@ for (const sig of ['SIGINT', 'SIGTERM']) {
     fastify.log.info({ sig }, 'shutting down');
     await stopBot();
     await fastify.close();
+    await pool.end().catch(() => {});
     process.exit(0);
   });
 }
