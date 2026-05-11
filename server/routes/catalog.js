@@ -1,5 +1,5 @@
 import { getCatalog } from '../catalog.js';
 
 export default async function catalogRoutes(fastify) {
-  fastify.get('/api/catalog', () => getCatalog());
+  fastify.get('/api/catalog', async () => getCatalog());
 }
