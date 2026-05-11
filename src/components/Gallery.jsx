@@ -39,30 +39,16 @@ const photos = [
   '/gallery/IMG_7729.jpeg',
 ];
 
-const VISIBLE = 8;
+const VISIBLE = 9;
 
 function getSlice(offset) {
   return Array.from({ length: VISIBLE }, (_, i) => photos[(offset + i) % photos.length]);
 }
 
-function preload(srcs) {
-  return Promise.all(srcs.map(src => new Promise(resolve => {
-    const img = new Image();
-    img.onload = img.onerror = resolve;
-    img.src = src;
-  })));
-}
-
 export default function Gallery() {
   const ref = useReveal();
-  const [layerA, setLayerA] = useState(() => getSlice(0));
-  const [layerB, setLayerB] = useState(() => getSlice(VISIBLE));
-  const [showA, setShowA] = useState(true);
-  const offsetRef = useRef(0);
-
-  const showARef = useRef(true);
+  const [visiblePhotos] = useState(() => getSlice(0));
   const [lightboxIdx, setLightboxIdx] = useState(null);
-  const currentPhotos = showA ? layerA : layerB;
 
   function openLightbox(src) {
     const idx = photos.indexOf(src);
@@ -88,25 +74,6 @@ export default function Gallery() {
     return () => { document.body.style.overflow = ''; };
   }, [lightboxIdx]);
 
-  useEffect(() => {
-    const t = setInterval(() => {
-      const nextOffset = (offsetRef.current + VISIBLE) % photos.length;
-      const nextSlice = getSlice(nextOffset);
-
-      preload(nextSlice).then(() => {
-        if (showARef.current) {
-          setLayerB(nextSlice);
-        } else {
-          setLayerA(nextSlice);
-        }
-        showARef.current = !showARef.current;
-        setShowA(a => !a);
-        offsetRef.current = nextOffset;
-      });
-    }, 5000);
-    return () => clearInterval(t);
-  }, []);
-
   return (
     <section id="gallery" className="gallery-section" ref={ref}>
       <div className="section-header">
@@ -114,19 +81,26 @@ export default function Gallery() {
           <div className="section-number">{useT('03 / GALERIA', '03 / GALLERY')}</div>
           <div className="section-title">{useT('Nasza praca', 'The Work')}</div>
         </div>
-        <a className="section-link" href="https://www.instagram.com/off_cut_barbershop/" target="_blank" rel="noopener noreferrer">
-          Instagram →
+        <a className="gallery-instagram-cta" href="https://www.instagram.com/off_cut_barbershop/" target="_blank" rel="noopener noreferrer">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <defs>
+              <linearGradient id="ig-grad-g" x1="0%" y1="100%" x2="100%" y2="0%">
+                <stop offset="0%" stopColor="#F58529"/>
+                <stop offset="40%" stopColor="#DD2A7B"/>
+                <stop offset="100%" stopColor="#515BD4"/>
+              </linearGradient>
+            </defs>
+            <rect x="2" y="2" width="20" height="20" rx="5" stroke="url(#ig-grad-g)"/>
+            <circle cx="12" cy="12" r="4" stroke="url(#ig-grad-g)"/>
+            <circle cx="17.5" cy="6.5" r="0.8" fill="#DD2A7B" stroke="none"/>
+          </svg>
+          {useT('Więcej na Instagram →', 'More on Instagram →')}
         </a>
       </div>
 
       <div className="gallery-stage reveal">
-        <div className={`gallery-grid gallery-layer${showA ? ' gallery-layer--visible' : ''}`}>
-          {layerA.map((src, i) => (
-            <div key={i} className="gallery-cell" style={{ backgroundImage: `url(${src})` }} onClick={() => openLightbox(src)} />
-          ))}
-        </div>
-        <div className={`gallery-grid gallery-layer${!showA ? ' gallery-layer--visible' : ''}`}>
-          {layerB.map((src, i) => (
+        <div className="gallery-grid">
+          {visiblePhotos.map((src, i) => (
             <div key={i} className="gallery-cell" style={{ backgroundImage: `url(${src})` }} onClick={() => openLightbox(src)} />
           ))}
         </div>
