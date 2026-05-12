@@ -47,8 +47,8 @@ export async function startBot({ log } = {}) {
     }
   });
 
-  registerHandlers(bot);
   registerCalendar(bot);
+  registerHandlers(bot);
 
   bot.catch((err) => {
     const ctx = err.ctx;
