@@ -2,6 +2,7 @@ import { withTransaction } from '../db.js';
 import { computeUnavailable, blockOverlapsExisting } from '../availability.js';
 import { getBarberIdSet, getServiceById, isBarberLinkedToService } from '../catalog.js';
 import { buildSlotsForISODate } from '../../src/data/booking-config.js';
+import { SLOT_STEP_MIN } from '../../src/data/businessHours.js';
 import * as bookingsRepo from '../data/bookingsRepo.js';
 import { notifyNewBooking } from '../bot/index.js';
 
@@ -74,7 +75,7 @@ export default async function bookingsRoutes(fastify) {
       }
 
       const today = todayInWarsaw();
-      const blocks = Math.ceil(service.duration_min / 30);
+      const blocks = Math.ceil(service.duration_min / SLOT_STEP_MIN);
       const fullyBookedDates = [];
 
       for (let d = 1; d <= lastDay; d++) {
@@ -132,7 +133,7 @@ export default async function bookingsRoutes(fastify) {
       if (!grid.includes(slot)) {
         return reply.code(400).send({ error: 'slot_outside_hours' });
       }
-      const blocks = Math.ceil(service.duration_min / 30);
+      const blocks = Math.ceil(service.duration_min / SLOT_STEP_MIN);
       const startIdx = grid.indexOf(slot);
       if (startIdx + blocks > grid.length) {
         return reply.code(400).send({ error: 'service_exceeds_hours' });
