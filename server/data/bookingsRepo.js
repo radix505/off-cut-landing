@@ -114,3 +114,83 @@ export async function findActiveByBarberAndRange(barberId, fromIso, toIso, { cli
   const { rows } = await runner(client).query(SQL_ACTIVE_BY_BARBER_RANGE, [barberId, fromIso, toIso]);
   return rows;
 }
+
+export async function findById(id, { client } = {}) {
+  const { rows } = await runner(client).query(SQL_BY_ID, [id]);
+  return rows[0] ?? null;
+}
+
+export async function findByDate(isoDate, { client } = {}) {
+  const { rows } = await runner(client).query(SQL_BY_DATE, [isoDate]);
+  return rows;
+}
+
+export async function findByRange(fromIso, toIso, { client } = {}) {
+  const { rows } = await runner(client).query(SQL_BY_DATE_RANGE, [fromIso, toIso]);
+  return rows;
+}
+
+export async function findPendingFrom(isoDate, { client } = {}) {
+  const { rows } = await runner(client).query(SQL_PENDING_FROM, [isoDate]);
+  return rows;
+}
+
+export async function search(query, fromIso, { client } = {}) {
+  const q = query.trim().toLowerCase();
+  const namePat = `%${q}%`;
+  const phoneClean = q.replace(/[\s\-()]/g, '');
+  const phonePat = `%${phoneClean}%`;
+  const { rows } = await runner(client).query(SQL_SEARCH_FROM, [fromIso, namePat, phonePat]);
+  return rows;
+}
+
+export async function findByBarberAndDate(barberId, isoDate, { client } = {}) {
+  const { rows } = await runner(client).query(SQL_BY_BARBER_DATE_FULL, [barberId, isoDate]);
+  return rows;
+}
+
+export async function countByDateForBarber(barberId, fromIso, toIso, { client } = {}) {
+  const { rows } = await runner(client).query(SQL_COUNT_BY_DATE_FOR_BARBER, [barberId, fromIso, toIso]);
+  return rows;
+}
+
+export async function getStats(fromIso, toIso, { client } = {}) {
+  const r = runner(client);
+  const { rows: counts } = await r.query(SQL_COUNT_BY_STATUS_IN_RANGE, [fromIso, toIso]);
+  const out = { pending: 0, confirmed: 0, cancelled: 0 };
+  for (const row of counts) out[row.status] = row.n;
+  const { rows: revRows } = await r.query(SQL_TOTAL_REVENUE_IN_RANGE, [fromIso, toIso]);
+  return { ...out, revenuePln: revRows[0]?.pln ?? 0 };
+}
+
+export async function updateStatus(id, status, { client } = {}) {
+  if (!ALLOWED_STATUSES.has(status)) {
+    throw new Error(`invalid status: ${status}`);
+  }
+  return runner(client).query(SQL_UPDATE_STATUS, [status, id]);
+}
+
+export async function insert(
+  { barberId, serviceId, durationMin, date, slot, name, phone },
+  { client } = {},
+) {
+  const { rows } = await runner(client).query(SQL_INSERT, [
+    barberId, serviceId, durationMin, date, slot, name, phone,
+  ]);
+  return rows[0].id;
+}
+
+export async function insertBlock(
+  { barberId, durationMin, date, slot },
+  { client } = {},
+) {
+  const { rows } = await runner(client).query(SQL_INSERT_BLOCK, [
+    barberId, durationMin, date, slot,
+  ]);
+  return rows[0].id;
+}
+
+export async function deleteBlock(id, { client } = {}) {
+  const { rowCount } = await runner(client).query(SQL_DELETE_BLOCK, [id]);
+  return rowCount > 0;
+}
