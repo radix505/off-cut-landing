@@ -1,5 +1,5 @@
 import { Bot, GrammyError, HttpError } from 'grammy';
-import { registerHandlers } from './handlers.js';
+import { registerHandlers, bookingKeyboard } from './handlers.js';
 import { registerCalendar } from './calendar.js';
 import { formatNewBookingNotification } from './format.js';
 
@@ -92,5 +92,7 @@ export async function notifyManagers(text, opts = {}) {
 
 export async function notifyNewBooking(booking) {
   if (!bot) return;
-  await notifyManagers(formatNewBookingNotification(booking));
+  await notifyManagers(formatNewBookingNotification(booking), {
+    reply_markup: bookingKeyboard(booking),
+  });
 }

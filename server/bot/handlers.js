@@ -11,7 +11,7 @@ import {
 const ISO_DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 const HTML = { parse_mode: 'HTML' };
 
-function bookingKeyboard(b) {
+export function bookingKeyboard(b) {
   const kb = new InlineKeyboard();
   if (b.status === 'pending') {
     kb.text('✅ Potwierdź', `bk:confirm:${b.id}`).text('❌ Anuluj', `bk:cancel:${b.id}`);
