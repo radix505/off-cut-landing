@@ -273,7 +273,7 @@ section { padding-block: var(--space-section-y); padding-inline: var(--space-sec
 .section-header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 4rem; border-bottom: 0.5px solid #ddd9d0; padding-bottom: 1.5rem; }
 .section-number { font-family: 'Bebas Neue', sans-serif; font-size: 0.8rem; letter-spacing: 0.3em; color: var(--text-muted-light); }
 .section-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(36px, 5vw, 60px); letter-spacing: 0.04em; color: var(--ink); line-height: 1; }
-.section-link { display: inline-flex; align-items: center; gap: 0.5rem; font-family: 'Inter', sans-serif; font-weight: 500; font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-muted-light); background: none; cursor: pointer; transition: color 0.3s, border-color 0.3s; text-decoration: none; border: none; border-bottom: 0.5px solid var(--text-muted-light); border-radius: 0; padding: 0 0 2px; line-height: 1; }
+.section-link { display: inline-flex; align-items: center; gap: 0.5rem; font-family: 'Inter', sans-serif; font-weight: 400; font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-muted-light); background: none; cursor: pointer; transition: color 0.3s, border-color 0.3s; text-decoration: none; border: none; border-bottom: 0.5px solid var(--text-muted-light); border-radius: 0; padding: 0 0 2px; line-height: 1; }
 .section-link:hover { color: var(--ink); border-color: var(--ink); }
 .section-link-icon { flex-shrink: 0; display: block; }
 .hero .section-link { color: var(--text-muted-dark); border-color: var(--text-muted-dark); }
