@@ -3,6 +3,7 @@ import { LangProvider } from './context/LangContext';
 import { RouterProvider, useRouter } from './context/RouterContext';
 import { CatalogProvider } from './context/CatalogContext';
 import LangSplash from './components/LangSplash';
+import LogoIntro from './components/LogoIntro';
 import CookieBanner from './components/CookieBanner';
 import ScissorsTransition from './components/ScissorsTransition';
 import HomePage from './pages/HomePage';
@@ -65,6 +66,7 @@ export default function App() {
         <CatalogProvider>
           <RouterProvider>
             <LangSplash />
+            <LogoIntro />
             <ScissorsTransition />
             <AppRoutes />
             <CookieBanner />

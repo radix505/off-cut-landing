@@ -43,9 +43,9 @@ export default function Nav() {
       raf = requestAnimationFrame(() => {
         const y = window.scrollY;
         setScrolled(y > 50);
-        const scrollingDown = y > 120 && y > lastY.current;
-        if (scrollingDown) setHovered(false);
-        setHidden(scrollingDown);
+        const atTop = y < 80;
+        if (!atTop && y > lastY.current) setHovered(false);
+        setHidden(!atTop);
         lastY.current = y;
       });
     };

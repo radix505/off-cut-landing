@@ -42,7 +42,9 @@ export default function Hero() {
   return (
     <section className="hero" id="home">
       <div className="hero-bg" ref={bgRef} />
-      <div className="hero-year">{useT('ZAŁ. 2019 — PREMIUM GROOMING', 'EST. 2019 — PREMIUM GROOMING')}</div>
+<p className="hero-sub">
+        {subLine1}<br />{subLine2}
+      </p>
       <div className="hero-content">
         <div className="hero-eyebrow">
           <span className="eyebrow-line" />
@@ -56,9 +58,6 @@ export default function Hero() {
           <span className="hero-title-line">ART</span>
         </h1>
         <span className="hero-rule" aria-hidden="true" />
-        <p className="hero-sub">
-          {subLine1}<br />{subLine2}
-        </p>
         <div className="hero-cta">
           <button className="btn-primary" onClick={() => navigate('/booking')}>{useT('Zarezerwuj wizytę', 'Book Appointment')}</button>
           <button className="btn-ghost" onClick={() => navigate('/services')}>{useT('Zobacz usługi', 'View Services')}</button>
