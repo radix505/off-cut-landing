@@ -1,0 +1,793 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - generic [ref=e4] [cursor=pointer]:
+      - generic:
+        - generic: OFF CUT
+        - generic: Barbershop
+        - generic: Polski
+        - generic: kliknij aby wybrać
+    - generic [ref=e5] [cursor=pointer]:
+      - generic:
+        - generic: OFF CUT
+        - generic: Barbershop
+        - generic: English
+        - generic: click to select
+  - generic [ref=e6]:
+    - navigation [ref=e7]:
+      - generic [ref=e9] [cursor=pointer]:
+        - generic [ref=e10]: OFF CUT
+        - generic [ref=e11]: Barbershop
+      - list [ref=e13]:
+        - listitem [ref=e14]:
+          - link "Usługi" [ref=e15] [cursor=pointer]:
+            - /url: /services
+        - listitem [ref=e16]:
+          - link "Ekipa" [ref=e17] [cursor=pointer]:
+            - /url: /crew
+        - listitem [ref=e18]:
+          - link "Galeria" [ref=e19] [cursor=pointer]:
+            - /url: /gallery
+        - listitem [ref=e20]:
+          - link "Kontakt" [ref=e21] [cursor=pointer]:
+            - /url: /contact
+      - generic [ref=e22]:
+        - img [ref=e23]
+        - button "Zarezerwuj" [ref=e29] [cursor=pointer]
+        - button "Switch to English" [ref=e30] [cursor=pointer]:
+          - generic [ref=e31]: EN
+          - generic [ref=e32]: PL
+    - generic:
+      - img
+    - generic [ref=e33]:
+      - generic [ref=e35]: ZAŁ. 2019 — PREMIUM GROOMING
+      - generic [ref=e36]:
+        - generic [ref=e37]:
+          - generic [ref=e39]: Szczecin
+          - generic [ref=e41]: ZAŁ. 2019
+        - heading "THE SHARP ART" [level=1] [ref=e42]:
+          - generic [ref=e43]: THE
+          - generic [ref=e44]: SHARP
+          - generic [ref=e45]: ART
+        - paragraph [ref=e46]:
+          - text: Precyzyjne strzyżenie. Ponadczasowe rzemiosło.
+          - text: Gdzie pielęgnacja staje się rytuałem.
+        - generic [ref=e47]:
+          - button "Zarezerwuj wizytę" [ref=e48] [cursor=pointer]
+          - button "Zobacz usługi" [ref=e49] [cursor=pointer]
+      - generic [ref=e52]: Przewiń
+    - generic [ref=e54]:
+      - generic [ref=e55]: PRECYZYJNE STRZYŻENIE
+      - generic [ref=e57]: GOLENIE BRZYTWĄ
+      - generic [ref=e59]: RZEŹBIENIE BRODY
+      - generic [ref=e61]: SKIN FADE
+      - generic [ref=e63]: KLASYCZNY GROOMING
+      - generic [ref=e65]: ZAŁ. 2019
+      - generic [ref=e67]: PREMIUM RZEMIOSŁO
+      - generic [ref=e69]: SZCZECIN
+      - generic [ref=e71]: PRECYZYJNE STRZYŻENIE
+      - generic [ref=e73]: GOLENIE BRZYTWĄ
+      - generic [ref=e75]: RZEŹBIENIE BRODY
+      - generic [ref=e77]: SKIN FADE
+      - generic [ref=e79]: KLASYCZNY GROOMING
+      - generic [ref=e81]: ZAŁ. 2019
+      - generic [ref=e83]: PREMIUM RZEMIOSŁO
+      - generic [ref=e85]: SZCZECIN
+    - generic [ref=e87]:
+      - generic [ref=e88]:
+        - generic [ref=e89]:
+          - generic [ref=e90]: 01 / USŁUGI
+          - generic [ref=e91]: Co robimy
+        - generic [ref=e92] [cursor=pointer]: Pełny cennik →
+      - generic [ref=e93]:
+        - generic [ref=e94]:
+          - generic [ref=e96]:
+            - generic [ref=e97]: 01 /
+            - text: WŁOSY
+          - list [ref=e98]:
+            - listitem [ref=e99]
+            - listitem [ref=e100]
+            - listitem [ref=e101]
+            - listitem [ref=e102]
+        - generic [ref=e103]:
+          - generic [ref=e105]:
+            - generic [ref=e106]: 02 /
+            - text: BRODA
+          - list [ref=e107]:
+            - listitem [ref=e108]
+            - listitem [ref=e109]
+            - listitem [ref=e110]
+            - listitem [ref=e111]
+        - generic [ref=e112]:
+          - generic [ref=e114]:
+            - generic [ref=e115]: 03 /
+            - text: ZESTAW
+          - list [ref=e116]:
+            - listitem [ref=e117]
+            - listitem [ref=e118]
+            - listitem [ref=e119]
+            - listitem [ref=e120]
+    - generic [ref=e122]:
+      - generic [ref=e123]:
+        - generic [ref=e124]: 02 / ZESPÓŁ
+        - generic [ref=e125]: Barberzy
+      - generic [ref=e126] [cursor=pointer]: Poznaj ekipę →
+    - generic [ref=e128]:
+      - generic [ref=e129]:
+        - generic [ref=e130]: 03 / GALERIA
+        - generic [ref=e131]: Nasza praca
+      - link "Więcej na Instagram →" [ref=e132] [cursor=pointer]:
+        - /url: https://www.instagram.com/off_cut_barbershop/
+        - img [ref=e133]
+        - text: Więcej na Instagram →
+    - generic [ref=e148]:
+      - generic [ref=e149]:
+        - generic:
+          - generic:
+            - generic: B
+            - generic:
+              - generic: Bartosz K.
+              - generic:
+                - generic:
+                  - img
+                  - text: Lokalny przewodnik
+                - generic: ·
+                - generic: 14 opinii
+            - img
+          - generic:
+            - generic: ★★★★★
+            - generic: 2 miesiące temu
+          - paragraph: Cięcie idealne, atmosfera luźna, Aleksander to prawdziwy profesjonalista.
+        - generic:
+          - generic:
+            - generic: W
+            - generic:
+              - generic: Wojtek M.
+              - generic:
+                - generic: 3 opinii
+            - img
+          - generic:
+            - generic: ★★★★★
+            - generic: miesiąc temu
+          - paragraph: Świetny barber shop z profesjonalnym podejściem do klienta.
+        - generic:
+          - generic:
+            - generic: M
+            - generic:
+              - generic: Michał R.
+              - generic:
+                - generic:
+                  - img
+                  - text: Lokalny przewodnik
+                - generic: ·
+                - generic: 31 opinii
+            - img
+          - generic:
+            - generic: ★★★★★
+            - generic: 3 miesiące temu
+          - paragraph: Idealne miejsce dla każdego mężczyzny, który chce zadbać o swój wygląd.
+        - generic:
+          - generic:
+            - generic: M
+            - generic:
+              - generic: Marek S.
+              - generic:
+                - generic: 7 opinii
+            - img
+          - generic:
+            - generic: ★★★★★
+            - generic: 5 miesięcy temu
+          - paragraph: Off Cut to barber shop, który zdecydowanie polecam każdemu.
+        - generic:
+          - generic:
+            - generic: K
+            - generic:
+              - generic: Kamil T.
+              - generic:
+                - generic:
+                  - img
+                  - text: Lokalny przewodnik
+                - generic: ·
+                - generic: 8 opinii
+            - img
+          - generic:
+            - generic: ★★★★★
+            - generic: tydzień temu
+          - paragraph: Nico zrobił mi niesamowity skin fade. Najlepsze miejsce w mieście!
+        - generic:
+          - generic:
+            - generic: P
+            - generic:
+              - generic: Paweł N.
+              - generic:
+                - generic: 2 opinii
+            - img
+          - generic:
+            - generic: ★★★★★
+            - generic: 4 miesiące temu
+          - paragraph: Profesjonalizm na najwyższym poziomie. Zadowolony w 100%.
+        - generic:
+          - generic:
+            - generic: Ł
+            - generic:
+              - generic: Łukasz B.
+              - generic:
+                - generic:
+                  - img
+                  - text: Lokalny przewodnik
+                - generic: ·
+                - generic: 22 opinii
+            - img
+          - generic:
+            - generic: ★★★★★
+            - generic: 6 miesięcy temu
+          - paragraph: Klimatyczne miejsce, świetni ludzie i jeszcze lepsze strzyżenie.
+        - generic:
+          - generic:
+            - generic: A
+            - generic:
+              - generic: Adam K.
+              - generic:
+                - generic: 5 opinii
+            - img
+          - generic:
+            - generic: ★★★★★
+            - generic: 7 miesięcy temu
+          - paragraph: Julia jest mistrzem w swoim fachu. Polecam wszystkim!
+        - generic:
+          - generic:
+            - generic: T
+            - generic:
+              - generic: Tomasz W.
+              - generic:
+                - generic:
+                  - img
+                  - text: Lokalny przewodnik
+                - generic: ·
+                - generic: 47 opinii
+            - img
+          - generic:
+            - generic: ★★★★★
+            - generic: 2 tygodnie temu
+          - paragraph: Trafiony brzytwą zarost wyszedł perfekcyjnie. Wracam co miesiąc.
+        - generic:
+          - generic:
+            - generic: R
+            - generic:
+              - generic: Rafał D.
+              - generic:
+                - generic: 4 opinii
+            - img
+          - generic:
+            - generic: ★★★★★
+            - generic: 3 tygodnie temu
+          - paragraph: Pierwsza wizyta i już wiem, że to mój nowy stały barber.
+        - generic:
+          - generic:
+            - generic: D
+            - generic:
+              - generic: Dawid L.
+              - generic:
+                - generic:
+                  - img
+                  - text: Lokalny przewodnik
+                - generic: ·
+                - generic: 19 opinii
+            - img
+          - generic:
+            - generic: ★★★★★
+            - generic: 8 miesięcy temu
+          - paragraph: Najlepszy fade jaki miałem. Załoga zna się na rzeczy.
+        - generic:
+          - generic:
+            - generic: J
+            - generic:
+              - generic: Jakub P.
+              - generic:
+                - generic: 1 opinii
+            - img
+          - generic:
+            - generic: ★★★★★
+            - generic: 5 dni temu
+          - paragraph: Dobry kawałek muzyki, kawa na powitanie i świetne strzyżenie. Polecam.
+        - generic:
+          - generic:
+            - generic: S
+            - generic:
+              - generic: Szymon F.
+              - generic:
+                - generic:
+                  - img
+                  - text: Lokalny przewodnik
+                - generic: ·
+                - generic: 11 opinii
+            - img
+          - generic:
+            - generic: ★★★★★
+            - generic: miesiąc temu
+          - paragraph: Detal i precyzja na każdym kroku — wreszcie znalazłem swoje miejsce.
+        - generic:
+          - generic:
+            - generic: O
+            - generic:
+              - generic: Oskar W.
+              - generic:
+                - generic: 6 opinii
+            - img
+          - generic:
+            - generic: ★★★★★
+            - generic: 2 miesiące temu
+          - paragraph: Przemyślana propozycja fryzury dopasowanej do twarzy. Wielki plus.
+        - generic:
+          - generic:
+            - generic: F
+            - generic:
+              - generic: Filip M.
+              - generic:
+                - generic:
+                  - img
+                  - text: Lokalny przewodnik
+                - generic: ·
+                - generic: 27 opinii
+            - img
+          - generic:
+            - generic: ★★★★★
+            - generic: 4 dni temu
+          - paragraph: Wnętrze z duszą, fachowcy w każdym calu. 10/10.
+        - generic:
+          - generic:
+            - generic: G
+            - generic:
+              - generic: Grzegorz S.
+              - generic:
+                - generic: 9 opinii
+            - img
+          - generic:
+            - generic: ★★★★★
+            - generic: 9 miesięcy temu
+          - paragraph: Cena adekwatna do jakości — a jakość jest naprawdę wysoka.
+        - generic:
+          - generic:
+            - generic: I
+            - generic:
+              - generic: Igor C.
+              - generic:
+                - generic:
+                  - img
+                  - text: Lokalny przewodnik
+                - generic: ·
+                - generic: 38 opinii
+            - img
+          - generic:
+            - generic: ★★★★★
+            - generic: tydzień temu
+          - paragraph: Wizyta zawsze na czas, bez pośpiechu, z dbałością o szczegóły.
+        - generic:
+          - generic:
+            - generic: H
+            - generic:
+              - generic: Hubert J.
+              - generic:
+                - generic: 2 opinii
+            - img
+          - generic:
+            - generic: ★★★★★
+            - generic: 10 miesięcy temu
+          - paragraph: Synowi pierwsze męskie strzyżenie u nich i zachwyt obu stron.
+        - generic:
+          - generic:
+            - generic: C
+            - generic:
+              - generic: Cyprian B.
+              - generic:
+                - generic:
+                  - img
+                  - text: Lokalny przewodnik
+                - generic: ·
+                - generic: 16 opinii
+            - img
+          - generic:
+            - generic: ★★★★★
+            - generic: 6 dni temu
+          - paragraph: Strzyżenie + broda za jednym zamachem, efekt powyżej oczekiwań.
+        - generic:
+          - generic:
+            - generic: "N"
+            - generic:
+              - generic: Norbert K.
+              - generic:
+                - generic: 4 opinii
+            - img
+          - generic:
+            - generic: ★★★★★
+            - generic: 3 miesiące temu
+          - paragraph: Atmosfera jak w klubie dla swoich. Wracam i zabieram brata.
+        - generic:
+          - generic:
+            - generic: V
+            - generic:
+              - generic: Wiktor L.
+              - generic:
+                - generic:
+                  - img
+                  - text: Lokalny przewodnik
+                - generic: ·
+                - generic: 12 opinii
+            - img
+          - generic:
+            - generic: ★★★★★
+            - generic: 2 tygodnie temu
+          - paragraph: Konsultacja przed cięciem zrobiła robotę — w końcu fryzura która pasuje.
+        - generic:
+          - generic:
+            - generic: Z
+            - generic:
+              - generic: Zbigniew O.
+              - generic:
+                - generic: 3 opinii
+            - img
+          - generic:
+            - generic: ★★★★★
+            - generic: 11 miesięcy temu
+          - paragraph: Klasyczna brzytwa, gorący ręcznik, pełen relaks. Czuję się jak nowo narodzony.
+        - generic:
+          - generic:
+            - generic: E
+            - generic:
+              - generic: Eryk Z.
+              - generic:
+                - generic:
+                  - img
+                  - text: Lokalny przewodnik
+                - generic: ·
+                - generic: 25 opinii
+            - img
+          - generic:
+            - generic: ★★★★★
+            - generic: 5 miesięcy temu
+          - paragraph: Świetne podejście, profesjonalny sprzęt i konkretne efekty.
+        - generic:
+          - generic:
+            - generic: X
+            - generic:
+              - generic: Xawery P.
+              - generic:
+                - generic: 1 opinii
+            - img
+          - generic:
+            - generic: ★★★★★
+            - generic: 4 tygodnie temu
+          - paragraph: Polecony przez kumpla i nie zawiódł — teraz polecam dalej.
+        - generic:
+          - generic:
+            - generic: U
+            - generic:
+              - generic: Ulan T.
+              - generic:
+                - generic:
+                  - img
+                  - text: Lokalny przewodnik
+                - generic: ·
+                - generic: 18 opinii
+            - img
+          - generic:
+            - generic: ★★★★★
+            - generic: miesiąc temu
+          - paragraph: Każdy detal dopracowany — od linii zarostu po końcówki włosów.
+        - generic:
+          - generic:
+            - generic: D
+            - generic:
+              - generic: Damian R.
+              - generic:
+                - generic: 2 opinii
+            - img
+          - generic:
+            - generic: ★★★★★
+            - generic: 7 dni temu
+          - paragraph: Lokal blisko centrum, łatwa rezerwacja online i punktualność.
+        - generic:
+          - generic:
+            - generic: B
+            - generic:
+              - generic: Borys H.
+              - generic:
+                - generic:
+                  - img
+                  - text: Lokalny przewodnik
+                - generic: ·
+                - generic: 33 opinii
+            - img
+          - generic:
+            - generic: ★★★★★
+            - generic: 6 miesięcy temu
+          - paragraph: Po latach szukania trafiłem na barbera, do którego wracam bez wahania.
+        - generic:
+          - generic:
+            - generic: M
+            - generic:
+              - generic: Mateusz G.
+              - generic:
+                - generic: 1 opinii
+            - img
+          - generic:
+            - generic: ★★★★★
+            - generic: 3 dni temu
+          - paragraph: Świetna robota przy brodzie — kontur ostry jak żyletka.
+        - generic:
+          - generic:
+            - generic: A
+            - generic:
+              - generic: Artur Z.
+              - generic:
+                - generic:
+                  - img
+                  - text: Lokalny przewodnik
+                - generic: ·
+                - generic: 56 opinii
+            - img
+          - generic:
+            - generic: ★★★★★
+            - generic: rok temu
+          - paragraph: Klient od ponad roku, jakość niezmiennie na najwyższym poziomie.
+        - generic:
+          - generic:
+            - generic: P
+            - generic:
+              - generic: Patryk D.
+              - generic:
+                - generic: 8 opinii
+            - img
+          - generic:
+            - generic: ★★★★★
+            - generic: 2 miesiące temu
+          - paragraph: Pierwszy raz wyszedłem od barbera w pełni zadowolony. Brawo.
+        - generic:
+          - generic:
+            - generic: K
+            - generic:
+              - generic: Krzysztof J.
+              - generic:
+                - generic:
+                  - img
+                  - text: Lokalny przewodnik
+                - generic: ·
+                - generic: 41 opinii
+            - img
+          - generic:
+            - generic: ★★★★★
+            - generic: 4 miesiące temu
+          - paragraph: Mocne wnętrze, mocne strzyżenie, mocne polecenie.
+        - generic:
+          - generic:
+            - generic: J
+            - generic:
+              - generic: Jędrzej W.
+              - generic:
+                - generic: 5 opinii
+            - img
+          - generic:
+            - generic: ★★★★★
+            - generic: 2 tygodnie temu
+          - paragraph: Rezerwacja online działa bez zarzutu, w środku już czuć klimat.
+        - generic:
+          - generic:
+            - generic: S
+            - generic:
+              - generic: Sebastian U.
+              - generic:
+                - generic:
+                  - img
+                  - text: Lokalny przewodnik
+                - generic: ·
+                - generic: 23 opinii
+            - img
+          - generic:
+            - generic: ★★★★★
+            - generic: 5 tygodni temu
+          - paragraph: Klasyczny pompadour wykonany perfekcyjnie. Komentarze same plusy.
+        - generic:
+          - generic:
+            - generic: R
+            - generic:
+              - generic: Robert F.
+              - generic:
+                - generic: 6 opinii
+            - img
+          - generic:
+            - generic: ★★★★★
+            - generic: 8 miesięcy temu
+          - paragraph: Dłuższe włosy, krótsze włosy, broda — zawsze wychodzę zadowolony.
+        - generic:
+          - generic:
+            - generic: T
+            - generic:
+              - generic: Tymoteusz K.
+              - generic:
+                - generic:
+                  - img
+                  - text: Lokalny przewodnik
+                - generic: ·
+                - generic: 17 opinii
+            - img
+          - generic:
+            - generic: ★★★★★
+            - generic: 9 dni temu
+          - paragraph: Profesjonalna konsultacja dobrała mi fryzurę na ślub. Wszyscy pytali gdzie.
+      - generic [ref=e150]:
+        - generic [ref=e151]: 04 / OPINIE
+        - heading "Co mówią klienci" [level=2] [ref=e152]
+        - generic [ref=e153]:
+          - generic [ref=e154]: "5.0"
+          - generic [ref=e155]:
+            - generic [ref=e156]: ★★★★★
+            - generic [ref=e157]: Ocena w Google
+          - link "Open Google Maps reviews" [ref=e159] [cursor=pointer]:
+            - /url: https://share.google/YjV0HAKR6jNQyiiHg
+            - img [ref=e160]
+            - generic [ref=e165]: Google Maps
+        - link "Wszystkie opinie w Google →" [ref=e166] [cursor=pointer]:
+          - /url: https://share.google/YjV0HAKR6jNQyiiHg
+    - generic [ref=e167]:
+      - generic [ref=e170]: 05 / REZERWACJA
+      - generic [ref=e171]:
+        - generic [ref=e172]:
+          - heading "ZAREZERWUJ SWÓJ TERMIN" [level=2] [ref=e173]:
+            - text: ZAREZERWUJ
+            - text: SWÓJ
+            - text: TERMIN
+          - paragraph [ref=e174]: Wizyty walk-in dostępne gdy mamy wolne miejsca. Aby mieć pewność co do wybranego barbera, rezerwuj z wyprzedzeniem.
+          - generic [ref=e175]:
+            - generic [ref=e176]:
+              - generic [ref=e177]: Godziny
+              - generic [ref=e178]: Pon 10–19
+              - generic [ref=e179]: Wt–Pt 9–19
+              - generic [ref=e180]: Sob 8–18
+            - generic [ref=e181]:
+              - generic [ref=e182]: Telefon
+              - link "+48 513 340 013" [ref=e183] [cursor=pointer]:
+                - /url: tel:+48513340013
+            - generic [ref=e184]:
+              - generic [ref=e185]: Adres
+              - generic [ref=e186]:
+                - text: Krzywoustego 27 U4
+                - text: Szczecin
+        - generic [ref=e187]:
+          - generic [ref=e188]:
+            - generic [ref=e190] [cursor=pointer]:
+              - generic [ref=e191]: "1"
+              - generic [ref=e192]: Barber
+            - generic [ref=e193] [cursor=pointer]:
+              - generic [ref=e194]: "2"
+              - generic [ref=e195]: Usługa
+            - generic [ref=e196] [cursor=pointer]:
+              - generic [ref=e197]: "3"
+              - generic [ref=e198]: Termin
+            - generic [ref=e199] [cursor=pointer]:
+              - generic [ref=e200]: "4"
+              - generic [ref=e201]: Dane
+          - generic [ref=e203]: Wybierz barbera
+          - button "Dalej" [ref=e205]
+    - generic [ref=e206]:
+      - generic [ref=e207]:
+        - generic [ref=e208]:
+          - generic [ref=e209]: 07 / LOKALIZACJA
+          - generic [ref=e210]: Znajdź nas
+        - link "Otwórz w mapach →" [ref=e211] [cursor=pointer]:
+          - /url: https://maps.google.com/?q=Bolesława+Krzywoustego+27+U4,+Szczecin
+      - generic [ref=e212]:
+        - generic [ref=e213]:
+          - generic [ref=e214]:
+            - generic [ref=e215]: Adres
+            - generic [ref=e216]:
+              - text: Bolesława Krzywoustego 27 U4
+              - text: 70-316 Szczecin
+            - link "Wyznacz trasę →" [ref=e217] [cursor=pointer]:
+              - /url: https://www.google.com/maps/dir/?api=1&destination=Bole%C5%82awa+Krzywoustego+27+U4%2C+Szczecin
+          - generic [ref=e218]:
+            - generic [ref=e219]: Telefon
+            - link "+48 513 340 013" [ref=e221] [cursor=pointer]:
+              - /url: tel:+48513340013
+          - generic [ref=e222]:
+            - generic [ref=e223]: Godziny otwarcia
+            - generic [ref=e224]:
+              - text: Poniedziałek
+              - text: 10:00 – 19:00
+            - generic [ref=e225]:
+              - text: Wt – Pt
+              - text: 09:00 – 19:00
+            - generic [ref=e226]:
+              - text: Sobota
+              - text: 08:00 – 18:00
+          - generic [ref=e227]:
+            - generic [ref=e228]: Email
+            - link "offcutszczecin@gmail.com" [ref=e230] [cursor=pointer]:
+              - /url: mailto:offcutszczecin@gmail.com
+        - iframe [ref=e232]
+    - contentinfo [ref=e233]:
+      - generic [ref=e234]:
+        - generic [ref=e235]:
+          - generic [ref=e237]: OFF CUT
+          - generic [ref=e238]: Barbershop
+          - img [ref=e240]
+          - paragraph [ref=e246]: Premium Barbershop — Zał. 2019
+          - generic [ref=e247]:
+            - link "Instagram" [ref=e248] [cursor=pointer]:
+              - /url: https://www.instagram.com/off_cut_barbershop/
+              - img [ref=e249]
+            - link "Facebook" [ref=e253] [cursor=pointer]:
+              - /url: https://www.facebook.com/offcutbarbershopszczecin
+              - img [ref=e254]
+            - link "Google Maps" [ref=e256] [cursor=pointer]:
+              - /url: https://share.google/YjV0HAKR6jNQyiiHg
+              - img [ref=e257]
+        - generic [ref=e263]:
+          - generic [ref=e264]: Kontakt
+          - generic [ref=e265]:
+            - generic [ref=e266]:
+              - img [ref=e267]
+              - text: Bolesława Krzywoustego 27 U4,
+              - text: 70-316 Szczecin
+            - generic [ref=e270]:
+              - img [ref=e271]
+              - link "offcutszczecin@gmail.com" [ref=e274] [cursor=pointer]:
+                - /url: mailto:offcutszczecin@gmail.com
+            - generic [ref=e275]:
+              - img [ref=e276]
+              - link "+48 513 340 013" [ref=e278] [cursor=pointer]:
+                - /url: tel:+48513340013
+        - generic [ref=e279]:
+          - generic [ref=e280]: Godziny otwarcia
+          - list [ref=e281]:
+            - listitem [ref=e282]:
+              - generic [ref=e283]: Poniedziałek
+              - generic [ref=e284]: 10:00 – 19:00
+            - listitem [ref=e285]:
+              - generic [ref=e286]: Wtorek
+              - generic [ref=e287]: 09:00 – 19:00
+            - listitem [ref=e288]:
+              - generic [ref=e289]: Środa
+              - generic [ref=e290]: 09:00 – 19:00
+            - listitem [ref=e291]:
+              - generic [ref=e292]: Czwartek
+              - generic [ref=e293]: 09:00 – 19:00
+            - listitem [ref=e294]:
+              - generic [ref=e295]: Piątek
+              - generic [ref=e296]: 09:00 – 19:00
+            - listitem [ref=e297]:
+              - generic [ref=e298]: Sobota
+              - generic [ref=e299]: 08:00 – 18:00
+            - listitem [ref=e300]:
+              - generic [ref=e301]: Niedziela
+              - generic [ref=e302]: Zamknięte
+        - generic [ref=e303]:
+          - generic [ref=e304]: Nawigacja
+          - list [ref=e305]:
+            - listitem [ref=e306]:
+              - link "Strona główna" [ref=e307] [cursor=pointer]:
+                - /url: /
+            - listitem [ref=e308]:
+              - link "Ekipa" [ref=e309] [cursor=pointer]:
+                - /url: /crew
+            - listitem [ref=e310]:
+              - link "Galeria" [ref=e311] [cursor=pointer]:
+                - /url: /gallery
+            - listitem [ref=e312]:
+              - link "Usługi" [ref=e313] [cursor=pointer]:
+                - /url: /services
+            - listitem [ref=e314]:
+              - link "Rezerwacja" [ref=e315] [cursor=pointer]:
+                - /url: /booking
+            - listitem [ref=e316]:
+              - link "Blog" [ref=e317] [cursor=pointer]:
+                - /url: /blog
+      - generic [ref=e318]:
+        - generic [ref=e319]: © 2026 Off Cut Barbershop. Wszelkie prawa zastrzeżone.
+        - generic [ref=e320]:
+          - button "Polityka prywatności" [ref=e321] [cursor=pointer]
+          - generic [ref=e322]: ·
+          - button "Cookies" [ref=e323] [cursor=pointer]
+        - generic [ref=e324]:
+          - text: Stworzone przez
+          - img "Corelaners" [ref=e325]
+          - link "corelaners.eu" [ref=e326] [cursor=pointer]:
+            - /url: https://corelaners.eu
