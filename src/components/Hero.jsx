@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useT } from '../context/LangContext';
 import { useRouter } from '../context/RouterContext';
 
@@ -9,6 +9,7 @@ export default function Hero() {
   const subLine1 = useT('Precyzyjne strzyżenie. Ponadczasowe rzemiosło.', 'Precision cuts. Timeless craft.');
   const subLine2 = useT('Gdzie pielęgnacja staje się rytuałem.', 'Where grooming becomes ritual.');
   const [lastBooking, setLastBooking] = useState(null);
+  const bgRef = useRef(null);
 
   useEffect(() => {
     try {
@@ -19,6 +20,20 @@ export default function Hero() {
     } catch {}
   }, []);
 
+  useEffect(() => {
+    const bg = bgRef.current;
+    if (!bg) return;
+    let raf;
+    const onScroll = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        bg.style.transform = `translateY(-${window.scrollY * 0.4}px)`;
+      });
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => { window.removeEventListener('scroll', onScroll); cancelAnimationFrame(raf); };
+  }, []);
+
   const rebookLabel = useT(
     lastBooking ? `Umów ponownie u ${lastBooking.barberName}` : '',
     lastBooking ? `Book again with ${lastBooking.barberName}` : ''
@@ -26,7 +41,7 @@ export default function Hero() {
 
   return (
     <section className="hero" id="home">
-      <div className="hero-bg" />
+      <div className="hero-bg" ref={bgRef} />
       <div className="hero-year">{useT('ZAŁ. 2019 — PREMIUM GROOMING', 'EST. 2019 — PREMIUM GROOMING')}</div>
       <div className="hero-content">
         <div className="hero-eyebrow">

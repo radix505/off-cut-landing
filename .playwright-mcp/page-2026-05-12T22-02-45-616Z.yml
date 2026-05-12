@@ -1,0 +1,848 @@
+- generic [ref=e6]:
+  - navigation [ref=e7]:
+    - generic [ref=e9] [cursor=pointer]:
+      - generic [ref=e10]: OFF CUT
+      - generic [ref=e11]: Barbershop
+    - list [ref=e13]:
+      - listitem [ref=e14]:
+        - link "Services" [ref=e327] [cursor=pointer]:
+          - /url: /services
+      - listitem [ref=e16]:
+        - link "Meet Crew" [ref=e328] [cursor=pointer]:
+          - /url: /crew
+      - listitem [ref=e18]:
+        - link "Gallery" [ref=e329] [cursor=pointer]:
+          - /url: /gallery
+      - listitem [ref=e20]:
+        - link "Contact" [ref=e330] [cursor=pointer]:
+          - /url: /contact
+    - generic [ref=e22]:
+      - img [ref=e23]
+      - button "Book Now" [ref=e331] [cursor=pointer]
+      - button "Przełącz na Polski" [ref=e332] [cursor=pointer]:
+        - generic [ref=e31]: EN
+        - generic [ref=e32]: PL
+  - generic:
+    - img
+  - generic [ref=e33]:
+    - generic [ref=e35]: EST. 2019 — PREMIUM GROOMING
+    - generic [ref=e36]:
+      - generic [ref=e37]:
+        - generic [ref=e39]: Szczecin
+        - generic [ref=e41]: EST. 2019
+      - heading "THE SHARP ART" [level=1] [ref=e42]:
+        - generic [ref=e43]: THE
+        - generic [ref=e44]: SHARP
+        - generic [ref=e45]: ART
+      - paragraph [ref=e46]:
+        - text: Precision cuts. Timeless craft.
+        - text: Where grooming becomes ritual.
+      - generic [ref=e47]:
+        - button "Book Appointment" [ref=e334] [cursor=pointer]
+        - button "View Services" [ref=e335] [cursor=pointer]
+    - generic [ref=e52]: Scroll
+  - generic [ref=e54]:
+    - generic [ref=e55]: PRECISION CUTS
+    - generic [ref=e57]: HOT TOWEL SHAVE
+    - generic [ref=e59]: BEARD SCULPTING
+    - generic [ref=e61]: SKIN FADE
+    - generic [ref=e63]: CLASSIC GROOMING
+    - generic [ref=e65]: EST. 2019
+    - generic [ref=e67]: PREMIUM CRAFT
+    - generic [ref=e69]: SZCZECIN
+    - generic [ref=e71]: PRECISION CUTS
+    - generic [ref=e73]: HOT TOWEL SHAVE
+    - generic [ref=e75]: BEARD SCULPTING
+    - generic [ref=e77]: SKIN FADE
+    - generic [ref=e79]: CLASSIC GROOMING
+    - generic [ref=e81]: EST. 2019
+    - generic [ref=e83]: PREMIUM CRAFT
+    - generic [ref=e85]: SZCZECIN
+  - generic [ref=e87]:
+    - generic [ref=e88]:
+      - generic [ref=e89]:
+        - generic [ref=e90]: 01 / SERVICES
+        - generic [ref=e91]: What We Do
+      - generic [ref=e92] [cursor=pointer]: Full price list →
+    - generic [ref=e93]:
+      - generic [ref=e94]:
+        - generic [ref=e96]:
+          - generic [ref=e97]: 01 /
+          - text: HAIR
+        - list [ref=e336]:
+          - listitem [ref=e337]:
+            - button "Short Hair Cut from 80 PLN" [ref=e338] [cursor=pointer]:
+              - generic [ref=e339]: Short Hair Cut
+              - generic [ref=e344]: from 80 PLN
+          - listitem [ref=e345]:
+            - button "Long Hair Cut from 90 PLN" [ref=e346] [cursor=pointer]:
+              - generic [ref=e347]: Long Hair Cut
+              - generic [ref=e352]: from 90 PLN
+          - listitem [ref=e353]:
+            - button "Clipper Head Shave from 40 PLN" [ref=e354] [cursor=pointer]:
+              - generic [ref=e355]: Clipper Head Shave
+              - generic [ref=e360]: from 40 PLN
+      - generic [ref=e103]:
+        - generic [ref=e105]:
+          - generic [ref=e106]: 02 /
+          - text: BEARD
+        - list [ref=e361]:
+          - listitem [ref=e362]:
+            - button "Beard Trim from 60 PLN" [ref=e363] [cursor=pointer]:
+              - generic [ref=e364]: Beard Trim
+              - generic [ref=e369]: from 60 PLN
+      - generic [ref=e112]:
+        - generic [ref=e114]:
+          - generic [ref=e115]: 03 /
+          - text: COMBO
+        - list [ref=e370]:
+          - listitem [ref=e371]:
+            - button "Cut & Beard from 130 PLN" [ref=e372] [cursor=pointer]:
+              - generic [ref=e373]: Cut & Beard
+              - generic [ref=e378]: from 130 PLN
+          - listitem [ref=e379]:
+            - button "Head Shave + Beard 100 PLN" [ref=e380] [cursor=pointer]:
+              - generic [ref=e381]: Head Shave + Beard
+              - generic [ref=e386]: 100 PLN
+          - listitem [ref=e387]:
+            - button "Cut & Beard + Straight Razor 1h 15min 170 PLN" [ref=e388] [cursor=pointer]:
+              - generic [ref=e389]: Cut & Beard + Straight Razor
+              - generic [ref=e393]: 1h 15min
+              - generic [ref=e394]: 170 PLN
+  - generic [ref=e121]:
+    - generic [ref=e122]:
+      - generic [ref=e123]:
+        - generic [ref=e124]: 02 / TEAM
+        - generic [ref=e125]: The Barbers
+      - generic [ref=e126] [cursor=pointer]: Meet the crew →
+    - generic [ref=e395]:
+      - generic [ref=e396] [cursor=pointer]:
+        - generic [ref=e397]:
+          - img "Nico" [ref=e398]
+          - generic [ref=e399]:
+            - generic [ref=e400]: Nico
+            - generic [ref=e401]: Barber
+            - paragraph:
+              - generic: Nico's description coming soon. A passionate barber with years of experience in classic techniques.
+        - generic [ref=e403]:
+          - generic [ref=e404]: Classic Cut
+          - generic [ref=e405]: Beard
+          - generic [ref=e406]: Hot Towel
+      - generic [ref=e407] [cursor=pointer]:
+        - generic [ref=e408]:
+          - img "Aleksander" [ref=e409]
+          - generic [ref=e410]:
+            - generic [ref=e411]: Aleksander
+            - generic [ref=e412]: Senior Barber
+            - paragraph:
+              - generic: Aleksander's description coming soon. A specialist in fades and precision cutting techniques.
+        - generic [ref=e414]:
+          - generic [ref=e415]: Fade
+          - generic [ref=e416]: Beard
+          - generic [ref=e417]: Skin Fade
+      - generic [ref=e418] [cursor=pointer]:
+        - generic [ref=e419]:
+          - img "Julia" [ref=e420]
+          - generic [ref=e421]:
+            - generic [ref=e422]: Julia
+            - generic [ref=e423]: Senior Barber
+            - paragraph:
+              - generic: Julia's description coming soon. An expert in scissor work and textured hair styling.
+        - generic [ref=e425]:
+          - generic [ref=e426]: Scissor Work
+          - generic [ref=e427]: Textured Hair
+          - generic [ref=e428]: Skin Fade
+  - generic [ref=e128]:
+    - generic [ref=e129]:
+      - generic [ref=e130]: 03 / GALLERY
+      - generic [ref=e131]: The Work
+    - link "More on Instagram →" [ref=e429] [cursor=pointer]:
+      - /url: https://www.instagram.com/off_cut_barbershop/
+      - img [ref=e133]
+      - text: More on Instagram →
+  - generic [ref=e148]:
+    - generic [ref=e149]:
+      - generic:
+        - generic:
+          - generic: B
+          - generic:
+            - generic: Bartosz K.
+            - generic:
+              - generic:
+                - img
+                - text: Local Guide
+              - generic: ·
+              - generic: 14 reviews
+          - img
+        - generic:
+          - generic: ★★★★★
+          - generic: 2 months ago
+        - paragraph: Perfect cut, relaxed atmosphere — Aleksander is a true professional.
+      - generic:
+        - generic:
+          - generic: W
+          - generic:
+            - generic: Wojtek M.
+            - generic:
+              - generic: 3 reviews
+          - img
+        - generic:
+          - generic: ★★★★★
+          - generic: 1 month ago
+        - paragraph: Great barbershop with a professional approach to every client.
+      - generic:
+        - generic:
+          - generic: M
+          - generic:
+            - generic: Michał R.
+            - generic:
+              - generic:
+                - img
+                - text: Local Guide
+              - generic: ·
+              - generic: 31 reviews
+          - img
+        - generic:
+          - generic: ★★★★★
+          - generic: 3 months ago
+        - paragraph: The perfect place for any man who cares about his appearance.
+      - generic:
+        - generic:
+          - generic: M
+          - generic:
+            - generic: Marek S.
+            - generic:
+              - generic: 7 reviews
+          - img
+        - generic:
+          - generic: ★★★★★
+          - generic: 5 months ago
+        - paragraph: Off Cut is a barbershop I would wholeheartedly recommend to anyone.
+      - generic:
+        - generic:
+          - generic: K
+          - generic:
+            - generic: Kamil T.
+            - generic:
+              - generic:
+                - img
+                - text: Local Guide
+              - generic: ·
+              - generic: 8 reviews
+          - img
+        - generic:
+          - generic: ★★★★★
+          - generic: 1 week ago
+        - paragraph: Nico did an incredible skin fade. Best place in the city!
+      - generic:
+        - generic:
+          - generic: P
+          - generic:
+            - generic: Paweł N.
+            - generic:
+              - generic: 2 reviews
+          - img
+        - generic:
+          - generic: ★★★★★
+          - generic: 4 months ago
+        - paragraph: Professionalism at its finest. 100% satisfied.
+      - generic:
+        - generic:
+          - generic: Ł
+          - generic:
+            - generic: Łukasz B.
+            - generic:
+              - generic:
+                - img
+                - text: Local Guide
+              - generic: ·
+              - generic: 22 reviews
+          - img
+        - generic:
+          - generic: ★★★★★
+          - generic: 6 months ago
+        - paragraph: Great atmosphere, great people, and even better haircuts.
+      - generic:
+        - generic:
+          - generic: A
+          - generic:
+            - generic: Adam K.
+            - generic:
+              - generic: 5 reviews
+          - img
+        - generic:
+          - generic: ★★★★★
+          - generic: 7 months ago
+        - paragraph: Julia is a master of her craft. I recommend to everyone!
+      - generic:
+        - generic:
+          - generic: T
+          - generic:
+            - generic: Tomasz W.
+            - generic:
+              - generic:
+                - img
+                - text: Local Guide
+              - generic: ·
+              - generic: 47 reviews
+          - img
+        - generic:
+          - generic: ★★★★★
+          - generic: 2 weeks ago
+        - paragraph: My beard came out perfect after the straight razor. I come back every month.
+      - generic:
+        - generic:
+          - generic: R
+          - generic:
+            - generic: Rafał D.
+            - generic:
+              - generic: 4 reviews
+          - img
+        - generic:
+          - generic: ★★★★★
+          - generic: 3 weeks ago
+        - paragraph: First visit and I already know this is my new regular barbershop.
+      - generic:
+        - generic:
+          - generic: D
+          - generic:
+            - generic: Dawid L.
+            - generic:
+              - generic:
+                - img
+                - text: Local Guide
+              - generic: ·
+              - generic: 19 reviews
+          - img
+        - generic:
+          - generic: ★★★★★
+          - generic: 8 months ago
+        - paragraph: Best fade I have ever had. The crew really knows what they are doing.
+      - generic:
+        - generic:
+          - generic: J
+          - generic:
+            - generic: Jakub P.
+            - generic:
+              - generic: 1 reviews
+          - img
+        - generic:
+          - generic: ★★★★★
+          - generic: 5 days ago
+        - paragraph: Good music, coffee on arrival and a great haircut. Recommended.
+      - generic:
+        - generic:
+          - generic: S
+          - generic:
+            - generic: Szymon F.
+            - generic:
+              - generic:
+                - img
+                - text: Local Guide
+              - generic: ·
+              - generic: 11 reviews
+          - img
+        - generic:
+          - generic: ★★★★★
+          - generic: 1 month ago
+        - paragraph: Detail and precision at every step — finally found my spot.
+      - generic:
+        - generic:
+          - generic: O
+          - generic:
+            - generic: Oskar W.
+            - generic:
+              - generic: 6 reviews
+          - img
+        - generic:
+          - generic: ★★★★★
+          - generic: 2 months ago
+        - paragraph: A thoughtful haircut suggestion tailored to my face shape. Huge plus.
+      - generic:
+        - generic:
+          - generic: F
+          - generic:
+            - generic: Filip M.
+            - generic:
+              - generic:
+                - img
+                - text: Local Guide
+              - generic: ·
+              - generic: 27 reviews
+          - img
+        - generic:
+          - generic: ★★★★★
+          - generic: 4 days ago
+        - paragraph: Place with character, pros through and through. 10/10.
+      - generic:
+        - generic:
+          - generic: G
+          - generic:
+            - generic: Grzegorz S.
+            - generic:
+              - generic: 9 reviews
+          - img
+        - generic:
+          - generic: ★★★★★
+          - generic: 9 months ago
+        - paragraph: Fair price for the quality — and the quality is genuinely high.
+      - generic:
+        - generic:
+          - generic: I
+          - generic:
+            - generic: Igor C.
+            - generic:
+              - generic:
+                - img
+                - text: Local Guide
+              - generic: ·
+              - generic: 38 reviews
+          - img
+        - generic:
+          - generic: ★★★★★
+          - generic: 1 week ago
+        - paragraph: Always on time, never rushed, attention to every detail.
+      - generic:
+        - generic:
+          - generic: H
+          - generic:
+            - generic: Hubert J.
+            - generic:
+              - generic: 2 reviews
+          - img
+        - generic:
+          - generic: ★★★★★
+          - generic: 10 months ago
+        - paragraph: My son got his first proper men's cut here — both of us were thrilled.
+      - generic:
+        - generic:
+          - generic: C
+          - generic:
+            - generic: Cyprian B.
+            - generic:
+              - generic:
+                - img
+                - text: Local Guide
+              - generic: ·
+              - generic: 16 reviews
+          - img
+        - generic:
+          - generic: ★★★★★
+          - generic: 6 days ago
+        - paragraph: Cut and beard in one go, the result exceeded my expectations.
+      - generic:
+        - generic:
+          - generic: "N"
+          - generic:
+            - generic: Norbert K.
+            - generic:
+              - generic: 4 reviews
+          - img
+        - generic:
+          - generic: ★★★★★
+          - generic: 3 months ago
+        - paragraph: Atmosphere like a private club. I'm coming back and bringing my brother.
+      - generic:
+        - generic:
+          - generic: V
+          - generic:
+            - generic: Wiktor L.
+            - generic:
+              - generic:
+                - img
+                - text: Local Guide
+              - generic: ·
+              - generic: 12 reviews
+          - img
+        - generic:
+          - generic: ★★★★★
+          - generic: 2 weeks ago
+        - paragraph: The pre-cut consultation made the difference — finally a style that fits.
+      - generic:
+        - generic:
+          - generic: Z
+          - generic:
+            - generic: Zbigniew O.
+            - generic:
+              - generic: 3 reviews
+          - img
+        - generic:
+          - generic: ★★★★★
+          - generic: 11 months ago
+        - paragraph: Straight razor shave, hot towel, total relaxation. Felt like a new man.
+      - generic:
+        - generic:
+          - generic: E
+          - generic:
+            - generic: Eryk Z.
+            - generic:
+              - generic:
+                - img
+                - text: Local Guide
+              - generic: ·
+              - generic: 25 reviews
+          - img
+        - generic:
+          - generic: ★★★★★
+          - generic: 5 months ago
+        - paragraph: Great attitude, pro equipment and solid results.
+      - generic:
+        - generic:
+          - generic: X
+          - generic:
+            - generic: Xawery P.
+            - generic:
+              - generic: 1 reviews
+          - img
+        - generic:
+          - generic: ★★★★★
+          - generic: 4 weeks ago
+        - paragraph: Recommended by a friend and they nailed it — passing the recommendation on.
+      - generic:
+        - generic:
+          - generic: U
+          - generic:
+            - generic: Ulan T.
+            - generic:
+              - generic:
+                - img
+                - text: Local Guide
+              - generic: ·
+              - generic: 18 reviews
+          - img
+        - generic:
+          - generic: ★★★★★
+          - generic: 1 month ago
+        - paragraph: Every detail dialed in — from beard lineup to hair tips.
+      - generic:
+        - generic:
+          - generic: D
+          - generic:
+            - generic: Damian R.
+            - generic:
+              - generic: 2 reviews
+          - img
+        - generic:
+          - generic: ★★★★★
+          - generic: 7 days ago
+        - paragraph: Central spot, easy online booking and punctual service.
+      - generic:
+        - generic:
+          - generic: B
+          - generic:
+            - generic: Borys H.
+            - generic:
+              - generic:
+                - img
+                - text: Local Guide
+              - generic: ·
+              - generic: 33 reviews
+          - img
+        - generic:
+          - generic: ★★★★★
+          - generic: 6 months ago
+        - paragraph: After years of searching, I found the barber I keep returning to without hesitation.
+      - generic:
+        - generic:
+          - generic: M
+          - generic:
+            - generic: Mateusz G.
+            - generic:
+              - generic: 1 reviews
+          - img
+        - generic:
+          - generic: ★★★★★
+          - generic: 3 days ago
+        - paragraph: Excellent beard work — the lineup is razor sharp.
+      - generic:
+        - generic:
+          - generic: A
+          - generic:
+            - generic: Artur Z.
+            - generic:
+              - generic:
+                - img
+                - text: Local Guide
+              - generic: ·
+              - generic: 56 reviews
+          - img
+        - generic:
+          - generic: ★★★★★
+          - generic: a year ago
+        - paragraph: Customer for over a year and the quality stays consistently top-tier.
+      - generic:
+        - generic:
+          - generic: P
+          - generic:
+            - generic: Patryk D.
+            - generic:
+              - generic: 8 reviews
+          - img
+        - generic:
+          - generic: ★★★★★
+          - generic: 2 months ago
+        - paragraph: First time I have left a barber fully satisfied. Bravo.
+      - generic:
+        - generic:
+          - generic: K
+          - generic:
+            - generic: Krzysztof J.
+            - generic:
+              - generic:
+                - img
+                - text: Local Guide
+              - generic: ·
+              - generic: 41 reviews
+          - img
+        - generic:
+          - generic: ★★★★★
+          - generic: 4 months ago
+        - paragraph: Strong interior, strong cut, strong recommendation.
+      - generic:
+        - generic:
+          - generic: J
+          - generic:
+            - generic: Jędrzej W.
+            - generic:
+              - generic: 5 reviews
+          - img
+        - generic:
+          - generic: ★★★★★
+          - generic: 2 weeks ago
+        - paragraph: Online booking works flawlessly, the vibe hits as soon as you walk in.
+      - generic:
+        - generic:
+          - generic: S
+          - generic:
+            - generic: Sebastian U.
+            - generic:
+              - generic:
+                - img
+                - text: Local Guide
+              - generic: ·
+              - generic: 23 reviews
+          - img
+        - generic:
+          - generic: ★★★★★
+          - generic: 5 weeks ago
+        - paragraph: Classic pompadour done perfectly. Got nothing but compliments.
+      - generic:
+        - generic:
+          - generic: R
+          - generic:
+            - generic: Robert F.
+            - generic:
+              - generic: 6 reviews
+          - img
+        - generic:
+          - generic: ★★★★★
+          - generic: 8 months ago
+        - paragraph: Long hair, short hair, beard — I always leave happy.
+      - generic:
+        - generic:
+          - generic: T
+          - generic:
+            - generic: Tymoteusz K.
+            - generic:
+              - generic:
+                - img
+                - text: Local Guide
+              - generic: ·
+              - generic: 17 reviews
+          - img
+        - generic:
+          - generic: ★★★★★
+          - generic: 9 days ago
+        - paragraph: Pro consultation picked the perfect cut for my wedding. Everyone asked where.
+    - generic [ref=e150]:
+      - generic [ref=e151]: 04 / REVIEWS
+      - heading "What Clients Say" [level=2] [ref=e430]
+      - generic [ref=e153]:
+        - generic [ref=e154]: "5.0"
+        - generic [ref=e155]:
+          - generic [ref=e156]: ★★★★★
+          - generic [ref=e157]: Google rating
+        - link "Open Google Maps reviews" [ref=e159] [cursor=pointer]:
+          - /url: https://share.google/YjV0HAKR6jNQyiiHg
+          - img [ref=e160]
+          - generic [ref=e165]: Google Maps
+      - link "All reviews on Google →" [ref=e431] [cursor=pointer]:
+        - /url: https://share.google/YjV0HAKR6jNQyiiHg
+  - generic [ref=e167]:
+    - generic [ref=e170]: 05 / BOOKING
+    - generic [ref=e171]:
+      - generic [ref=e172]:
+        - heading "BOOK YOUR SLOT" [level=2] [ref=e432]:
+          - text: BOOK
+          - text: YOUR
+          - text: SLOT
+        - paragraph [ref=e174]: Walk-ins welcome when available. For guaranteed access to your preferred barber, book ahead.
+        - generic [ref=e175]:
+          - generic [ref=e176]:
+            - generic [ref=e177]: Hours
+            - generic [ref=e178]: Mon 10–19
+            - generic [ref=e179]: Tue–Fri 9–19
+            - generic [ref=e180]: Sat 8–18
+          - generic [ref=e181]:
+            - generic [ref=e182]: Phone
+            - link "+48 513 340 013" [ref=e183] [cursor=pointer]:
+              - /url: tel:+48513340013
+          - generic [ref=e184]:
+            - generic [ref=e185]: Location
+            - generic [ref=e186]:
+              - text: Krzywoustego 27 U4
+              - text: Szczecin
+      - generic [ref=e187]:
+        - generic [ref=e188]:
+          - generic [ref=e190] [cursor=pointer]:
+            - generic [ref=e191]: "1"
+            - generic [ref=e192]: Barber
+          - generic [ref=e193] [cursor=pointer]:
+            - generic [ref=e194]: "2"
+            - generic [ref=e195]: Service
+          - generic [ref=e196] [cursor=pointer]:
+            - generic [ref=e197]: "3"
+            - generic [ref=e198]: Date
+          - generic [ref=e199] [cursor=pointer]:
+            - generic [ref=e200]: "4"
+            - generic [ref=e201]: Details
+        - generic [ref=e202]:
+          - generic [ref=e203]: Choose your barber
+          - generic [ref=e433]:
+            - button "Nico Nico Barber" [ref=e434] [cursor=pointer]:
+              - img "Nico" [ref=e435]
+              - generic [ref=e436]: Nico
+              - generic [ref=e437]: Barber
+            - button "Aleksander Aleksander Senior Barber" [ref=e438] [cursor=pointer]:
+              - img "Aleksander" [ref=e439]
+              - generic [ref=e440]: Aleksander
+              - generic [ref=e441]: Senior Barber
+            - button "Julia Julia Senior Barber" [ref=e442] [cursor=pointer]:
+              - img "Julia" [ref=e443]
+              - generic [ref=e444]: Julia
+              - generic [ref=e445]: Senior Barber
+        - button "Next" [ref=e446]
+  - generic [ref=e206]:
+    - generic [ref=e207]:
+      - generic [ref=e208]:
+        - generic [ref=e209]: 07 / LOCATION
+        - generic [ref=e210]: Find Us
+      - link "Open in Maps →" [ref=e447] [cursor=pointer]:
+        - /url: https://maps.google.com/?q=Bolesława+Krzywoustego+27+U4,+Szczecin
+    - generic [ref=e212]:
+      - generic [ref=e213]:
+        - generic [ref=e214]:
+          - generic [ref=e215]: Address
+          - generic [ref=e216]:
+            - text: Bolesława Krzywoustego 27 U4
+            - text: 70-316 Szczecin
+          - link "Get directions →" [ref=e448] [cursor=pointer]:
+            - /url: https://www.google.com/maps/dir/?api=1&destination=Bole%C5%82awa+Krzywoustego+27+U4%2C+Szczecin
+        - generic [ref=e218]:
+          - generic [ref=e219]: Phone
+          - link "+48 513 340 013" [ref=e221] [cursor=pointer]:
+            - /url: tel:+48513340013
+        - generic [ref=e222]:
+          - generic [ref=e223]: Opening Hours
+          - generic [ref=e224]:
+            - text: Monday
+            - text: 10:00 – 19:00
+          - generic [ref=e225]:
+            - text: Tue – Fri
+            - text: 09:00 – 19:00
+          - generic [ref=e226]:
+            - text: Saturday
+            - text: 08:00 – 18:00
+        - generic [ref=e227]:
+          - generic [ref=e228]: Email
+          - link "offcutszczecin@gmail.com" [ref=e230] [cursor=pointer]:
+            - /url: mailto:offcutszczecin@gmail.com
+      - iframe [ref=e232]
+  - contentinfo [ref=e233]:
+    - generic [ref=e234]:
+      - generic [ref=e235]:
+        - generic [ref=e237]: OFF CUT
+        - generic [ref=e238]: Barbershop
+        - img [ref=e240]
+        - paragraph [ref=e246]: Premium Barbershop — Est. 2019
+        - generic [ref=e247]:
+          - link "Instagram" [ref=e248] [cursor=pointer]:
+            - /url: https://www.instagram.com/off_cut_barbershop/
+            - img [ref=e249]
+          - link "Facebook" [ref=e253] [cursor=pointer]:
+            - /url: https://www.facebook.com/offcutbarbershopszczecin
+            - img [ref=e254]
+          - link "Google Maps" [ref=e256] [cursor=pointer]:
+            - /url: https://share.google/YjV0HAKR6jNQyiiHg
+            - img [ref=e257]
+      - generic [ref=e263]:
+        - generic [ref=e264]: Contact
+        - generic [ref=e265]:
+          - generic [ref=e266]:
+            - img [ref=e267]
+            - text: Bolesława Krzywoustego 27 U4,
+            - text: 70-316 Szczecin
+          - generic [ref=e270]:
+            - img [ref=e271]
+            - link "offcutszczecin@gmail.com" [ref=e274] [cursor=pointer]:
+              - /url: mailto:offcutszczecin@gmail.com
+          - generic [ref=e275]:
+            - img [ref=e276]
+            - link "+48 513 340 013" [ref=e278] [cursor=pointer]:
+              - /url: tel:+48513340013
+      - generic [ref=e279]:
+        - generic [ref=e280]: Opening Hours
+        - list [ref=e281]:
+          - listitem [ref=e282]:
+            - generic [ref=e283]: Monday
+            - generic [ref=e284]: 10:00 – 19:00
+          - listitem [ref=e285]:
+            - generic [ref=e286]: Tuesday
+            - generic [ref=e287]: 09:00 – 19:00
+          - listitem [ref=e288]:
+            - generic [ref=e289]: Wednesday
+            - generic [ref=e290]: 09:00 – 19:00
+          - listitem [ref=e291]:
+            - generic [ref=e292]: Thursday
+            - generic [ref=e293]: 09:00 – 19:00
+          - listitem [ref=e294]:
+            - generic [ref=e295]: Friday
+            - generic [ref=e296]: 09:00 – 19:00
+          - listitem [ref=e297]:
+            - generic [ref=e298]: Saturday
+            - generic [ref=e299]: 08:00 – 18:00
+          - listitem [ref=e300]:
+            - generic [ref=e301]: Sunday
+            - generic [ref=e302]: Closed
+      - generic [ref=e303]:
+        - generic [ref=e304]: Navigation
+        - list [ref=e305]:
+          - listitem [ref=e306]:
+            - link "Home" [ref=e449] [cursor=pointer]:
+              - /url: /
+          - listitem [ref=e308]:
+            - link "Meet Crew" [ref=e450] [cursor=pointer]:
+              - /url: /crew
+          - listitem [ref=e310]:
+            - link "Gallery" [ref=e451] [cursor=pointer]:
+              - /url: /gallery
+          - listitem [ref=e312]:
+            - link "Services" [ref=e452] [cursor=pointer]:
+              - /url: /services
+          - listitem [ref=e314]:
+            - link "Booking" [ref=e453] [cursor=pointer]:
+              - /url: /booking
+          - listitem [ref=e316]:
+            - link "Blog" [ref=e317] [cursor=pointer]:
+              - /url: /blog
+    - generic [ref=e318]:
+      - generic [ref=e319]: © 2026 Off Cut Barbershop. All rights reserved.
+      - generic [ref=e320]:
+        - button "Privacy Policy" [ref=e454] [cursor=pointer]
+        - generic [ref=e322]: ·
+        - button "Cookies" [ref=e323] [cursor=pointer]
+      - generic [ref=e324]:
+        - text: Created by
+        - img "Corelaners" [ref=e325]
+        - link "corelaners.eu" [ref=e326] [cursor=pointer]:
+          - /url: https://corelaners.eu

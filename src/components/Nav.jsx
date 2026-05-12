@@ -12,6 +12,19 @@ const ScissorsIcon = () => (
   </svg>
 );
 
+function LangToggle({ lang, onToggle }) {
+  return (
+    <button
+      className="lang-toggle"
+      onClick={onToggle}
+      aria-label={lang === 'pl' ? 'Switch to English' : 'Przełącz na Polski'}
+    >
+      <span className={`lang-toggle-opt${lang === 'en' ? ' lang-toggle-opt--on' : ''}`}>EN</span>
+      <span className={`lang-toggle-opt${lang === 'pl' ? ' lang-toggle-opt--on' : ''}`}>PL</span>
+    </button>
+  );
+}
+
 export default function Nav() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -39,6 +52,7 @@ export default function Nav() {
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => { window.removeEventListener('scroll', onScroll); cancelAnimationFrame(raf); };
   }, []);
+
   const { page, navigate } = useRouter();
   const onBlog = page === 'blog';
   const onGallery = page === 'gallery';
@@ -67,6 +81,7 @@ export default function Nav() {
   }
 
   const isHidden = hidden && !hovered;
+  const toggleLang = () => selectLang(lang === 'pl' ? 'en' : 'pl');
 
   return (
     <>
@@ -88,55 +103,57 @@ export default function Nav() {
           <span className="nav-logo-sub">Barbershop</span>
         </div>
       </div>
-      <ul className={`nav-links${open ? ' nav-links--open' : ''}`}>
-        <li><a href="/services" onClick={(e) => { e.preventDefault(); navigate('/services'); close(); }}>{useT('Usługi', 'Services')}</a></li>
-        <li>
-          <a
-            href="/crew"
-            className={onCrew ? 'nav-link--active' : ''}
-            onClick={(e) => { e.preventDefault(); navigate('/crew'); close(); }}
-          >
-            {useT('Ekipa', 'Meet Crew')}
-          </a>
-        </li>
-        <li>
-          <a
-            href="/gallery"
-            className={onGallery ? 'nav-link--active' : ''}
-            onClick={(e) => { e.preventDefault(); navigate('/gallery'); close(); }}
-          >
-            {useT('Galeria', 'Gallery')}
-          </a>
-        </li>
-        <li><a href="/contact" className={onContact ? 'nav-link--active' : ''} onClick={(e) => { e.preventDefault(); navigate('/contact'); close(); }}>{useT('Kontakt', 'Contact')}</a></li>
-        <li className="nav-li--mobile-only"><a href="#location" onClick={(e) => handleSectionClick(e, 'location')}>{useT('Lokalizacja', 'Location')}</a></li>
-        <li className="nav-li--mobile-only">
-          <a
-            href="/blog"
-            className={onBlog ? 'nav-link--active' : ''}
-            onClick={(e) => { e.preventDefault(); navigate('/blog'); close(); }}
-          >
-            Blog
-          </a>
-        </li>
-        <li className="nav-mobile-book">
-          <button className="nav-book-mobile" onClick={handleBookClick}>
-            {useT('Zarezerwuj', 'Book Now')}
-          </button>
-        </li>
-      </ul>
-      <div className="nav-right">
+
+      <div className="nav-pill nav-pill--center">
+        <ul className={`nav-links${open ? ' nav-links--open' : ''}`}>
+          <li><a href="/services" onClick={(e) => { e.preventDefault(); navigate('/services'); close(); }}>{useT('Usługi', 'Services')}</a></li>
+          <li>
+            <a
+              href="/crew"
+              className={onCrew ? 'nav-link--active' : ''}
+              onClick={(e) => { e.preventDefault(); navigate('/crew'); close(); }}
+            >
+              {useT('Ekipa', 'Meet Crew')}
+            </a>
+          </li>
+          <li>
+            <a
+              href="/gallery"
+              className={onGallery ? 'nav-link--active' : ''}
+              onClick={(e) => { e.preventDefault(); navigate('/gallery'); close(); }}
+            >
+              {useT('Galeria', 'Gallery')}
+            </a>
+          </li>
+          <li><a href="/contact" className={onContact ? 'nav-link--active' : ''} onClick={(e) => { e.preventDefault(); navigate('/contact'); close(); }}>{useT('Kontakt', 'Contact')}</a></li>
+          <li className="nav-li--mobile-only"><a href="#location" onClick={(e) => handleSectionClick(e, 'location')}>{useT('Lokalizacja', 'Location')}</a></li>
+          <li className="nav-li--mobile-only">
+            <a
+              href="/blog"
+              className={onBlog ? 'nav-link--active' : ''}
+              onClick={(e) => { e.preventDefault(); navigate('/blog'); close(); }}
+            >
+              Blog
+            </a>
+          </li>
+          <li className="nav-mobile-book">
+            <button className="nav-book-mobile" onClick={handleBookClick}>
+              {useT('Zarezerwuj', 'Book Now')}
+            </button>
+          </li>
+        </ul>
+      </div>
+
+      <div className="nav-pill nav-pill--right">
         <ScissorsIcon />
         <button className="nav-book" onClick={handleBookClick}>
           {useT('Zarezerwuj', 'Book Now')}
         </button>
-        <button
-          className="lang-flag-btn"
-          onClick={() => selectLang(lang === 'pl' ? 'en' : 'pl')}
-          aria-label={lang === 'pl' ? 'Switch to English' : 'Przełącz na Polski'}
-        >
-          {lang === 'pl' ? '🇵🇱' : '🇬🇧'}
-        </button>
+        <LangToggle lang={lang} onToggle={toggleLang} />
+      </div>
+
+      <div className="nav-mobile-right">
+        <LangToggle lang={lang} onToggle={toggleLang} />
         <button className="nav-hamburger" onClick={() => setOpen(o => !o)} aria-label="Menu">
           {open ? (
             <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
