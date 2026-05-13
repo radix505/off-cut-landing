@@ -45,9 +45,57 @@ export function formatStatus(status) {
   return `${s.emoji} ${s.label}`;
 }
 
-function formatBookingLine(b) {
+function addMinutesToSlot(slot, minutes) {
+  const [h, m] = slot.split(':').map(Number);
+  const total = h * 60 + m + minutes;
+  const hh = Math.floor(total / 60);
+  const mm = total % 60;
+  return `${String(hh).padStart(2, '0')}:${String(mm).padStart(2, '0')}`;
+}
+
+// Collapse runs of back-to-back blocks for the same barber into a single
+// virtual entry with summed duration. Non-block items pass through untouched.
+// The merged entry carries `_merged_count` (>1) so the renderer can suppress
+// the per-block id (since multiple ids would have collapsed).
+export function mergeAdjacentBlocks(items) {
+  const byBarber = new Map();
+  for (const b of items) {
+    const key = b.barber_id ?? '_';
+    if (!byBarber.has(key)) byBarber.set(key, []);
+    byBarber.get(key).push(b);
+  }
+  const out = [];
+  for (const group of byBarber.values()) {
+    const sorted = [...group].sort((a, b) => a.slot.localeCompare(b.slot));
+    let i = 0;
+    while (i < sorted.length) {
+      const cur = sorted[i];
+      if (!cur.is_block) { out.push(cur); i++; continue; }
+      let totalDur = cur.duration_min;
+      let endSlot = addMinutesToSlot(cur.slot, cur.duration_min);
+      let j = i + 1;
+      while (j < sorted.length && sorted[j].is_block && sorted[j].slot === endSlot) {
+        totalDur += sorted[j].duration_min;
+        endSlot = addMinutesToSlot(endSlot, sorted[j].duration_min);
+        j++;
+      }
+      out.push(j > i + 1
+        ? { ...cur, duration_min: totalDur, _merged_count: j - i }
+        : cur);
+      i = j;
+    }
+  }
+  out.sort((a, b) => a.slot.localeCompare(b.slot));
+  return out;
+}
+
+function formatBookingLine(b, { prefix } = { prefix: `#${b.id}` }) {
+  const head = prefix ? `${prefix} ` : '';
   if (b.is_block) {
-    return `🚫 <b>${escapeHtml(b.slot)}</b> <i>${escapeHtml(b.duration_min)}min</i> · <i>Zablokowane</i> · #${b.id}`;
+    const endSlot = addMinutesToSlot(b.slot, b.duration_min);
+    const merged = (b._merged_count ?? 1) > 1;
+    const tail = (prefix && !merged) ? ` · ${prefix}` : '';
+    return `🚫 <b>${escapeHtml(b.slot)}–${escapeHtml(endSlot)}</b> <i>${escapeHtml(b.duration_min)}min</i> · <i>Zablokowane</i>${tail}`;
   }
   const parts = [
     `${STATUS[b.status]?.emoji ?? '•'} <b>${escapeHtml(b.slot)}</b>`,
@@ -56,7 +104,7 @@ function formatBookingLine(b) {
     `· ${escapeHtml(b.customer_name)}`,
     `· <code>${escapeHtml(b.phone)}</code>`,
   ];
-  return `#${b.id} ${parts.join(' ')}`;
+  return `${head}${parts.join(' ')}`;
 }
 
 export function formatDayOverview(isoDate, bookings) {
@@ -74,7 +122,7 @@ export function formatDayOverview(isoDate, bookings) {
   for (const { name, items } of byBarber.values()) {
     lines.push('');
     lines.push(`✂️ <b>${escapeHtml(name)}</b> — ${items.length}`);
-    for (const b of items) lines.push(formatBookingLine(b));
+    for (const b of mergeAdjacentBlocks(items)) lines.push(formatBookingLine(b));
   }
   return lines.join('\n');
 }
@@ -92,8 +140,8 @@ export function formatRangeOverview(bookings, headerLabel) {
   for (const [date, items] of byDate) {
     lines.push('');
     lines.push(`<b>${escapeHtml(isoToHumanPl(date))}</b> — ${items.length}`);
-    for (const b of items) {
-      lines.push(`${formatBookingLine(b)} · ✂️ ${escapeHtml(b.barber_name)}`);
+    for (const b of mergeAdjacentBlocks(items)) {
+      lines.push(`${formatBookingLine(b, { prefix: '' })} · ✂️ ${escapeHtml(b.barber_name)}`);
     }
   }
   return lines.join('\n');
@@ -201,7 +249,7 @@ export function formatCalendarDayView({ isoDate, barberName, bookings, freeSlots
   if (bookings.length === 0) {
     lines.push('<i>Brak rezerwacji ani blokad.</i>');
   } else {
-    for (const b of bookings) lines.push(formatBookingLine(b));
+    for (const b of mergeAdjacentBlocks(bookings)) lines.push(formatBookingLine(b));
   }
   lines.push('');
   if (freeSlots.length === 0) {
