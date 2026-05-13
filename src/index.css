@@ -1288,8 +1288,6 @@ footer.footer-pro { background: var(--ink); border-top: 0.5px solid #1a1a1a; pad
 .review-meta { flex: 1; display: flex; flex-direction: column; gap: 0.15rem; min-width: 0; }
 .review-author { font-size: 0.82rem; font-weight: 600; color: var(--ink-strong); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .review-submeta { display: flex; align-items: center; gap: 0.3rem; flex-wrap: wrap; }
-.review-local-guide { display: flex; align-items: center; gap: 0.25rem; font-size: 0.7rem; color: var(--text-muted-light); }
-.review-dot { font-size: 0.7rem; color: var(--text-muted-light); }
 .review-count { font-size: 0.7rem; color: var(--text-muted-light); }
 .review-stars-row { display: flex; align-items: center; gap: 0.6rem; }
 .review-stars { color: #FBBC04; font-size: 0.85rem; letter-spacing: 0.04em; line-height: 1; }

@@ -11,12 +11,6 @@ const GoogleG = ({ size = 18 }) => (
   </svg>
 );
 
-const LocalGuideIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="11" height="11" style={{ flexShrink: 0 }}>
-    <path d="M12 2l2.9 8.9H23l-7.5 5.4 2.9 8.9L12 20l-6.4 5.2 2.9-8.9L1 11h8.1z" fill="#F29900"/>
-  </svg>
-);
-
 // NOTE: static review wall — copy is paraphrased from real Google reviews of Off Cut Szczecin.
 // Replace with live Google Places API data before launch if authenticity becomes a concern.
 const reviews = [
@@ -82,8 +76,6 @@ function ReviewCard({ r, lang, style, accent = false }) {
         <div className="review-meta">
           <div className="review-author">{r.name}</div>
           <div className="review-submeta">
-            {r.localGuide && <span className="review-local-guide"><LocalGuideIcon />{pick('Lokalny przewodnik', 'Local Guide')}</span>}
-            {r.localGuide && <span className="review-dot">·</span>}
             <span className="review-count">{r.reviewCount} {pick('opinii', 'reviews')}</span>
           </div>
         </div>
