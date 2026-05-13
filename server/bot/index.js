@@ -1,6 +1,7 @@
 import { Bot, GrammyError, HttpError } from 'grammy';
 import { registerHandlers, bookingKeyboard } from './handlers.js';
 import { registerCalendar } from './calendar.js';
+import { registerReschedule } from './reschedule.js';
 import { formatNewBookingNotification } from './format.js';
 
 let bot = null;
@@ -48,6 +49,7 @@ export async function startBot({ log } = {}) {
   });
 
   registerCalendar(bot);
+  registerReschedule(bot);
   registerHandlers(bot);
 
   bot.catch((err) => {

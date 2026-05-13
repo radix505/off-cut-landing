@@ -260,6 +260,18 @@ export function formatCalendarDayView({ isoDate, barberName, bookings, freeSlots
   return lines.join('\n');
 }
 
+export function formatRescheduleConfirm(b, newIsoDate, newSlot) {
+  return [
+    `🔄 <b>Przełożenie rezerwacji #${b.id}</b>`,
+    ``,
+    `Z: <s>${escapeHtml(isoToHumanPl(b.date))} · ${escapeHtml(b.slot)}</s>`,
+    `Na: <b>${escapeHtml(isoToHumanPl(newIsoDate))} · ${escapeHtml(newSlot)}</b> (${b.duration_min}min)`,
+    ``,
+    `✂️ ${escapeHtml(b.barber_name)}   👤 ${escapeHtml(b.customer_name)}`,
+    `💈 ${escapeHtml(b.service_name ?? b.service_id)}`,
+  ].join('\n');
+}
+
 export function formatBlockConfirm({ isoDate, barberName, slot, durationMin }) {
   return [
     `🚫 <b>Zablokować czas?</b>`,
