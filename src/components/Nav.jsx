@@ -80,6 +80,7 @@ export default function Nav() {
   }
 
   const isHidden = hidden && !hovered;
+  const showBg = page !== 'home' || scrolled;
   const toggleLang = () => selectLang(lang === 'pl' ? 'en' : 'pl');
 
   return (
@@ -93,7 +94,7 @@ export default function Nav() {
     {open && <div className="nav-backdrop" onClick={close} aria-hidden="true" />}
     <nav
       ref={navRef}
-      className={[scrolled ? 'nav-scrolled' : '', isHidden ? 'nav-hidden' : ''].filter(Boolean).join(' ')}
+      className={[scrolled ? 'nav-scrolled' : '', isHidden ? 'nav-hidden' : '', showBg ? 'nav-bg' : ''].filter(Boolean).join(' ')}
       onMouseLeave={() => setHovered(false)}
     >
       <div className="nav-logo" onClick={handleLogoClick} style={{ cursor: 'pointer' }}>

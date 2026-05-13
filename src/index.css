@@ -201,8 +201,9 @@ html::-webkit-scrollbar-thumb:hover { background: var(--ink-weak); }
 @keyframes logo-intro-out { from { opacity: 1; } to { opacity: 0; } }
 
 /* NAV */
-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; padding: 1.5rem 2rem 1.1rem 1.5rem; background: transparent; border-bottom: none; transform: translateZ(0); will-change: transform; transition: transform 0.4s cubic-bezier(0.4,0,0.2,1); }
-nav.nav-scrolled { background: transparent; }
+nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; padding: 1.5rem 2rem 1.1rem 1.5rem; background: transparent; border-bottom: 0.5px solid transparent; transform: translateZ(0); will-change: transform; transition: transform 0.4s cubic-bezier(0.4,0,0.2,1), background 0.3s, border-color 0.3s; }
+nav.nav-scrolled { border-color: rgba(255,255,255,0.06); }
+nav.nav-bg { background: rgba(10,10,10,0.92); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-color: rgba(255,255,255,0.06); }
 nav.nav-scrolled .nav-logo-icon { transform: scale(0.68); }
 nav.nav-hidden { transform: translateZ(0) translateY(-110%); }
 .nav-logo { display: flex; flex-direction: row; align-items: center; gap: 0.6rem; line-height: 1; margin-left: 0; }
