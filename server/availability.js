@@ -1,9 +1,10 @@
 import { buildSlotsForISODate } from '../src/data/booking-config.js';
+import { SLOT_STEP_MIN } from '../src/data/businessHours.js';
 
 export function expandBlock(slot, durationMin, slotGrid) {
   const idx = slotGrid.indexOf(slot);
   if (idx === -1) return [];
-  const blocks = Math.ceil(durationMin / 30);
+  const blocks = Math.ceil(durationMin / SLOT_STEP_MIN);
   return slotGrid.slice(idx, idx + blocks);
 }
 

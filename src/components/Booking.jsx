@@ -216,7 +216,6 @@ export default function Booking() {
     if (!d) return;
     const picked = new Date(calYear, calMonth, d);
     if (picked < today) return;
-    if (fullyBookedDates.has(isoFromDay(d))) return;
     setDate(picked); setSlot(null);
   }
 
@@ -515,7 +514,7 @@ export default function Booking() {
                       key={i}
                       className={`bcal-day${!d?' empty':''}${d&&isPast(d)?' past':''}${isToday(d)?' today':''}${isSelected(d)?' sel':''}${isFullyBooked(d)?' unavail':''}`}
                       onClick={() => pickDay(d)}
-                      disabled={!d || isPast(d) || isFullyBooked(d)}
+                      disabled={!d || isPast(d)}
                       title={isFullyBooked(d) ? (lang==='pl' ? 'Brak wolnych terminów' : 'No slots available') : undefined}
                     >{d||''}</button>
                   ))}

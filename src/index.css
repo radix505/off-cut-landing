@@ -617,6 +617,7 @@ section { padding-block: var(--space-section-y); padding-inline: var(--space-sec
 .bcal-day.today::after { content: ''; position: absolute; bottom: 14%; left: 50%; transform: translateX(-50%); width: 3px; height: 3px; border-radius: 50%; background: var(--color-accent-warm); }
 .bcal-day.past { color: #2e2e2e; cursor: default; }
 .bcal-day.empty { cursor: default; }
+.bcal-day.unavail:not(.sel) { color: #5a3a35; text-decoration: line-through; text-decoration-thickness: 1px; }
 .bcal-day.sel { background: var(--color-accent-warm); color: #fff; font-weight: 600; }
 .bcal-day.sel.today::after { background: #fff; }
 .booking-slots { display: flex; flex-direction: column; gap: 0.75rem; }

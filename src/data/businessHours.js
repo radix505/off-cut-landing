@@ -19,7 +19,7 @@ export const BUSINESS_HOURS = {
 
 
 
-export const SLOT_STEP_MIN = 30;
+export const SLOT_STEP_MIN = 10;
 
 const DAYS = [
   { idx: 1, pl: 'Poniedziałek', en: 'Monday' },

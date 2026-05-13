@@ -30,13 +30,20 @@ export default function BookingTimeWheel({
   // Pre-select first available when slots change (date change / availability load)
   useEffect(() => {
     if (!slots.length) return;
-    const currentIdx = value ? indexOf(value) : -1;
-    if (currentIdx >= 0) {
-      scrollToIndex(currentIdx, false);
+    const valueIdx = value ? indexOf(value) : -1;
+    const valueIsValid = valueIdx >= 0 && !unavailable.has(value);
+    if (valueIsValid) {
+      scrollToIndex(valueIdx, false);
       return;
     }
     const firstFree = slots.findIndex((s) => !unavailable.has(s));
-    if (firstFree === -1) return;
+    if (firstFree === -1) {
+      if (value !== null) {
+        lastReportedRef.current = null;
+        onChange(null);
+      }
+      return;
+    }
     scrollToIndex(firstFree, false);
     lastReportedRef.current = slots[firstFree];
     onChange(slots[firstFree]);
