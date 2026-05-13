@@ -312,9 +312,9 @@ section { padding-block: var(--space-section-y); padding-inline: var(--space-sec
 .services-section .section-link:hover { color: var(--paper-strong); border-color: var(--paper-strong); }
 
 .services-columns { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--ink); align-items: stretch; }
-/* 3 → 2 cols in the tablet gap (iPad portrait, Surface, Z Fold unfolded), → 1 col on phones */
-@media (max-width: 1099px) { .services-columns { grid-template-columns: 1fr 1fr; } }
-@media (max-width: 720px)  { .services-columns { grid-template-columns: 1fr; } }
+/* Below desktop: single column (same as mobile) — keeps service ledger readable
+   on all tablets and phones without a cramped 2-column intermediate. */
+@media (max-width: 1099px) { .services-columns { grid-template-columns: 1fr; } }
 
 .services-col {
   background-color: rgba(255,255,255,0.025);
