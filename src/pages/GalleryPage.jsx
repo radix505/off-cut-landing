@@ -38,11 +38,11 @@ const photos = [
   '/gallery/IMG_3025.jpeg',
   '/gallery/319C0F08-DB22-4ABB-8F4D-F489828F6DBE.jpeg',
   '/gallery/ADEAFE12-39E6-4E6A-B8AD-E411C5EA7BAE.jpeg',
+  '/gallery/IMG_7729.jpeg',
 ];
 
 export default function GalleryPage() {
   const { navigate } = useRouter();
-
   const [lightboxIdx, setLightboxIdx] = useState(null);
   const open  = i => setLightboxIdx(i);
   const close = () => setLightboxIdx(null);
@@ -75,8 +75,9 @@ export default function GalleryPage() {
         </button>
         <div className="blog-page-eyebrow">{useT('Off Cut — Barbershop', 'Off Cut — Barbershop')}</div>
         <h1 className="blog-page-title">{useT('Galeria\nPrac', 'Our\nWork')}</h1>
-        <p className="blog-page-sub">{useT('Każde cięcie to historia. Oto nasze rzemiosło.', 'Every cut tells a story. Here\'s our craft.')}</p>
+        <p className="blog-page-sub">{useT('Każde cięcie to historia. Oto nasze rzemiosło.', "Every cut tells a story. Here's our craft.")}</p>
       </div>
+
       <section className="gallery-page-section">
         <div className="gallery-page-meta">
           <span className="gallery-page-count">{photos.length} {useT('zdjęć', 'photos')}</span>
@@ -89,14 +90,17 @@ export default function GalleryPage() {
             Instagram →
           </a>
         </div>
-        <div className="gallery-page-grid">
+
+        <div className="gallery-masonry">
           {photos.map((src, i) => (
             <div
               key={i}
-              className="gallery-page-cell"
-              style={{ backgroundImage: `url(${src})` }}
+              className="gallery-masonry-item"
+              style={{ animationDelay: `${Math.min(i, 15) * 55}ms` }}
               onClick={() => open(i)}
-            />
+            >
+              <img src={src} alt="" loading="lazy" />
+            </div>
           ))}
         </div>
       </section>

@@ -1,6 +1,7 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { useT } from '../context/LangContext';
 import { useReveal } from '../hooks/useReveal';
+import { useRouter } from '../context/RouterContext';
 
 const photos = [
   '/gallery/DSC_3460.jpeg',
@@ -39,21 +40,17 @@ const photos = [
   '/gallery/IMG_7729.jpeg',
 ];
 
-const VISIBLE = 9;
-
-function getSlice(offset) {
-  return Array.from({ length: VISIBLE }, (_, i) => photos[(offset + i) % photos.length]);
-}
+const FEATURED = [3, 8, 14, 20, 27].map(i => photos[i]);
 
 export default function Gallery() {
   const ref = useReveal();
-  const [visiblePhotos] = useState(() => getSlice(0));
+  const { navigate } = useRouter();
   const [lightboxIdx, setLightboxIdx] = useState(null);
 
-  function openLightbox(src) {
+  const openLightbox = src => {
     const idx = photos.indexOf(src);
     setLightboxIdx(idx >= 0 ? idx : 0);
-  }
+  };
   const closeLightbox = () => setLightboxIdx(null);
   const prevPhoto = e => { e.stopPropagation(); setLightboxIdx(i => (i - 1 + photos.length) % photos.length); };
   const nextPhoto = e => { e.stopPropagation(); setLightboxIdx(i => (i + 1) % photos.length); };
@@ -98,13 +95,29 @@ export default function Gallery() {
         </a>
       </div>
 
-      <div className="gallery-stage reveal">
-        <div className="gallery-grid">
-          {visiblePhotos.map((src, i) => (
-            <div key={i} className="gallery-cell" style={{ backgroundImage: `url(${src})` }} onClick={() => openLightbox(src)} />
-          ))}
-        </div>
+      <div className="gallery-editorial reveal">
+        <div
+          className="gallery-editorial-hero"
+          style={{ backgroundImage: `url(${FEATURED[0]})` }}
+          onClick={() => openLightbox(FEATURED[0])}
+        />
+        {FEATURED.slice(1).map((src, i) => (
+          <div
+            key={i}
+            className="gallery-editorial-cell"
+            style={{ backgroundImage: `url(${src})` }}
+            onClick={() => openLightbox(src)}
+          />
+        ))}
       </div>
+
+      <button className="gallery-editorial-cta" onClick={() => navigate('/gallery')}>
+        <span>{useT(`Wszystkie ${photos.length} zdjęć`, `All ${photos.length} shots`)}</span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <line x1="5" y1="12" x2="19" y2="12"/>
+          <polyline points="12 5 19 12 12 19"/>
+        </svg>
+      </button>
 
       {lightboxIdx !== null && (
         <div className="lightbox" onClick={closeLightbox}>

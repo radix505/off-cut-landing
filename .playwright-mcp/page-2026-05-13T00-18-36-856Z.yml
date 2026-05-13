@@ -1,0 +1,22 @@
+- generic [active]:
+  - generic:
+    - generic [ref=e1]:
+      - generic [ref=e2] [cursor=pointer]:
+        - generic:
+          - generic: OFF CUT
+          - generic: Barbershop
+          - generic: Polski
+          - generic: kliknij aby wybrać
+      - generic [ref=e3] [cursor=pointer]:
+        - generic:
+          - generic: OFF CUT
+          - generic: Barbershop
+          - generic: English
+          - generic: click to select
+    - generic [ref=e4]:
+      - paragraph [ref=e5]:
+        - text: Używamy niezbędnych plików cookie do poprawnego działania strony.
+        - button "Dowiedz się więcej" [ref=e6] [cursor=pointer]
+      - generic [ref=e7]:
+        - button "Odrzuć" [ref=e8] [cursor=pointer]
+        - button "Akceptuję" [ref=e9] [cursor=pointer]
