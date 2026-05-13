@@ -741,13 +741,19 @@ section { padding-block: var(--space-section-y); padding-inline: var(--space-sec
 /* FOOTER PRO */
 footer.footer-pro { background: var(--ink); border-top: 0.5px solid #1a1a1a; padding: 0; }
 .footer-pro-inner { display: grid; grid-template-columns: 1.6fr 1fr 1fr 1.2fr; gap: 0; border-bottom: 0.5px solid #1a1a1a; }
-/* Tablet gap (iPad portrait, Surface, Z Fold unfolded): 4 → 2x2 instead of 4→1 */
-@media (max-width: 1099px) and (min-width: 769px) {
+/* Tablet gap: 4 → 2x2 instead of 4→1. Extended to 1199 so iPad Air
+   landscape (1180) gets the 2-col footer instead of cramming Polish day
+   names + times into 4 narrow columns. Most laptops are ≥1280 so the
+   tradeoff is minimal. */
+@media (min-width: 769px) and (max-width: 1199px) {
   .footer-pro-inner { grid-template-columns: 1fr 1fr; }
   .footer-col { border-right: 0.5px solid #1a1a1a; border-bottom: 0.5px solid #1a1a1a; padding: 2rem 1.75rem; }
   .footer-col:nth-child(even) { border-right: none; }
   .footer-col:nth-last-child(-n+2) { border-bottom: none; }
 }
+/* Defensive: hours times never wrap mid-string even if a future viewport
+   squeezes the column. Day name allowed to wrap; time stays one line. */
+.footer-pro-hours li > span:last-child { white-space: nowrap; }
 .footer-col { padding: 2.8rem 3rem; border-right: 0.5px solid #1a1a1a; }
 .footer-col:last-child { border-right: none; }
 .footer-col--brand { }
