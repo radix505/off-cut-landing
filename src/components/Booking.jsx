@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
 import { useT, useLang } from '../context/LangContext';
 import { useReveal } from '../hooks/useReveal';
 import { useRouter } from '../context/RouterContext';
@@ -116,6 +116,7 @@ export default function Booking() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMsg,     setErrorMsg]     = useState('');
   const [filteredBarberIds, setFilteredBarberIds] = useState(null);
+  const wizardEndRef = useRef(null);
 
   const calYear  = calBase.getFullYear();
   const calMonth = calBase.getMonth();
@@ -150,6 +151,16 @@ export default function Booking() {
       .catch(err => { if (err.name !== 'AbortError') setFullyBookedDates(new Set()); });
     return () => ctrl.abort();
   }, [barber?.id, service?.id, calYear, calMonth]);
+
+  useEffect(() => {
+    if (step !== 3 || !date) return;
+    const el = wizardEndRef.current;
+    if (!el) return;
+    const id = requestAnimationFrame(() => {
+      el.scrollIntoView({ behavior: 'smooth', block: 'end' });
+    });
+    return () => cancelAnimationFrame(id);
+  }, [date, step]);
 
   const today = new Date(); today.setHours(0, 0, 0, 0);
 
@@ -576,7 +587,7 @@ export default function Booking() {
           )}
 
           {/* Navigation */}
-          <div className="booking-wizard-nav">
+          <div className="booking-wizard-nav" ref={wizardEndRef}>
             {(stepIdx > 0 || (step === 2 && category))
               ? <button className="bwiz-back" onClick={goBack} disabled={isSubmitting}>← {useT('Wróć','Back')}</button>
               : <span />}
