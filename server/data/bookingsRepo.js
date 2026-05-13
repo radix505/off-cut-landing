@@ -16,6 +16,15 @@ const SQL_ACTIVE_BY_BARBER_DATE = `
   WHERE barber_id = $1 AND date = $2 AND status IN ('pending','confirmed')
 `;
 
+const SQL_ACTIVE_BY_BARBER_DATE_EXCLUDING = `
+  SELECT id, service_id, duration_min, slot, status, is_block
+  FROM bookings
+  WHERE barber_id = $1 AND date = $2 AND status IN ('pending','confirmed') AND id <> $3
+`;
+
+const SQL_LOCK_BY_ID = `SELECT * FROM bookings WHERE id = $1 FOR UPDATE`;
+const SQL_UPDATE_DATE_SLOT = `UPDATE bookings SET date = $1, slot = $2 WHERE id = $3`;
+
 const SQL_ACTIVE_BY_BARBER_RANGE = `
   SELECT date, slot, duration_min, is_block
   FROM bookings
@@ -108,6 +117,27 @@ const runner = (client) => client ?? pool;
 export async function findActiveByBarberAndDate(barberId, date, { client } = {}) {
   const { rows } = await runner(client).query(SQL_ACTIVE_BY_BARBER_DATE, [barberId, date]);
   return rows;
+}
+
+export async function findActiveByBarberAndDateExcluding(
+  barberId, date, excludeId, { client } = {},
+) {
+  const { rows } = await runner(client).query(
+    SQL_ACTIVE_BY_BARBER_DATE_EXCLUDING,
+    [barberId, date, excludeId],
+  );
+  return rows;
+}
+
+export async function lockById(id, { client } = {}) {
+  if (!client) throw new Error('lockById requires a transaction client');
+  const { rows } = await client.query(SQL_LOCK_BY_ID, [id]);
+  return rows[0] ?? null;
+}
+
+export async function updateDateAndSlot(id, date, slot, { client } = {}) {
+  const { rowCount } = await runner(client).query(SQL_UPDATE_DATE_SLOT, [date, slot, id]);
+  return rowCount > 0;
 }
 
 export async function findActiveByBarberAndRange(barberId, fromIso, toIso, { client } = {}) {

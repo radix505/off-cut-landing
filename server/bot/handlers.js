@@ -20,6 +20,9 @@ export function bookingKeyboard(b) {
   } else if (b.status === 'cancelled') {
     kb.text('↩️ Przywróć (oczekuje)', `bk:pending:${b.id}`);
   }
+  if (!b.is_block && (b.status === 'pending' || b.status === 'confirmed')) {
+    kb.row().text('🔄 Przełóż', `bk:rs:${b.id}`);
+  }
   return kb;
 }
 
