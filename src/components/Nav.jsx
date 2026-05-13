@@ -54,7 +54,6 @@ export default function Nav() {
   }, []);
 
   const { page, navigate } = useRouter();
-  const onBlog = page === 'blog';
   const onGallery = page === 'gallery';
   const onCrew = page === 'crew' || page === 'barber';
   const onContact = page === 'contact';
@@ -91,6 +90,7 @@ export default function Nav() {
         onMouseEnter={() => setHovered(true)}
       />
     )}
+    {open && <div className="nav-backdrop" onClick={close} aria-hidden="true" />}
     <nav
       ref={navRef}
       className={[scrolled ? 'nav-scrolled' : '', isHidden ? 'nav-hidden' : ''].filter(Boolean).join(' ')}
@@ -126,16 +126,6 @@ export default function Nav() {
             </a>
           </li>
           <li><a href="/contact" className={onContact ? 'nav-link--active' : ''} onClick={(e) => { e.preventDefault(); navigate('/contact'); close(); }}>{useT('Kontakt', 'Contact')}</a></li>
-          <li className="nav-li--mobile-only"><a href="#location" onClick={(e) => handleSectionClick(e, 'location')}>{useT('Lokalizacja', 'Location')}</a></li>
-          <li className="nav-li--mobile-only">
-            <a
-              href="/blog"
-              className={onBlog ? 'nav-link--active' : ''}
-              onClick={(e) => { e.preventDefault(); navigate('/blog'); close(); }}
-            >
-              Blog
-            </a>
-          </li>
           <li className="nav-mobile-book">
             <button className="nav-book-mobile" onClick={handleBookClick}>
               {useT('Zarezerwuj', 'Book Now')}
@@ -153,7 +143,6 @@ export default function Nav() {
       </div>
 
       <div className="nav-mobile-right">
-        <LangToggle lang={lang} onToggle={toggleLang} />
         <button className="nav-hamburger" onClick={() => setOpen(o => !o)} aria-label="Menu">
           {open ? (
             <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
