@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useT } from '../context/LangContext';
 import { useReveal } from '../hooks/useReveal';
 import { useRouter } from '../context/RouterContext';
@@ -46,6 +46,18 @@ export default function Gallery() {
   const ref = useReveal();
   const { navigate } = useRouter();
   const [lightboxIdx, setLightboxIdx] = useState(null);
+  const touchStartX = useRef(null);
+
+  const onTouchStart = e => { touchStartX.current = e.touches[0].clientX; };
+  const onTouchEnd = e => {
+    if (touchStartX.current === null) return;
+    const dx = e.changedTouches[0].clientX - touchStartX.current;
+    if (Math.abs(dx) > 40) {
+      if (dx < 0) setLightboxIdx(i => (i + 1) % photos.length);
+      else setLightboxIdx(i => (i - 1 + photos.length) % photos.length);
+    }
+    touchStartX.current = null;
+  };
 
   const openLightbox = src => {
     const idx = photos.indexOf(src);
@@ -120,7 +132,7 @@ export default function Gallery() {
       </button>
 
       {lightboxIdx !== null && (
-        <div className="lightbox" onClick={closeLightbox}>
+        <div className="lightbox" onClick={closeLightbox} onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
           <button className="lightbox-close" onClick={closeLightbox}>×</button>
           <button className="lightbox-prev" onClick={prevPhoto}>‹</button>
           <img
