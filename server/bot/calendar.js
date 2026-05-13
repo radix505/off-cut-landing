@@ -152,13 +152,15 @@ async function renderDay(ctx, barberId, year, month, day, { edit = true } = {}) 
   const kb = new InlineKeyboard();
   if (!isClosed && !isPast) {
     if (freeSlots.length > 0) {
-      kb.text('🚫 Zablokuj czas', `cal:blk:${barberId}:${year}:${month}:${day}`);
+      kb.text('🚫 Zablokuj czas', `cal:blk:${barberId}:${year}:${month}:${day}`)
+        .text('🚫 Cały dzień', `cal:blkday:${barberId}:${year}:${month}:${day}`)
+        .row();
     }
     const blocks = bookings.filter((b) => b.is_block);
     if (blocks.length > 0) {
-      kb.text(`🗑 Odblokuj (${blocks.length})`, `cal:ulist:${barberId}:${year}:${month}:${day}`);
+      kb.text(`🗑 Odblokuj (${blocks.length})`, `cal:ulist:${barberId}:${year}:${month}:${day}`)
+        .row();
     }
-    kb.row();
   }
   kb.text('🔄 Odśwież', `cal:d:${barberId}:${year}:${month}:${day}`)
     .text('⟵ Wróć', `cal:m:${barberId}:${year}:${month}`)
@@ -273,6 +275,64 @@ async function commitBlock(ctx, barberId, year, month, day, slot, durationMin) {
   return renderDay(ctx, barberId, year, month, day);
 }
 
+async function commitBlockEntireDay(ctx, barberId, year, month, day) {
+  const iso = buildIso(year, month, day);
+  if (iso < todayInWarsaw()) {
+    await ctx.answerCallbackQuery({ text: 'Nie można blokować w przeszłości.', show_alert: true });
+    return renderDay(ctx, barberId, year, month, day);
+  }
+  const dow = jsDayOfWeek(year, month, day);
+  if (!BUSINESS_HOURS[dow]) {
+    await ctx.answerCallbackQuery({ text: 'Dzień zamknięty.', show_alert: true });
+    return renderDay(ctx, barberId, year, month, day);
+  }
+
+  let runsBlocked = 0;
+  try {
+    await withTransaction(async (client) => {
+      const existing = await bookingsRepo.findActiveByBarberAndDate(barberId, iso, { client });
+      const grid = buildSlotsForISODate(iso);
+      const unavailable = computeUnavailable(existing, iso);
+
+      const runs = [];
+      let current = null;
+      for (const s of grid) {
+        if (!unavailable.has(s)) {
+          if (!current) current = { start: s, count: 1 };
+          else current.count++;
+        } else if (current) {
+          runs.push(current);
+          current = null;
+        }
+      }
+      if (current) runs.push(current);
+
+      if (runs.length === 0) {
+        const e = new Error('no-free'); e.code = 'NO_FREE'; throw e;
+      }
+
+      for (const r of runs) {
+        await bookingsRepo.insertBlock(
+          { barberId, durationMin: r.count * SLOT_STEP_MIN, date: iso, slot: r.start },
+          { client },
+        );
+        runsBlocked++;
+      }
+    });
+  } catch (err) {
+    if (err?.code === 'NO_FREE') {
+      await ctx.answerCallbackQuery({ text: 'Brak wolnych slotów.', show_alert: true });
+      return renderDay(ctx, barberId, year, month, day);
+    }
+    await ctx.answerCallbackQuery({ text: 'Błąd przy blokowaniu.', show_alert: true });
+    throw err;
+  }
+  await ctx.answerCallbackQuery({
+    text: runsBlocked === 1 ? 'Zablokowano cały dzień ✓' : `Zablokowano cały dzień ✓ (${runsBlocked} przedziały)`,
+  });
+  return renderDay(ctx, barberId, year, month, day);
+}
+
 async function renderUnblockList(ctx, barberId, year, month, day) {
   const iso = buildIso(year, month, day);
   const bookings = await bookingsRepo.findByBarberAndDate(barberId, iso);
@@ -375,6 +435,12 @@ export function registerCalendar(bot) {
   bot.callbackQuery(/^cal:bkc:(\d+):(\d{4}):(\d{1,2}):(\d{1,2}):(\d{4}):(\d+)$/, async (ctx) => {
     const [, b, y, m, d, s, dur] = ctx.match;
     await commitBlock(ctx, Number(b), Number(y), Number(m), Number(d), cbToSlot(s), Number(dur));
+  });
+
+  // Block entire day (one-tap)
+  bot.callbackQuery(/^cal:blkday:(\d+):(\d{4}):(\d{1,2}):(\d{1,2})$/, async (ctx) => {
+    const [, b, y, m, d] = ctx.match;
+    await commitBlockEntireDay(ctx, Number(b), Number(y), Number(m), Number(d));
   });
 
   // Unblock list
