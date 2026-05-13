@@ -271,7 +271,7 @@ nav.nav-hidden { transform: translateZ(0) translateY(-110%); }
   50%       { box-shadow: 0 0 44px 14px rgba(232, 90, 42, 0.68), 0 2px 8px rgba(0,0,0,0.18); }
 }
 .hero-cta { margin-top: 2.25rem; display: flex; flex-direction: row; align-items: center; gap: 1rem; opacity: 0; animation: fadeUp 1s cubic-bezier(0.16, 1, 0.3, 1) 0.75s forwards; }
-.hero-rebook { background: transparent; border: none; color: var(--color-accent); font-family: 'Inter', sans-serif; font-size: calc(0.78rem - 5px); letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer; padding: 0.4rem 0; min-height: var(--touch-min); transition: color 0.2s, transform 0.2s; }
+.hero-rebook { background: transparent; border: none; color: var(--color-accent); font-family: 'Inter', sans-serif; font-size: calc(0.85rem - 3px); letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer; padding: 0.4rem 0; min-height: var(--touch-min); transition: color 0.2s, transform 0.2s; }
 .hero-rebook:hover { color: #ff6a3a; transform: translateX(2px); }
 
 @media (min-width: 769px) {
