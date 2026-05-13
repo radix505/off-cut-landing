@@ -99,8 +99,8 @@ export default function Nav() {
       <div className="nav-logo" onClick={handleLogoClick} style={{ cursor: 'pointer' }}>
         <img src="/logo.svg" alt="" className="nav-logo-icon" />
         <div className="nav-logo-text">
-          <span className="nav-logo-main">OFF CUT</span>
-          <span className="nav-logo-sub">Barbershop</span>
+          <span className="nav-logo-off">OFF</span>
+          <span className="nav-logo-cut">CUT</span>
         </div>
       </div>
 

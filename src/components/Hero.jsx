@@ -42,6 +42,7 @@ export default function Hero() {
   return (
     <section className="hero" id="home">
       <div className="hero-bg" ref={bgRef} />
+      <div className="hero-grid-lines" aria-hidden="true" />
 <p className="hero-sub">
         {subLine1}<br />{subLine2}
       </p>
@@ -61,23 +62,20 @@ export default function Hero() {
         <div className="hero-cta">
           <button className="btn-primary" onClick={() => navigate('/booking')}>{useT('Zarezerwuj wizytę', 'Book Appointment')}</button>
           <button className="btn-ghost" onClick={() => navigate('/services')}>{useT('Zobacz usługi', 'View Services')}</button>
+          {lastBooking && (
+            <button
+              className="hero-rebook"
+              onClick={() => navigate('/booking', {
+                preselectedBarber: lastBooking.barberId,
+                preselectedService: lastBooking.serviceId,
+              })}
+            >
+              {rebookLabel} →
+            </button>
+          )}
         </div>
-        {lastBooking && (
-          <button
-            className="hero-rebook"
-            onClick={() => navigate('/booking', {
-              preselectedBarber: lastBooking.barberId,
-              preselectedService: lastBooking.serviceId,
-            })}
-          >
-            {rebookLabel} →
-          </button>
-        )}
       </div>
-      <div className="hero-scroll-hint">
-        <div className="scroll-line" />
-        <span>{useT('Przewiń', 'Scroll')}</span>
-      </div>
+
     </section>
   );
 }
