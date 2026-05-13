@@ -170,11 +170,11 @@ html::-webkit-scrollbar-thumb:hover { background: var(--ink-weak); }
   .splash-half--dark:hover ~ .splash-half--light { clip-path: polygon(0 45%, 100% 55%, 100% 100%, 0 100%); }
 }
 
-.splash-half--dark.splash-splitting { transform: translateX(-110vw); }
-.splash-half--light.splash-splitting { transform: translateX(110vw); }
+.splash-half--dark.splash-splitting { transform: translateX(-110%); }
+.splash-half--light.splash-splitting { transform: translateX(110%); }
 @media (max-width: 600px) {
-  .splash-half--dark.splash-splitting  { transform: translateY(-110vh); }
-  .splash-half--light.splash-splitting { transform: translateY(110vh); }
+  .splash-half--dark.splash-splitting  { transform: translateY(-110%); }
+  .splash-half--light.splash-splitting { transform: translateY(110%); }
   .splash-logo-wrap.splash-logo-splitting .splash-logo-img--dark  { animation-name: logo-crash-mobile-up;   animation-duration: 0.65s; }
   .splash-logo-wrap.splash-logo-splitting .splash-logo-img--light { animation-name: logo-crash-mobile-down; animation-duration: 0.65s; }
   @keyframes logo-crash-mobile-up {
@@ -201,10 +201,10 @@ html::-webkit-scrollbar-thumb:hover { background: var(--ink-weak); }
 @keyframes logo-intro-out { from { opacity: 1; } to { opacity: 0; } }
 
 /* NAV */
-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; padding: 1.1rem 2rem 1.1rem 1.2rem; background: transparent; border-bottom: none; transition: transform 0.4s cubic-bezier(0.4,0,0.2,1); }
+nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; padding: 1.1rem 2rem 1.1rem 1.2rem; background: transparent; border-bottom: none; transform: translateZ(0); will-change: transform; transition: transform 0.4s cubic-bezier(0.4,0,0.2,1); }
 nav.nav-scrolled { background: transparent; }
 nav.nav-scrolled .nav-logo-icon { transform: scale(0.68); }
-nav.nav-hidden { transform: translateY(-110%); }
+nav.nav-hidden { transform: translateZ(0) translateY(-110%); }
 .nav-logo { display: flex; flex-direction: row; align-items: center; gap: 0.6rem; line-height: 1; margin-left: 0.8rem; }
 .nav-logo-icon { height: 44px; width: auto; display: block; filter: invert(1); transform-origin: left center; transition: transform 0.3s var(--ease-out-quart); }
 .nav-logo-text { display: flex; flex-direction: column; line-height: 1; }
@@ -312,6 +312,8 @@ section { padding-block: var(--space-section-y); padding-inline: var(--space-sec
 .services-section .section-link:hover { color: var(--paper-strong); border-color: var(--paper-strong); }
 
 .services-columns { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--ink); align-items: stretch; }
+/* Below desktop: single column (same as mobile) — keeps service ledger readable
+   on all tablets and phones without a cramped 2-column intermediate. */
 @media (max-width: 1099px) { .services-columns { grid-template-columns: 1fr; } }
 
 .services-col {
@@ -481,7 +483,7 @@ section { padding-block: var(--space-section-y); padding-inline: var(--space-sec
 /* container-type lets the wizard respond to its own width — needed because
    it's rendered in two contexts (homepage 50% column, /booking page 60% column)
    with different available widths for the same content. */
-.booking-wizard { container-type: inline-size; container-name: wizard; display: flex; flex-direction: column; gap: 1.75rem; border: 0.5px solid rgba(255,255,255,0.1); padding: 2rem; min-height: 460px; }
+.booking-wizard { container-type: inline-size; container-name: wizard; display: flex; flex-direction: column; gap: 1.75rem; border: 0.5px solid rgba(255,255,255,0.1); padding: 2rem; min-height: clamp(420px, 60svh, 580px); min-height: clamp(420px, 60dvh, 580px); }
 
 /* Progress bar */
 .booking-progress { display: flex; align-items: flex-start; justify-content: space-between; position: relative; padding-bottom: 0.25rem; }
@@ -723,7 +725,7 @@ section { padding-block: var(--space-section-y); padding-inline: var(--space-sec
 .booking-page-wrap .booking-section { padding-top: 10rem; padding-bottom: 2rem; }
 .booking-page-wrap .booking-section .section-header { display: none; }
 .booking-page-wrap .booking-layout { grid-template-columns: 1fr 1.55fr; gap: 3.5rem; }
-.booking-page-wrap .booking-wizard { min-height: 580px; padding: 2.75rem; background: #161616; border-color: rgba(255,255,255,0.16); }
+.booking-page-wrap .booking-wizard { min-height: clamp(480px, 70svh, 700px); min-height: clamp(480px, 70dvh, 700px); padding: 2.75rem; background: #161616; border-color: rgba(255,255,255,0.16); }
 .booking-page-wrap .booking-barber-card { background: rgba(255,255,255,0.055); border-color: rgba(255,255,255,0.11); }
 .booking-page-wrap .booking-barber-card:hover { background: rgba(255,255,255,0.09); border-color: rgba(255,255,255,0.25); }
 .booking-page-wrap .booking-services-list { border-color: rgba(255,255,255,0.11); }
@@ -739,6 +741,13 @@ section { padding-block: var(--space-section-y); padding-inline: var(--space-sec
 /* FOOTER PRO */
 footer.footer-pro { background: var(--ink); border-top: 0.5px solid #1a1a1a; padding: 0; }
 .footer-pro-inner { display: grid; grid-template-columns: 1.6fr 1fr 1fr 1.2fr; gap: 0; border-bottom: 0.5px solid #1a1a1a; }
+/* Tablet gap (iPad portrait, Surface, Z Fold unfolded): 4 → 2x2 instead of 4→1 */
+@media (max-width: 1099px) and (min-width: 769px) {
+  .footer-pro-inner { grid-template-columns: 1fr 1fr; }
+  .footer-col { border-right: 0.5px solid #1a1a1a; border-bottom: 0.5px solid #1a1a1a; padding: 2rem 1.75rem; }
+  .footer-col:nth-child(even) { border-right: none; }
+  .footer-col:nth-last-child(-n+2) { border-bottom: none; }
+}
 .footer-col { padding: 2.8rem 3rem; border-right: 0.5px solid #1a1a1a; }
 .footer-col:last-child { border-right: none; }
 .footer-col--brand { }
@@ -798,7 +807,11 @@ footer.footer-pro { background: var(--ink); border-top: 0.5px solid #1a1a1a; pad
   .nav-mobile-right { display: flex; }
   .nav-hamburger { display: flex; position: relative; z-index: 10000; }
   .nav-links {
-    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    position: fixed; top: 0; left: 0;
+    width: 100%;
+    height: 100vh;            /* fallback for old browsers */
+    height: 100svh;           /* prefer small viewport at first paint */
+    height: 100dvh;           /* track address-bar dynamically where supported */
     background: rgba(10,10,10,0.88);
     backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
     flex-direction: column; align-items: center; justify-content: center;
@@ -888,6 +901,19 @@ footer.footer-pro { background: var(--ink); border-top: 0.5px solid #1a1a1a; pad
   .scroll-top-btn { bottom: 1.25rem; right: 1.25rem; width: 40px; height: 40px; }
 }
 
+/* TABLET PORTRAIT (iPad portrait 820, iPad mini portrait 744, Surface Pro 912,
+   Z Fold unfolded ~717). Above the 768 mobile breakpoint but below desktop —
+   collapse two-column page layouts to one wider column so the booking wizard
+   and map iframe get a full-width row instead of being squeezed into ~340px. */
+@media (min-width: 769px) and (max-width: 1099px) and (orientation: portrait),
+       (min-width: 769px) and (max-width: 1099px) and (pointer: coarse) {
+  .booking-layout { grid-template-columns: 1fr; gap: 2.5rem; }
+  .booking-text { max-width: 720px; margin: 0 auto; }
+  .booking-text p { max-width: 100%; }
+  .map-layout   { grid-template-columns: 1fr; gap: 2rem; }
+  .booking-page-wrap .booking-layout { grid-template-columns: 1fr; gap: 2.5rem; }
+}
+
 @media (max-width: 480px) {
   .hero-title { font-size: clamp(52px, 20vw, 80px); }
   .footer-pro-inner { grid-template-columns: 1fr; }
@@ -905,6 +931,19 @@ footer.footer-pro { background: var(--ink); border-top: 0.5px solid #1a1a1a; pad
   .footer-pro-copy { font-size: 0.55rem; }
   .footer-pro-legal-link { font-size: 0.55rem; }
   .footer-credit { font-size: 0.55rem; }
+}
+
+/* NARROW FOLDABLE / SMALL-COVER (Galaxy Z Fold cover screen ~344px, Z Flip cover) — extra
+   guards so buttons and pills wrap, hero title shrinks one more notch, and pills
+   that would otherwise overflow break gracefully. */
+@media (max-width: 360px) {
+  .hero-title { font-size: clamp(40px, 22vw, 64px); }
+  .booking-cat-pill { flex-wrap: wrap; align-self: stretch; }
+  .booking-cat-pill-name { overflow-wrap: anywhere; }
+  .bwiz-next, .bwiz-back { letter-spacing: 0.18em; }
+  /* Cookie banner: stack actions when text + buttons can't fit on one line */
+  .cookie-banner { flex-wrap: wrap; }
+  .cookie-banner-actions { width: 100%; justify-content: flex-end; }
 }
 
 /* BLOG — newspaper palette */
@@ -969,7 +1008,7 @@ footer.footer-pro { background: var(--ink); border-top: 0.5px solid #1a1a1a; pad
 @media (max-width: 600px) { .gallery-page-section { padding: 3rem 1rem 5rem; } .gallery-page-hero { padding: 8rem 1.5rem 4rem; } }
 
 /* CONTACT PAGE */
-.contact-hero { position: relative; height: 60vh; min-height: 420px; overflow: hidden; }
+.contact-hero { position: relative; height: 60svh; height: 60dvh; min-height: 320px; max-height: 720px; overflow: hidden; }
 .contact-hero-map { position: absolute; top: -60px; left: 0; right: 0; bottom: 0; width: 100%; height: calc(100% + 60px); border: none; display: block; pointer-events: none; }
 .contact-hero-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(10,10,10,0.55) 0%, rgba(10,10,10,0.3) 60%, rgba(10,10,10,0.65) 100%); pointer-events: none; z-index: 1; }
 .contact-hero-content { position: absolute; bottom: 3.5rem; left: 3rem; z-index: 2; pointer-events: none; }
@@ -1178,7 +1217,8 @@ footer.footer-pro { background: var(--ink); border-top: 0.5px solid #1a1a1a; pad
   background: var(--paper);
   position: relative;
   padding: 0;
-  min-height: 780px;
+  min-height: clamp(560px, 70svh, 780px);
+  min-height: clamp(560px, 70dvh, 780px);
   overflow: hidden;
 }
 
@@ -1256,7 +1296,8 @@ footer.footer-pro { background: var(--ink); border-top: 0.5px solid #1a1a1a; pad
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 780px;
+  min-height: clamp(560px, 70svh, 780px);
+  min-height: clamp(560px, 70dvh, 780px);
   padding: 4rem 2rem;
   pointer-events: none;
   background:
@@ -1308,15 +1349,15 @@ footer.footer-pro { background: var(--ink); border-top: 0.5px solid #1a1a1a; pad
 .reviews-aggregate-google { font-size: 0.78rem; color: var(--text-muted-light); letter-spacing: 0.04em; transition: color 0.2s; }
 
 @media (max-width: 900px) {
-  .reviews-section { min-height: 700px; }
-  .reviews-overlay { min-height: 700px; padding: 3rem 1.5rem; }
+  .reviews-section { min-height: clamp(480px, 65svh, 700px); min-height: clamp(480px, 65dvh, 700px); }
+  .reviews-overlay { min-height: clamp(480px, 65svh, 700px); min-height: clamp(480px, 65dvh, 700px); padding: 3rem 1.5rem; }
   .review-card { padding: 0.85rem 0.95rem; gap: 0.45rem; }
   .reviews-aggregate { padding: 1rem 1.3rem; gap: 1.1rem; }
   .reviews-aggregate-score { font-size: 2.5rem; }
 }
 @media (max-width: 540px) {
-  .reviews-section { min-height: 620px; }
-  .reviews-overlay { min-height: 620px; padding: 2.5rem 1rem; }
+  .reviews-section { min-height: clamp(420px, 60svh, 620px); min-height: clamp(420px, 60dvh, 620px); }
+  .reviews-overlay { min-height: clamp(420px, 60svh, 620px); min-height: clamp(420px, 60dvh, 620px); padding: 2.5rem 1rem; }
   .review-card { padding: 0.75rem 0.85rem; gap: 0.4rem; }
   .reviews-overlay-inner { gap: 1.1rem; }
   .reviews-aggregate { width: 100%; justify-content: center; }
@@ -1339,14 +1380,20 @@ footer.footer-pro { background: var(--ink); border-top: 0.5px solid #1a1a1a; pad
 .map-info-link:hover { color: var(--ink-weak); border-color: var(--ink-weak); }
 .map-directions-cta { display: inline-flex; align-items: center; gap: 0.5rem; margin-top: 0.6rem; padding: 0.6rem 1rem; background: var(--ink); color: var(--paper-strong); text-decoration: none; font-size: 0.75rem; letter-spacing: 0.18em; text-transform: uppercase; font-weight: 500; border: 0.5px solid var(--ink); transition: background 0.2s, color 0.2s; align-self: flex-start; min-height: var(--touch-min); }
 .map-directions-cta:hover { background: transparent; color: var(--ink); }
-.map-frame-wrap { position: relative; border: 0.5px solid #ddd9d0; overflow: hidden; min-height: 420px; }
+.map-frame-wrap { position: relative; border: 0.5px solid #ddd9d0; overflow: hidden; min-height: clamp(300px, 45svh, 480px); min-height: clamp(300px, 45dvh, 480px); }
 .map-frame-wrap::after { content: ''; position: absolute; inset: 0; pointer-events: none; box-shadow: inset 0 0 30px rgba(245, 243, 239, 0.35); }
-.map-frame { width: 100%; height: 100%; min-height: 420px; border: none; display: block; filter: grayscale(1) contrast(0.9) brightness(1.05); transition: filter 0.4s ease; }
+.map-frame { width: 100%; height: 100%; min-height: clamp(300px, 45svh, 480px); min-height: clamp(300px, 45dvh, 480px); border: none; display: block; filter: grayscale(1) contrast(0.9) brightness(1.05); transition: filter 0.4s ease; }
 .map-frame:hover { filter: grayscale(0.3) contrast(1) brightness(1); }
 @media (max-width: 768px) {
   .map-layout { grid-template-columns: 1fr; gap: 2.5rem; }
   .map-frame-wrap, .map-frame { min-height: 300px; }
   .map-info { gap: 1.5rem; }
+}
+/* Tablet portrait (iPad portrait, Surface, Z Fold unfolded) — must come AFTER
+   the base .map-layout rule to win source-order tie. */
+@media (min-width: 769px) and (max-width: 1099px) and (orientation: portrait),
+       (min-width: 769px) and (max-width: 1099px) and (pointer: coarse) {
+  .map-layout { grid-template-columns: 1fr; gap: 2rem; }
 }
 
 /* BARBER HOVER BIO (homepage Barbers section) */
@@ -1429,7 +1476,7 @@ footer.footer-pro { background: var(--ink); border-top: 0.5px solid #1a1a1a; pad
 
 /* COOKIE BANNER */
 .cookie-banner { position: fixed; bottom: 0; left: 0; right: 0; z-index: 80; background: #e8e3d8; border-top: 0.5px solid #ccc8bb; padding: 1rem 2rem; display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap; padding-bottom: calc(1rem + env(safe-area-inset-bottom)); }
-.cookie-banner-text { flex: 1; font-size: 0.78rem; letter-spacing: 0.02em; color: var(--ink-weak); line-height: 1.6; margin: 0; min-width: 200px; max-width: var(--measure); }
+.cookie-banner-text { flex: 1; font-size: 0.78rem; letter-spacing: 0.02em; color: var(--ink-weak); line-height: 1.6; margin: 0; min-width: 0; max-width: var(--measure); }
 .cookie-banner-link { background: none; border: none; padding: 0; color: var(--ink-strong); font-size: inherit; letter-spacing: inherit; font-family: inherit; cursor: pointer; text-decoration: underline; text-decoration-color: var(--text-muted-light); transition: color 0.2s; }
 .cookie-banner-link:hover { color: var(--ink); }
 .cookie-banner-actions { display: flex; gap: 0.6rem; flex-shrink: 0; }
