@@ -123,7 +123,8 @@ export default function Reviews() {
   const sectionNumber = useT('04 / OPINIE', '04 / REVIEWS');
   const sectionTitle = useT('Co mówią klienci', 'What Clients Say');
   const aggregateLabel = useT('Ocena w Google', 'Google rating');
-  const allReviewsLink = useT('Wszystkie opinie w Google →', 'All reviews on Google →');
+  const seeReviewsLabel = useT('Zobacz opinie', 'Read reviews');
+  const googleMapsAria = useT('Zobacz opinie na Google Maps', 'See reviews on Google Maps');
 
   const total = cols * rows;
   const bricks = [];
@@ -171,15 +172,18 @@ export default function Reviews() {
               href="https://share.google/YjV0HAKR6jNQyiiHg"
               target="_blank"
               rel="noopener noreferrer"
-              aria-label="Open Google Maps reviews"
+              aria-label={googleMapsAria}
             >
               <GoogleG size={22} />
-              <span className="reviews-aggregate-google">Google Maps</span>
+              <span className="reviews-aggregate-right-text">
+                <span className="reviews-aggregate-right-label">{seeReviewsLabel}</span>
+                <span className="reviews-aggregate-google">
+                  Google Maps
+                  <span className="reviews-aggregate-arrow" aria-hidden="true">→</span>
+                </span>
+              </span>
             </a>
           </div>
-          <a className="reviews-overlay-link" href="https://share.google/YjV0HAKR6jNQyiiHg" target="_blank" rel="noopener noreferrer">
-            {allReviewsLink}
-          </a>
         </div>
       </div>
     </section>

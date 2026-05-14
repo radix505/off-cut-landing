@@ -25,7 +25,7 @@ services:
       postgres:
         condition: service_healthy
     environment:
-      DATABASE_URL: postgres://offcut:offcut@postgres:5432/offcut
+      DATABASE_URL: ${DATABASE_URL:-postgres://offcut:offcut@postgres:5432/offcut}
       NODE_ENV: development
       HOST: 0.0.0.0
       PORT: "3001"
@@ -39,6 +39,13 @@ services:
       - .:/app:cached         # live source — HMR picks up changes
       - /app/node_modules     # mask host node_modules with container-installed deps
     command: npm run dev:all
+    networks:
+      - default
+      - dokploy-network
 
 volumes:
   postgres-data:
+
+networks:
+  dokploy-network:
+    external: true

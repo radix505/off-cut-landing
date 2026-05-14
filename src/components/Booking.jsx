@@ -3,7 +3,7 @@ import { useT, useLang } from '../context/LangContext';
 import { useReveal } from '../hooks/useReveal';
 import { useRouter } from '../context/RouterContext';
 import { buildSlots } from '../data/booking-config';
-import { HOURS_SUMMARY } from '../data/businessHours';
+import { BUSINESS_HOURS, HOURS_SUMMARY } from '../data/businessHours';
 import { useCatalog } from '../context/CatalogContext';
 import BookingTimeWheel from './BookingTimeWheel';
 
@@ -227,6 +227,7 @@ export default function Booking() {
     if (!d) return;
     const picked = new Date(calYear, calMonth, d);
     if (picked < today) return;
+    if (BUSINESS_HOURS[picked.getDay()] == null) return;
     setDate(picked); setSlot(null);
   }
 
@@ -234,6 +235,7 @@ export default function Booking() {
   const isToday       = d => { const n = new Date(); return d && n.getFullYear()===calYear && n.getMonth()===calMonth && n.getDate()===d; };
   const isSelected    = d => date && d && date.getFullYear()===calYear && date.getMonth()===calMonth && date.getDate()===d;
   const isFullyBooked = d => d && fullyBookedDates.has(isoFromDay(d));
+  const isClosed      = d => !!d && BUSINESS_HOURS[new Date(calYear, calMonth, d).getDay()] == null;
 
   const canAdvance = [
     () => !!barber,
@@ -523,10 +525,10 @@ export default function Booking() {
                   {calDays.map((d, i) => (
                     <button
                       key={i}
-                      className={`bcal-day${!d?' empty':''}${d&&isPast(d)?' past':''}${isToday(d)?' today':''}${isSelected(d)?' sel':''}${isFullyBooked(d)?' unavail':''}`}
+                      className={`bcal-day${!d?' empty':''}${d&&isPast(d)?' past':''}${isToday(d)?' today':''}${isSelected(d)?' sel':''}${(!isPast(d)&&(isFullyBooked(d)||isClosed(d)))?' unavail':''}`}
                       onClick={() => pickDay(d)}
-                      disabled={!d || isPast(d)}
-                      title={isFullyBooked(d) ? (lang==='pl' ? 'Brak wolnych terminów' : 'No slots available') : undefined}
+                      disabled={!d || isPast(d) || isClosed(d)}
+                      title={isClosed(d) ? (lang==='pl' ? 'Zamknięte' : 'Closed') : isFullyBooked(d) ? (lang==='pl' ? 'Brak wolnych terminów' : 'No slots available') : undefined}
                     >{d||''}</button>
                   ))}
                 </div>

@@ -11,8 +11,8 @@ const BARBERS = [
     keys: ['NICO'],
     bioPL: 'Opis Nico pojawi się tutaj wkrótce. Pasjonat klasycznych technik barberskich z wieloletnim doświadczeniem.',
     bioEN: "Nico's description coming soon. A passionate barber with years of experience in classic techniques.",
-    longBioPL: 'Pełny opis Nico pojawi się tutaj. Tutaj możesz opisać jego historię, doświadczenie, pasje i specjalizacje. Ten tekst jest placeholderem — wypełnij go kiedy będziesz gotowy.',
-    longBioEN: "Full bio coming soon. Here you can describe his story, experience, passions and specialisations. This text is a placeholder — fill it in when you're ready.",
+    longBioPL: 'Pełny opis Nico pojawi się tutaj. Tutaj możesz opisać jej historię, doświadczenie, pasje i specjalizacje. Ten tekst jest placeholderem — wypełnij go kiedy będziesz gotowy.',
+    longBioEN: "Full bio coming soon. Here you can describe her story, experience, passions and specialisations. This text is a placeholder — fill it in when you're ready.",
     tags: [
       { pl: 'Klasyczne strzyżenie', en: 'Classic Cut' },
       { pl: 'Broda', en: 'Beard' },

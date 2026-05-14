@@ -23,7 +23,7 @@ services:
       postgres:
         condition: service_healthy
     environment:
-      DATABASE_URL: postgres://offcut:offcut@postgres:5432/offcut
+      DATABASE_URL: ${DATABASE_URL:-postgres://offcut:offcut@postgres:5432/offcut}
       NODE_ENV: production
       HOST: 0.0.0.0
       PORT: "3001"
@@ -32,6 +32,13 @@ services:
       TELEGRAM_MANAGER_IDS: ${TELEGRAM_MANAGER_IDS:-}
     ports:
       - "3001:3001"
+    networks:
+      - default
+      - dokploy-network
 
 volumes:
   postgres-data:
+
+networks:
+  dokploy-network:
+    external: true

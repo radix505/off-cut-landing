@@ -45,12 +45,6 @@ function mergedPriceLabel(s, lang) {
   return lang === 'pl' ? `od ${min} PLN` : `from ${min} PLN`;
 }
 
-function singleDuration(s) {
-  const variants = s.variants ?? [s];
-  const set = new Set(variants.map((v) => v.duration).filter(Boolean));
-  return set.size === 1 ? variants[0].duration : null;
-}
-
 function CategoryColumn({ category, items, lang, barberById, loading, revealDelay, onSelect }) {
   const eyebrowLang = lang === 'pl' ? category.altPL : category.altEN;
   const merged = useMemo(() => mergeByName(items), [items]);
@@ -73,7 +67,6 @@ function CategoryColumn({ category, items, lang, barberById, loading, revealDela
         <ul className="services-index">
           {merged.map((s) => {
             const name = (lang === 'pl' ? s.namePL : s.nameEN) || s.namePL || s.nameEN || '';
-            const dur = singleDuration(s);
             const price = mergedPriceLabel(s, lang);
             return (
               <li key={s.id}>
@@ -106,7 +99,6 @@ function CategoryColumn({ category, items, lang, barberById, loading, revealDela
                       })}
                     </span>
                   )}
-                  {dur ? <span className="services-index-dur">{dur}</span> : null}
                   {price ? <span className="services-index-price">{price}</span> : null}
                 </button>
               </li>
