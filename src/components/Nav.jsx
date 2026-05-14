@@ -132,6 +132,9 @@ export default function Nav() {
               {useT('Zarezerwuj', 'Book Now')}
             </button>
           </li>
+          <li className="nav-mobile-lang-item">
+            <LangToggle lang={lang} onToggle={toggleLang} />
+          </li>
         </ul>
       </div>
 

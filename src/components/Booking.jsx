@@ -99,6 +99,8 @@ export default function Booking() {
   const { lang } = useLang();
   const { navState, clearNavState } = useRouter();
   const { barbers: BARBERS, services: ALL_SERVICES } = useCatalog();
+  // TEMPORARY: dim + disable these barbers — remove IDs to re-enable
+  const SUSPENDED_BARBER_IDS = new Set([1, 3]);
 
   const [step,      setStep]      = useState(1);
   const [barber,    setBarber]    = useState(null);
@@ -109,6 +111,7 @@ export default function Booking() {
   const [calBase,   setCalBase]   = useState(() => { const d = new Date(); d.setDate(1); return d; });
   const [name,      setName]      = useState('');
   const [phone,     setPhone]     = useState('');
+  const [email,     setEmail]     = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [unavailable,  setUnavailable]  = useState(() => new Set());
   const [loadingAvail, setLoadingAvail] = useState(false);
@@ -117,6 +120,7 @@ export default function Booking() {
   const [errorMsg,     setErrorMsg]     = useState('');
   const [filteredBarberIds, setFilteredBarberIds] = useState(null);
   const wizardEndRef = useRef(null);
+  const servicesListRef = useRef(null);
 
   const calYear  = calBase.getFullYear();
   const calMonth = calBase.getMonth();
@@ -161,6 +165,16 @@ export default function Booking() {
     });
     return () => cancelAnimationFrame(id);
   }, [date, step]);
+
+  useEffect(() => {
+    if (!category || step !== 2) return;
+    const el = servicesListRef.current;
+    if (!el) return;
+    const id = requestAnimationFrame(() => {
+      el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    });
+    return () => cancelAnimationFrame(id);
+  }, [category, step]);
 
   const today = new Date(); today.setHours(0, 0, 0, 0);
 
@@ -246,7 +260,7 @@ export default function Booking() {
 
   function reset() {
     setStep(1); setBarber(null); setCategory(null); setService(null); setDate(null); setSlot(null);
-    setName(''); setPhone(''); setSubmitted(false);
+    setName(''); setPhone(''); setEmail(''); setSubmitted(false);
     setUnavailable(new Set()); setIsSubmitting(false); setErrorMsg('');
     setFilteredBarberIds(null);
   }
@@ -265,6 +279,7 @@ export default function Booking() {
           slot,
           name:      name.trim(),
           phone:     phone.trim(),
+          email:     email.trim(),
         }),
       });
       if (res.ok) {
@@ -324,8 +339,14 @@ export default function Booking() {
         <div className="booking-success-icon">✓</div>
         <div className="booking-success-title">{useT('Prośba wysłana!','Request Sent!')}</div>
         <p className="booking-success-text">
-          {useT('Potwierdzimy Twoją wizytę telefonicznie lub SMS-em.','We\'ll confirm your appointment by phone or SMS.')}
+          {useT('Potwierdzimy Twoją wizytę telefonicznie, SMS-em lub e-mailem.','We\'ll confirm your appointment by phone, SMS or email.')}
         </p>
+        <div className="booking-success-email">
+          <span className="booking-success-email-label">{useT('Potwierdzenie na e-mail', 'Confirmation email')}</span>
+          <span className="booking-success-email-addr">
+            {email.trim() || useT('— podaj e-mail przy następnej rezerwacji', '— add your email at next booking')}
+          </span>
+        </div>
         <div className="booking-success-summary">
           <span>{barber?.name}</span><span className="bss-dot">·</span>
           <span>{lang==='pl' ? service?.namePL : service?.nameEN}</span><span className="bss-dot">·</span>
@@ -406,11 +427,15 @@ export default function Booking() {
             <div className="booking-step-body">
               <div className="bwiz-heading">{useT('Wybierz barbera','Choose your barber')}</div>
               <div className="booking-barbers-grid">
-                {BARBERS.filter(b => !filteredBarberIds || filteredBarberIds.has(b.id)).map(b => (
+                {BARBERS.filter(b => !filteredBarberIds || filteredBarberIds.has(b.id)).map(b => {
+                  const suspended = SUSPENDED_BARBER_IDS.has(b.id);
+                  return (
                   <button
                     key={b.id}
-                    className={`booking-barber-card${barber?.id===b.id?' selected':''}`}
+                    className={`booking-barber-card${barber?.id===b.id?' selected':''}${suspended?' suspended':''}`}
+                    disabled={suspended}
                     onClick={() => {
+                      if (suspended) return;
                       if (service?.variants?.length) {
                         setService(pickVariantForBarber(service, b.id));
                       } else if (barber?.id !== b.id) {
@@ -423,8 +448,8 @@ export default function Booking() {
                     <img className="booking-barber-av" src={b.photo} alt={b.name} loading="lazy" decoding="async" />
                     <div className="booking-barber-name">{b.name}</div>
                     <div className="booking-barber-title">{lang==='pl' ? b.titlePL : b.titleEN}</div>
-                  </button>
-                ))}
+                  </button>);
+                })}
               </div>
             </div>
           )}
@@ -480,7 +505,7 @@ export default function Booking() {
                     </span>
                   </button>
                   <div className="bwiz-heading">{useT('Wybierz usługę','Choose a service')}</div>
-                  <div className="booking-services-list">
+                  <div className="booking-services-list" ref={servicesListRef}>
                     {ALL_SERVICES
                       .filter(s => barber && (s.barberIds ?? []).includes(barber.id) && categorize(s) === category)
                       .map(s => (
@@ -579,6 +604,10 @@ export default function Booking() {
                 <div className="form-group">
                   <label className="form-label">{useT('Telefon','Phone')}</label>
                   <input className="form-input" type="tel" placeholder="+48 513 340 013" value={phone} onChange={e => setPhone(e.target.value)} />
+                </div>
+                <div className="form-group">
+                  <label className="form-label">{useT('E-mail','E-mail')}</label>
+                  <input className="form-input" type="email" placeholder="jan@example.com" value={email} onChange={e => setEmail(e.target.value)} />
                 </div>
               </div>
             </div>

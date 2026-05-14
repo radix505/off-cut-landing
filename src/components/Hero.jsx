@@ -60,14 +60,13 @@ export default function Hero() {
         </h1>
         <span className="hero-rule" aria-hidden="true" />
         <div className="hero-cta">
-          <button className="btn-primary" onClick={() => navigate('/booking')}>{useT('Zarezerwuj wizytę', 'Book Appointment')}</button>
+          <button className="btn-primary" onClick={() => navigate('/booking')}>{useT('Zarezerwuj wizytę', 'Book an appointment')}</button>
           <button className="btn-ghost" onClick={() => navigate('/services')}>{useT('Zobacz usługi', 'View Services')}</button>
           {lastBooking && (
             <button
               className="hero-rebook"
               onClick={() => navigate('/booking', {
                 preselectedBarber: lastBooking.barberId,
-                preselectedService: lastBooking.serviceId,
               })}
             >
               {rebookLabel} →
