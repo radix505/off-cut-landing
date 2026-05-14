@@ -1272,7 +1272,7 @@ footer.footer-pro { background: var(--ink); border-top: 0.5px solid #1a1a1a; pad
   background: var(--paper);
   position: relative;
   padding: 0;
-  min-height: clamp(560px, 70svh, 780px);
+  min-height: clamp(680px, 80svh, 900px);
   overflow: hidden;
 }
 
@@ -1348,7 +1348,7 @@ footer.footer-pro { background: var(--ink); border-top: 0.5px solid #1a1a1a; pad
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: clamp(560px, 70svh, 780px);
+  min-height: clamp(680px, 80svh, 900px);
   padding: 4rem 2rem;
   pointer-events: none;
   background:
@@ -1412,15 +1412,15 @@ footer.footer-pro { background: var(--ink); border-top: 0.5px solid #1a1a1a; pad
 .reviews-aggregate-right:hover .reviews-aggregate-arrow { transform: translateX(4px); }
 
 @media (max-width: 900px) {
-  .reviews-section { min-height: clamp(480px, 65svh, 700px); }
-  .reviews-overlay { min-height: clamp(480px, 65svh, 700px); padding: 3rem 1.5rem; }
+  .reviews-section { min-height: clamp(600px, 75svh, 820px); }
+  .reviews-overlay { min-height: clamp(600px, 75svh, 820px); padding: 3rem 1.5rem; }
   .review-card { padding: 0.85rem 0.95rem; gap: 0.45rem; }
   .reviews-aggregate { padding: 1rem 1.3rem; gap: 1.1rem; }
   .reviews-aggregate-score { font-size: 2.5rem; }
 }
 @media (max-width: 540px) {
-  .reviews-section { min-height: clamp(420px, 60svh, 620px); }
-  .reviews-overlay { min-height: clamp(420px, 60svh, 620px); padding: 2.5rem 1rem; }
+  .reviews-section { min-height: clamp(540px, 70svh, 740px); }
+  .reviews-overlay { min-height: clamp(540px, 70svh, 740px); padding: 2.5rem 1rem; }
   .review-card { padding: 0.75rem 0.85rem; gap: 0.4rem; }
   .reviews-overlay-inner { gap: 1.1rem; }
   .reviews-aggregate { width: 100%; justify-content: center; gap: 0.85rem; padding: 0.95rem 1rem; }
