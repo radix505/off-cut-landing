@@ -54,11 +54,10 @@ export default function Hero() {
           <span className="hero-eyebrow-est">{useT('ZAŁ. 2019', 'EST. 2019')}</span>
         </div>
         <h1 className="hero-title">
-          <span className="hero-title-line">THE</span>
-          <span className="hero-title-line">SHARP</span>
-          <span className="hero-title-line">ART</span>
+          <span className="hero-title-line" onAnimationEnd={e => { e.currentTarget.style.animation = 'none'; }}>THE</span>
+          <span className="hero-title-line" onAnimationEnd={e => { if (e.animationName === 'slideFromLeft') e.currentTarget.style.animation = 'none'; }}>SHARP</span>
+          <span className="hero-title-line" onAnimationEnd={e => { e.currentTarget.style.animation = 'none'; }}>ART</span>
         </h1>
-        <span className="hero-rule" aria-hidden="true" />
         <div className="hero-cta">
           <button className="btn-primary" onClick={() => navigate('/booking')}>{useT('Zarezerwuj wizytę', 'Book an appointment')}</button>
           <button className="btn-ghost" onClick={() => navigate('/services')}>{useT('Zobacz usługi', 'View Services')}</button>

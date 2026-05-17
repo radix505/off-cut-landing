@@ -6,6 +6,7 @@ import LangSplash from './components/LangSplash';
 import LogoIntro from './components/LogoIntro';
 import CookieBanner from './components/CookieBanner';
 import ScissorsTransition from './components/ScissorsTransition';
+import MobileAppBar from './components/MobileAppBar';
 import HomePage from './pages/HomePage';
 
 class ErrorBoundary extends Component {
@@ -69,6 +70,7 @@ export default function App() {
             <LogoIntro />
             <ScissorsTransition />
             <AppRoutes />
+            <MobileAppBar />
             <CookieBanner />
           </RouterProvider>
         </CatalogProvider>

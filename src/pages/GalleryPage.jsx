@@ -73,7 +73,6 @@ export default function GalleryPage() {
           <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
           {useT('Wróć', 'Back')}
         </button>
-        <div className="blog-page-eyebrow">{useT('Off Cut — Barbershop', 'Off Cut — Barbershop')}</div>
         <h1 className="blog-page-title">{useT('Galeria\nPrac', 'Our\nWork')}</h1>
         <p className="blog-page-sub">{useT('Każde cięcie to historia. Oto nasze rzemiosło.', "Every cut tells a story. Here's our craft.")}</p>
       </div>

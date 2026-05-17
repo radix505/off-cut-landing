@@ -1,6 +1,24 @@
 import { useT, useLang } from '../context/LangContext';
 import { useRouter } from '../context/RouterContext';
-import { HOURS_DISPLAY } from '../data/businessHours';
+import { HOURS_DISPLAY, BUSINESS_HOURS } from '../data/businessHours';
+
+const DAY_NAMES_PL = ['Niedziela','Poniedziałek','Wtorek','Środa','Czwartek','Piątek','Sobota'];
+const DAY_NAMES_EN = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+
+function getStatus(lang) {
+  const now = new Date(), day = now.getDay(), hour = now.getHours() + now.getMinutes() / 60;
+  const h = BUSINESS_HOURS[day], pad = (n) => String(n).padStart(2, '0');
+  if (!h || hour >= h.end) {
+    let next = day;
+    for (let i = 1; i <= 7; i++) { next = (day + i) % 7; if (BUSINESS_HOURS[next]) break; }
+    const nh = BUSINESS_HOURS[next], diff = (next - day + 7) % 7;
+    const namePL = diff === 1 ? 'jutro' : `w ${DAY_NAMES_PL[next]}`;
+    const nameEN = diff === 1 ? 'tomorrow' : DAY_NAMES_EN[next];
+    return { open: false, label: lang === 'pl' ? `Zamknięte · otwieramy ${namePL} o ${pad(nh.start)}:00` : `Closed · opens ${nameEN} at ${pad(nh.start)}:00` };
+  }
+  if (hour < h.start) return { open: false, label: lang === 'pl' ? `Zamknięte · otwieramy o ${pad(h.start)}:00` : `Closed · opens at ${pad(h.start)}:00` };
+  return { open: true, label: lang === 'pl' ? `Otwarte · zamykamy o ${pad(h.end)}:00` : `Open · closes at ${pad(h.end)}:00` };
+}
 
 const ScissorsIcon = () => (
   <svg viewBox="0 0 100 40" fill="none" xmlns="http://www.w3.org/2000/svg" width="36" height="14">
@@ -15,6 +33,7 @@ const ScissorsIcon = () => (
 export default function Footer() {
   const { navigate } = useRouter();
   const { lang } = useLang();
+  const status = getStatus(lang);
   return (
     <footer className="footer-pro">
       <div className="footer-pro-inner">
@@ -83,6 +102,10 @@ export default function Footer() {
         {/* Hours */}
         <div className="footer-col">
           <div className="footer-col-label">{useT('Godziny otwarcia', 'Opening Hours')}</div>
+          <div className="footer-status">
+            <span className={`contact-status-dot${status.open ? ' contact-status-dot--open' : ' contact-status-dot--closed'}`} />
+            <span className="footer-status-text">{status.label}</span>
+          </div>
           <ul className="footer-pro-hours">
             {HOURS_DISPLAY.map((row) => (
               <li key={row.dayEN}>

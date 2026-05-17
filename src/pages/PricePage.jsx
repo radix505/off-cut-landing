@@ -91,7 +91,6 @@ export default function PricePage() {
           <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
           {useT('Wróć', 'Back')}
         </button>
-        <div className="blog-page-eyebrow">Off Cut — Barbershop</div>
         <h1 className="blog-page-title">{useT('Usługi', 'Services')}</h1>
         <p className="blog-page-sub">
           {useT(
@@ -99,6 +98,14 @@ export default function PricePage() {
             'All services in one place. Time and price — no surprises.'
           )}
         </p>
+        <div className="prices-hero-cta">
+          <button className="btn-primary" onClick={() => navigate('/booking')}>
+            {useT('Zarezerwuj wizytę', 'Book an appointment')}
+          </button>
+          <button className="btn-ghost" onClick={() => navigate('/crew')}>
+            {useT('Poznaj ekipę', 'Meet the Crew')}
+          </button>
+        </div>
       </div>
 
       <section className="prices-full-section">

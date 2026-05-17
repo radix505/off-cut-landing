@@ -24,7 +24,6 @@ export default function CrewPage() {
         </button>
         <div className="crew-page-header">
           <div className="crew-page-header-text">
-            <div className="section-number" style={{ color: '#444' }}>{useT('/ ZESPÓŁ', '/ TEAM')}</div>
             <h1 className="crew-page-title">{useT('Meet\nthe\nCrew', 'Meet\nthe\nCrew')}</h1>
             <p className="crew-page-sub">{useT('Każdy z nas wnosi coś wyjątkowego. Razem tworzymy Off Cut.', 'Each of us brings something unique. Together we are Off Cut.')}</p>
           </div>

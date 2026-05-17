@@ -98,7 +98,6 @@ export default function PrivacyPage() {
     <>
       <Nav />
       <div className="prices-page-hero legal-hero">
-        <div className="blog-page-eyebrow">{c.eyebrow}</div>
         <h1 className="blog-page-title">{c.title}</h1>
         <p className="blog-page-sub legal-updated">{c.updated}</p>
       </div>

@@ -20,15 +20,19 @@ function samplePath(xPct, vw, rem) {
   const [x1, y1] = PATH[i + 1];
   const t = x1 === x0 ? 0 : (clamped - x0) / (x1 - x0);
   const yRem = y0 + (y1 - y0) * t;
-
   const dx = (x1 - x0) / 100 * vw;
   const dy = (y1 - y0) * rem;
   const angle = Math.atan2(dy, dx) * 180 / Math.PI;
-
   return { xPx: (clamped / 100) * vw, yRem, angle };
 }
 
-// Half-dimensions of the SVG (90×36) for centering via transform
+// Document-relative offsetTop — only changes on resize, not on scroll
+function getDocTop(el) {
+  let top = 0, node = el;
+  while (node) { top += node.offsetTop; node = node.offsetParent; }
+  return top;
+}
+
 const HW = 45;
 const HH = 18;
 
@@ -37,73 +41,85 @@ export default function ScrollScissors() {
   const topRef = useRef(null);
   const botRef = useRef(null);
 
-  const lastScrollY  = useRef(typeof window !== 'undefined' ? window.scrollY : 0);
-  const remCache     = useRef(typeof window !== 'undefined' ? parseFloat(getComputedStyle(document.documentElement).fontSize) : 16);
-  const barbersCache = useRef(null);
-
   useEffect(() => {
-    let rafId = null;
+    let rafId      = null;
+    let lastScrollY = window.scrollY;
+    let bladeState  = false; // track to avoid unnecessary DOM writes
 
-    const update = () => {
+    // Cached layout values — only refreshed on resize
+    let barbersDocTop = 0;
+    let vw  = window.innerWidth;
+    let vh  = window.innerHeight;
+    let rem = parseFloat(getComputedStyle(document.documentElement).fontSize);
+
+    function cacheLayout() {
+      const el = document.querySelector('#barbers');
+      if (el) barbersDocTop = getDocTop(el);
+      vw  = window.innerWidth;
+      vh  = window.innerHeight;
+      rem = parseFloat(getComputedStyle(document.documentElement).fontSize);
+    }
+    cacheLayout();
+
+    function setBlades(playing) {
+      if (bladeState === playing) return;
+      bladeState = playing;
+      const state = playing ? 'running' : 'paused';
+      if (topRef.current) topRef.current.style.animationPlayState = state;
+      if (botRef.current) botRef.current.style.animationPlayState = state;
+    }
+
+    function update() {
+      rafId = null;
       const el = elRef.current;
       if (!el) return;
 
-      if (!barbersCache.current) barbersCache.current = document.querySelector('#barbers');
-      const barbers = barbersCache.current;
-      if (!barbers) return;
+      const scrollY      = window.scrollY;
+      const scrollingDown = scrollY >= lastScrollY;
+      lastScrollY = scrollY;
 
-      const scrollingDown = window.scrollY >= lastScrollY.current;
-      lastScrollY.current = window.scrollY;
+      const offset  = 5 * rem;
+      // Viewport Y of barbers section top — no getBoundingClientRect needed
+      const rectTop = barbersDocTop - scrollY;
+      const isVisible = rectTop <= vh && rectTop >= -offset;
 
-      const rect   = barbers.getBoundingClientRect();
-      const vh     = window.innerHeight;
-      const vw     = window.innerWidth;
-      const rem    = remCache.current;
-      const offset = 5 * rem;
-
-      const isVisible = rect.top <= vh && rect.top >= -offset;
       if (!isVisible) {
-        el.style.opacity = '0';
-        topRef.current && (topRef.current.style.animationPlayState = 'paused');
-        botRef.current && (botRef.current.style.animationPlayState = 'paused');
+        if (el.style.opacity !== '0') el.style.opacity = '0';
+        setBlades(false);
         return;
       }
 
-      const progress  = Math.max(0, Math.min(1, (vh - rect.top) / (vh + offset)));
-      const { xPx, yRem, angle } = samplePath(progress * 100, vw, rem);
-
-      // y in viewport coords — barbers top + path y offset from that top
-      const y = rect.top + yRem * rem;
-
+      const progress = Math.max(0, Math.min(1, (vh - rectTop) / (vh + offset)));
       const edgeFade = Math.min(progress * 6, (1 - progress) * 6, 1);
 
-      // Use transform only (no left/top changes) — stays on compositor thread
-      el.style.transform = `translate(${xPx - HW}px, ${y - HH}px) rotate(${angle}deg) scaleX(${scrollingDown ? 1 : -1})`;
-      el.style.opacity    = String(edgeFade);
+      const { xPx, yRem, angle } = samplePath(progress * 100, vw, rem);
+      const tx = xPx - HW;
+      const ty = rectTop + yRem * rem - HH;
 
-      const play = edgeFade > 0 ? 'running' : 'paused';
-      topRef.current && (topRef.current.style.animationPlayState = play);
-      botRef.current && (botRef.current.style.animationPlayState = play);
-    };
+      el.style.transform = `translate(${tx}px,${ty}px) rotate(${angle}deg) scaleX(${scrollingDown ? 1 : -1})`;
+      el.style.opacity   = String(edgeFade);
+      setBlades(edgeFade > 0);
+    }
 
     const onScroll = () => {
       if (rafId) return;
-      rafId = requestAnimationFrame(() => { rafId = null; update(); });
+      rafId = requestAnimationFrame(update);
     };
+
     const onResize = () => {
-      remCache.current  = parseFloat(getComputedStyle(document.documentElement).fontSize);
-      barbersCache.current = null;
+      cacheLayout();
       if (rafId) return;
-      rafId = requestAnimationFrame(() => { rafId = null; update(); });
+      rafId = requestAnimationFrame(update);
     };
 
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('resize', onResize, { passive: true });
-    update();
+    rafId = requestAnimationFrame(update);
+
     return () => {
+      if (rafId) cancelAnimationFrame(rafId);
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener('resize', onResize);
-      if (rafId) cancelAnimationFrame(rafId);
     };
   }, []);
 
@@ -116,7 +132,6 @@ export default function ScrollScissors() {
         left: 0,
         top: 0,
         opacity: 0,
-        transition: 'opacity 0.15s',
         zIndex: 50,
         pointerEvents: 'none',
         mixBlendMode: 'difference',
