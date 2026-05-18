@@ -99,8 +99,6 @@ export default function Booking() {
   const { lang } = useLang();
   const { navState, clearNavState } = useRouter();
   const { barbers: BARBERS, services: ALL_SERVICES } = useCatalog();
-  // TEMPORARY: dim + disable these barbers — remove IDs to re-enable
-  const SUSPENDED_BARBER_IDS = new Set([1, 3]);
 
   const [step,      setStep]      = useState(1);
   const [barber,    setBarber]    = useState(null);
@@ -438,7 +436,7 @@ export default function Booking() {
               <div className="bwiz-heading">{useT('Wybierz barbera','Choose your barber')}</div>
               <div className="booking-barbers-grid">
                 {BARBERS.filter(b => !filteredBarberIds || filteredBarberIds.has(b.id)).map(b => {
-                  const suspended = SUSPENDED_BARBER_IDS.has(b.id);
+                  const suspended = !!b.suspended;
                   return (
                   <button
                     key={b.id}

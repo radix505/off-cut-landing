@@ -55,6 +55,12 @@ export const SCHEMA = [
     PRIMARY KEY (service_id, barber_id)
     )`,
 
+  `CREATE TABLE IF NOT EXISTS app_meta (
+                                         key        TEXT PRIMARY KEY,
+                                         value      TEXT NOT NULL,
+                                         applied_at TIMESTAMPTZ NOT NULL DEFAULT now()
+    )`,
+
   `CREATE TABLE IF NOT EXISTS barber_tags (
                                             barber_id  INTEGER NOT NULL REFERENCES barbers(id) ON DELETE CASCADE,
     tag_pl     TEXT NOT NULL,

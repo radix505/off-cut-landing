@@ -1,10 +1,9 @@
 import { pool } from '../db.js';
 
-const SQL_LIST_ACTIVE_FOR_CATALOG = `
+const SQL_LIST_FOR_CATALOG = `
   SELECT id, name, photo, title_pl, title_en, slug, delay,
-         bio_pl, bio_en, long_bio_pl, long_bio_en
+         bio_pl, bio_en, long_bio_pl, long_bio_en, active
   FROM barbers
-  WHERE active = 1
   ORDER BY sort_order, id
 `;
 
@@ -53,8 +52,8 @@ const SQL_INSERT_TAG = `
 
 const runner = (client) => client ?? pool;
 
-export async function listActiveForCatalog({ client } = {}) {
-  const { rows } = await runner(client).query(SQL_LIST_ACTIVE_FOR_CATALOG);
+export async function listForCatalog({ client } = {}) {
+  const { rows } = await runner(client).query(SQL_LIST_FOR_CATALOG);
   return rows;
 }
 

@@ -47,12 +47,14 @@ export default function BarberPage() {
               ))}
             </div>
 
-            <button
-              className="barber-page-book"
-              onClick={() => navigate('/booking', { preselectedBarber: barber.slug })}
-            >
-              {lang === 'pl' ? `Zarezerwuj u ${firstNameProper}` : `Book with ${firstNameProper}`}
-            </button>
+            {!barber.suspended && (
+              <button
+                className="barber-page-book"
+                onClick={() => navigate('/booking', { preselectedBarber: barber.slug })}
+              >
+                {lang === 'pl' ? `Zarezerwuj u ${firstNameProper}` : `Book with ${firstNameProper}`}
+              </button>
+            )}
           </div>
 
           <div className="barber-page-photo-col">

@@ -7,7 +7,7 @@ function formatPrice(pln) {
 
 export async function getCatalog() {
   const [barberRows, tagRows, serviceRows, linkRows] = await Promise.all([
-    barbersRepo.listActiveForCatalog(),
+    barbersRepo.listForCatalog(),
     barbersRepo.listTags(),
     servicesRepo.listActiveForCatalog(),
     servicesRepo.listServiceBarberLinks(),
@@ -30,6 +30,7 @@ export async function getCatalog() {
     bio: { pl: r.bio_pl ?? '', en: r.bio_en ?? '' },
     longBio: { pl: r.long_bio_pl ?? '', en: r.long_bio_en ?? '' },
     tags: tagsByBarber.get(r.id) ?? [],
+    suspended: r.active === 0,
   }));
 
   const linksByService = new Map();
