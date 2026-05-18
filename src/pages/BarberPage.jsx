@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import Nav from '../components/Nav';
 import Footer from '../components/Footer';
 import { useT, useLang } from '../context/LangContext';
@@ -9,9 +10,19 @@ export default function BarberPage() {
   const { lang } = useLang();
   const { barbers, loading } = useCatalog();
 
-  if (loading && barbers.length === 0) return <><Nav /></>;
+  const matched = crewSlug ? barbers.find((b) => b.slug === crewSlug) : null;
+  // A given slug with no match means the barber is inactive/hidden or unknown —
+  // don't fall back to another barber; send the visitor back to the crew list.
+  const notFound = !loading && barbers.length > 0 && Boolean(crewSlug) && !matched;
 
-  const barber = barbers.find((b) => b.slug === crewSlug) ?? barbers[0];
+  useEffect(() => {
+    if (notFound) navigate('/crew');
+  }, [notFound, navigate]);
+
+  if (loading && barbers.length === 0) return <><Nav /></>;
+  if (notFound) return <><Nav /></>;
+
+  const barber = matched ?? barbers[0];
   if (!barber) return <><Nav /></>;
 
   const firstNameProper = barber.name.charAt(0) + barber.name.slice(1).toLowerCase();

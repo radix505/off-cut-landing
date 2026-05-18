@@ -15,6 +15,7 @@ export const SCHEMA = [
                                         delay        INTEGER NOT NULL DEFAULT 0
    )`,
   `CREATE INDEX IF NOT EXISTS idx_barbers_slug ON barbers(slug)`,
+  `ALTER TABLE barbers ADD COLUMN IF NOT EXISTS suspended INTEGER NOT NULL DEFAULT 0`,
 
   `CREATE TABLE IF NOT EXISTS services (
                                          id             TEXT PRIMARY KEY,

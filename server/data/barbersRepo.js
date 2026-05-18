@@ -2,19 +2,20 @@ import { pool } from '../db.js';
 
 const SQL_LIST_FOR_CATALOG = `
   SELECT id, name, photo, title_pl, title_en, slug, delay,
-         bio_pl, bio_en, long_bio_pl, long_bio_en, active
+         bio_pl, bio_en, long_bio_pl, long_bio_en, suspended
   FROM barbers
+  WHERE active = 1
   ORDER BY sort_order, id
 `;
 
 const SQL_LIST_ACTIVE_BRIEF = `
   SELECT id, name, title_pl
   FROM barbers
-  WHERE active = 1
+  WHERE active = 1 AND suspended = 0
   ORDER BY sort_order, id
 `;
 
-const SQL_ACTIVE_IDS = `SELECT id FROM barbers WHERE active = 1`;
+const SQL_ACTIVE_IDS = `SELECT id FROM barbers WHERE active = 1 AND suspended = 0`;
 
 const SQL_LIST_TAGS = `
   SELECT barber_id, tag_pl, tag_en
