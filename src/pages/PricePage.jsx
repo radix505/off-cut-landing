@@ -47,10 +47,10 @@ function mergedPriceLabel(s, lang) {
   return lang === 'pl' ? `od ${min} PLN` : `from ${min} PLN`;
 }
 
-function singleDuration(s) {
+function mergedDurationLabel(s) {
   const variants = s.variants ?? [s];
-  const set = new Set(variants.map(v => v.duration).filter(Boolean));
-  return set.size === 1 ? variants[0].duration : null;
+  const label = variants.map(v => v.duration).find(Boolean);
+  return label || null;
 }
 
 function groupByCategory(svcs) {
@@ -118,14 +118,13 @@ export default function PricePage() {
 
                 <div className="prices-group-header prices-group-header--cat">
                   <div className="prices-group-cat">
-                    <span className="prices-group-cat-num">{cat.num} /</span>
                     <span className="prices-group-cat-name">{catLabel}</span>
                   </div>
                 </div>
 
                 <div className="prices-service-list">
                   {group.services.map(s => {
-                    const dur = singleDuration(s);
+                    const dur = mergedDurationLabel(s);
                     const price = mergedPriceLabel(s, lang);
                     return (
                       <div
@@ -133,7 +132,6 @@ export default function PricePage() {
                         className="prices-service-row"
                         onClick={() => navigate('/booking', { preselectedService: s })}
                       >
-                        <span className="psr-num">{s.id}</span>
                         <div className="psr-info">
                           <span className="psr-name">{lang === 'pl' ? s.namePL : s.nameEN}</span>
                           <span className="psr-desc">{lang === 'pl' ? s.descPL : s.descEN}</span>

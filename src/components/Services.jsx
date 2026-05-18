@@ -55,7 +55,7 @@ function CategoryColumn({ category, items, lang, barberById, loading, revealDela
     <div className={`services-col reveal reveal-delay-${revealDelay}`}>
       <header className="services-col-header">
         <div className="services-col-num">
-          <span className="services-col-num-prefix">{category.num} /</span> {eyebrowLang}
+          <span className="services-col-num-prefix"></span> {eyebrowLang}
         </div>
       </header>
 

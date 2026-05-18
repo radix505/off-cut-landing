@@ -8,7 +8,7 @@ import fastifyStatic from '@fastify/static';
 import { initSchema, waitForDb, pool, ping } from './db.js';
 import bookingsRoutes from './routes/bookings.js';
 import catalogRoutes from './routes/catalog.js';
-import { seedCatalogIfEmpty, backfillBarberDetailsIfMissing, cleanServiceCopyIfNeeded } from './seed-catalog.js';
+import { seedCatalogIfEmpty, suspendInitialBarbersIfNeeded, backfillBarberDetailsIfMissing, cleanServiceCopyIfNeeded } from './seed-catalog.js';
 import { startBot, stopBot } from './bot/index.js';
 
 const here = dirname(fileURLToPath(import.meta.url));
@@ -21,6 +21,7 @@ const fastify = Fastify({
 await waitForDb({ log: fastify.log });
 await initSchema();
 await seedCatalogIfEmpty(fastify.log);
+await suspendInitialBarbersIfNeeded(fastify.log);
 await backfillBarberDetailsIfMissing(fastify.log);
 await cleanServiceCopyIfNeeded(fastify.log);
 

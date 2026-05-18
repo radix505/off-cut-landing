@@ -204,6 +204,25 @@ export async function cleanServiceCopyIfNeeded(logger) {
   return true;
 }
 
+// Run-once: suspend the barbers that were previously hardcoded as suspended in
+// the frontend, so reusing the `active` column preserves current live behavior.
+// Guarded by app_meta so a later manual re-activation is never overridden.
+export async function suspendInitialBarbersIfNeeded(logger) {
+  return withTransaction(async (client) => {
+    const { rows } = await client.query(
+      `INSERT INTO app_meta (key, value)
+       VALUES ('suspend_initial_barbers_v1', '1,3')
+       ON CONFLICT (key) DO NOTHING
+       RETURNING key`,
+    );
+    if (rows.length === 0) return false;
+
+    await client.query('UPDATE barbers SET active = 0 WHERE id IN (1, 3)');
+    logger?.info?.({ ids: [1, 3] }, 'initial barbers suspended');
+    return true;
+  });
+}
+
 export async function backfillBarberDetailsIfMissing(logger) {
   const missing = await barbersRepo.countMissingDetails();
   if (missing === 0) return false;
