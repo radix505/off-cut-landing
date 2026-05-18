@@ -31,7 +31,7 @@ const ScissorsIcon = () => (
 );
 
 export default function Footer() {
-  const { navigate } = useRouter();
+  const { navigate, page } = useRouter();
   const { lang } = useLang();
   const status = getStatus(lang);
   return (
@@ -120,7 +120,7 @@ export default function Footer() {
         <div className="footer-col">
           <div className="footer-col-label">{useT('Nawigacja', 'Navigation')}</div>
           <ul className="footer-pro-nav">
-            <li><a onClick={(e) => { e.preventDefault(); navigate('/'); }} href="/">{useT('Strona główna', 'Home')}</a></li>
+            <li><a onClick={(e) => { e.preventDefault(); page === 'home' ? window.scrollTo({ top: 0, behavior: 'smooth' }) : navigate('/'); }} href="/">{useT('Strona główna', 'Home')}</a></li>
             <li><a onClick={(e) => { e.preventDefault(); navigate('/crew'); }} href="/crew">{useT('Ekipa', 'Meet Crew')}</a></li>
             <li><a onClick={(e) => { e.preventDefault(); navigate('/gallery'); }} href="/gallery">{useT('Galeria', 'Gallery')}</a></li>
             <li><a onClick={(e) => { e.preventDefault(); navigate('/services'); }} href="/services">{useT('Usługi', 'Services')}</a></li>
