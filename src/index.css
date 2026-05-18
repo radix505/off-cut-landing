@@ -1079,13 +1079,12 @@ body.nav-drawer-is-open .mobile-app-bar { opacity: 0; pointer-events: none; }
   .booking-info-row { flex-wrap: wrap; gap: 1.5rem; }
   .booking-wizard { padding: 1.5rem; }
   .booking-barbers-grid { gap: 0.5rem; }
-  .booking-categories-grid { gap: 0.5rem; }
+  .booking-categories-grid { gap: 0.5rem; grid-template-columns: 1fr; }
   .booking-category-card { flex-direction: row; align-items: center; padding: 0.9rem 1.1rem; gap: 0.9rem; text-align: left; min-height: 0; }
   .bcat-icon { width: 30px; height: 30px; flex-shrink: 0; }
-  .bcat-num { top: 0.45rem; right: 0.7rem; }
   .bcat-name { font-size: 1.2rem; margin-top: 0; }
   .bcat-sub { font-size: 0.62rem; }
-  .bcat-count { margin-top: 0; }
+  .bcat-count { margin-top: 0; margin-left: auto; flex-shrink: 0; }
   .booking-service-item { padding: 0.6rem 1rem; }
   .bsi-name { font-size: 0.82rem; }
   .bsi-price { font-size: 0.85rem; }

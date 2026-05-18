@@ -160,11 +160,21 @@ export default function Booking() {
     if (step !== 3 || !date) return;
     const el = wizardEndRef.current;
     if (!el) return;
-    const id = requestAnimationFrame(() => {
+    const id = setTimeout(() => {
       el.scrollIntoView({ behavior: 'smooth', block: 'end' });
+    }, 120);
+    return () => clearTimeout(id);
+  }, [date, step]);
+
+  useEffect(() => {
+    if (step !== 3 || !slot) return;
+    const el = wizardEndRef.current;
+    if (!el) return;
+    const id = requestAnimationFrame(() => {
+      el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     });
     return () => cancelAnimationFrame(id);
-  }, [date, step]);
+  }, [slot, step]);
 
   useEffect(() => {
     if (!category || step !== 2) return;
@@ -477,7 +487,6 @@ export default function Booking() {
                           onClick={() => !empty && setCategory(cat.key)}
                           disabled={empty}
                         >
-                          <span className="bcat-num">{`0${i + 1}`}</span>
                           <span className="bcat-icon" aria-hidden="true">{cat.icon}</span>
                           <span className="bcat-name">{lang === 'pl' ? cat.namePL : cat.nameEN}</span>
                           <span className="bcat-sub">{lang === 'pl' ? cat.subPL : cat.subEN}</span>
