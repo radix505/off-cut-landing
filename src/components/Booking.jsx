@@ -545,6 +545,7 @@ export default function Booking() {
           {step === 3 && (
             <div className="booking-step-body booking-step-body--dt">
 
+              {/* Calendar — always visible */}
               <div className="booking-cal">
                 <div className="bcal-header">
                   <button type="button" className="bcal-nav" onClick={prevMonth}>
@@ -573,13 +574,12 @@ export default function Booking() {
                 </div>
               </div>
 
-              <div className="booking-slots">
-                <div className="bwiz-heading bwiz-heading--slots">
-                  {date
-                    ? useT('Wybierz godzinę','Choose a time')
-                    : useT('Najpierw wybierz dzień','Select a day first')}
-                </div>
-                {date && (
+              {/* Time slots — right column */}
+              {date ? (
+                <div className="booking-time-col">
+                  <div className="bwiz-heading bwiz-heading--slots">
+                    {useT('Wybierz godzinę','Choose a time')}
+                  </div>
                   <BookingTimeWheel
                     slots={slots}
                     unavailable={unavailable}
@@ -588,8 +588,12 @@ export default function Booking() {
                     loading={loadingAvail}
                     lang={lang}
                   />
-                )}
-              </div>
+                </div>
+              ) : (
+                <div className="booking-time-prompt">
+                  {useT('Wybierz dzień','Select a day')}
+                </div>
+              )}
 
             </div>
           )}
