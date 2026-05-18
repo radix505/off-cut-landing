@@ -43,13 +43,6 @@ function pickVariantForBarber(svc, barberId) {
   return { ...variant, variants: svc.variants };
 }
 
-function pluralPL(n, one, few, many) {
-  if (n === 1) return one;
-  const mod10 = n % 10, mod100 = n % 100;
-  if (mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14)) return few;
-  return many;
-}
-
 const CATEGORY_DEFS = [
   {
     key: 'hair',
@@ -118,7 +111,6 @@ export default function Booking() {
   const [errorMsg,     setErrorMsg]     = useState('');
   const [filteredBarberIds, setFilteredBarberIds] = useState(null);
   const wizardEndRef = useRef(null);
-  const servicesListRef = useRef(null);
 
   const calYear  = calBase.getFullYear();
   const calMonth = calBase.getMonth();
@@ -175,14 +167,34 @@ export default function Booking() {
   }, [slot, step]);
 
   useEffect(() => {
+    if (step !== 1 || !barber) return;
+    const el = wizardEndRef.current;
+    if (!el) return;
+    const id = requestAnimationFrame(() => {
+      el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    });
+    return () => cancelAnimationFrame(id);
+  }, [barber, step]);
+
+  useEffect(() => {
     if (!category || step !== 2) return;
-    const el = servicesListRef.current;
+    const el = wizardEndRef.current;
     if (!el) return;
     const id = requestAnimationFrame(() => {
       el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     });
     return () => cancelAnimationFrame(id);
   }, [category, step]);
+
+  useEffect(() => {
+    if (step !== 2 || !service) return;
+    const el = wizardEndRef.current;
+    if (!el) return;
+    const id = requestAnimationFrame(() => {
+      el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    });
+    return () => cancelAnimationFrame(id);
+  }, [service, step]);
 
   const today = new Date(); today.setHours(0, 0, 0, 0);
 
@@ -470,13 +482,9 @@ export default function Booking() {
                   <div className="bwiz-heading">{useT('Wybierz kategorię','Choose a category')}</div>
                   <div className="booking-categories-grid">
                     {CATEGORY_DEFS.map((cat, i) => {
-                      const count = ALL_SERVICES.filter(s =>
+                      const empty = ALL_SERVICES.filter(s =>
                         barber && (s.barberIds ?? []).includes(barber.id) && categorize(s) === cat.key
-                      ).length;
-                      const empty = count === 0;
-                      const countLabel = lang === 'pl'
-                        ? `${count} ${pluralPL(count, 'usługa', 'usługi', 'usług')}`
-                        : `${count} ${count === 1 ? 'service' : 'services'}`;
+                      ).length === 0;
                       return (
                         <button
                           key={cat.key}
@@ -488,7 +496,6 @@ export default function Booking() {
                           <span className="bcat-icon" aria-hidden="true">{cat.icon}</span>
                           <span className="bcat-name">{lang === 'pl' ? cat.namePL : cat.nameEN}</span>
                           <span className="bcat-sub">{lang === 'pl' ? cat.subPL : cat.subEN}</span>
-                          <span className="bcat-count">{countLabel}</span>
                         </button>
                       );
                     })}
@@ -512,7 +519,7 @@ export default function Booking() {
                     </span>
                   </button>
                   <div className="bwiz-heading">{useT('Wybierz usługę','Choose a service')}</div>
-                  <div className="booking-services-list" ref={servicesListRef}>
+                  <div className="booking-services-list">
                     {ALL_SERVICES
                       .filter(s => barber && (s.barberIds ?? []).includes(barber.id) && categorize(s) === category)
                       .map(s => (

@@ -636,14 +636,6 @@ section { padding-block: var(--space-section-y); padding-inline: var(--space-sec
 .bcat-sub {
   font-size: 0.7rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--text-muted-dark);
 }
-.bcat-count {
-  display: inline-flex; align-items: center; gap: 0.5rem;
-  font-size: 0.7rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--text-muted-dark);
-  margin-top: 0.2rem;
-}
-.bcat-count::before, .bcat-count::after {
-  content: ''; display: block; width: 14px; height: 0.5px; background: rgba(255,255,255,0.18);
-}
 .booking-cat-pill {
   display: inline-flex; align-items: center; gap: 0.65rem;
   align-self: flex-start;
@@ -1084,7 +1076,6 @@ body.nav-drawer-is-open .mobile-app-bar { opacity: 0; pointer-events: none; }
   .bcat-icon { width: 30px; height: 30px; flex-shrink: 0; }
   .bcat-name { font-size: 1.2rem; margin-top: 0; }
   .bcat-sub { font-size: 0.62rem; }
-  .bcat-count { margin-top: 0; margin-left: auto; flex-shrink: 0; }
   .booking-service-item { padding: 0.6rem 1rem; }
   .bsi-name { font-size: 0.82rem; }
   .bsi-price { font-size: 0.85rem; }
@@ -1131,11 +1122,21 @@ body.nav-drawer-is-open .mobile-app-bar { opacity: 0; pointer-events: none; }
 }
 
 /* TABLET PORTRAIT (iPad portrait 820, iPad mini portrait 744, Surface Pro 912,
-   Z Fold unfolded ~717). Above the 768 mobile breakpoint but below desktop —
-   collapse two-column page layouts to one wider column so the booking wizard
-   and map iframe get a full-width row instead of being squeezed into ~340px. */
+   Z Fold unfolded ~717, iPad Pro portrait 834/1024). Above the 768 mobile
+   breakpoint but below desktop — collapse two-column page layouts to one wider
+   column so the booking wizard and map iframe get a full-width row instead of
+   being squeezed into ~340px. */
 @media (min-width: 769px) and (max-width: 1099px) and (orientation: portrait),
        (min-width: 769px) and (max-width: 1099px) and (pointer: coarse) {
+  /* Hero — the mobile app bar (72 px) is visible at these widths (max-width: 1100px
+     rule) but the desktop hero rule puts CTAs only 2.75 rem from the bottom,
+     which lands under the bar. Lift CTAs above it. */
+  .hero .hero-cta {
+    bottom: calc(72px + env(safe-area-inset-bottom, 0px) + 1.5rem);
+  }
+  /* Reduce horizontal hero padding so the title has more room on narrower tablets */
+  .hero { padding-inline: 2rem; }
+
   .booking-layout { grid-template-columns: 1fr; gap: 2.5rem; }
   .booking-text { max-width: 720px; margin: 0 auto; }
   .booking-text p { max-width: 100%; }
@@ -1464,7 +1465,7 @@ nav.nav--light .nav-links a.nav-link--active::after { background: var(--ink-stro
   .nav-logo-sub, .portrait-label, .bcal-dn, .footer-copy,
   .gallery-page-count, .contact-label, .map-info-label, .crew-card-title,
   .crew-card-cta, .barber-page-section-label, .barber-page-placeholder-label,
-  .bcat-num, .bcat-count,
+  .bcat-num,
   .footer-pro-copy, .footer-pro-legal-link, .footer-credit,
   .contact-action-link {
     font-size: 0.625rem;
