@@ -557,7 +557,8 @@ section { padding-block: var(--space-section-y); padding-inline: var(--space-sec
 /* container-type lets the wizard respond to its own width — needed because
    it's rendered in two contexts (homepage 50% column, /booking page 60% column)
    with different available widths for the same content. */
-.booking-wizard { container-type: inline-size; container-name: wizard; display: flex; flex-direction: column; gap: 1.75rem; border: 0.5px solid rgba(255,255,255,0.1); padding: 2rem; min-height: clamp(420px, 60svh, 580px); min-height: clamp(420px, 60dvh, 580px); background: var(--ink); }
+.booking-wizard { container-type: inline-size; container-name: wizard; display: flex; flex-direction: column; gap: 1.75rem; border: 0.5px solid rgba(255,255,255,0.1); padding: 2rem; min-height: clamp(420px, 60svh, 580px); min-height: clamp(420px, 60dvh, 580px); max-height: clamp(520px, 82svh, 760px); max-height: clamp(520px, 82dvh, 760px); overflow-y: auto; scrollbar-width: none; background: var(--ink); }
+.booking-wizard::-webkit-scrollbar { display: none; }
 
 /* Progress bar */
 .booking-progress { display: flex; align-items: flex-start; justify-content: space-between; position: relative; padding-bottom: 0.25rem; }
@@ -774,7 +775,7 @@ section { padding-block: var(--space-section-y); padding-inline: var(--space-sec
 }
 
 /* Wizard nav */
-.booking-wizard-nav { display: flex; align-items: center; justify-content: space-between; padding-top: 1.25rem; border-top: 0.5px solid #141414; margin-top: auto; }
+.booking-wizard-nav { display: flex; align-items: center; justify-content: space-between; padding-top: 1.25rem; border-top: 0.5px solid #141414; margin-top: auto; position: sticky; bottom: 0; background: var(--ink); z-index: 5; padding-bottom: 1rem; }
 .bwiz-back { background: none; border: none; color: var(--text-muted-dark); font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase; cursor: pointer; font-family: 'Inter', sans-serif; transition: color 0.2s; }
 .bwiz-back:hover { color: var(--paper-strong); }
 .bwiz-next { background: var(--paper-strong); border: none; color: var(--ink-strong); padding: 0.8rem 2rem; font-size: 0.72rem; letter-spacing: 0.25em; text-transform: uppercase; cursor: pointer; font-family: 'Inter', sans-serif; font-weight: 600; border-radius: 100px; transition: background 0.25s, opacity 0.25s; }
@@ -801,7 +802,7 @@ section { padding-block: var(--space-section-y); padding-inline: var(--space-sec
 .booking-page-wrap .booking-section { padding-top: 10rem; padding-bottom: 2rem; }
 .booking-page-wrap .booking-section .section-header { display: none; }
 .booking-page-wrap .booking-layout { grid-template-columns: 1fr 1.55fr; gap: 3.5rem; }
-.booking-page-wrap .booking-wizard { min-height: clamp(480px, 70svh, 700px); min-height: clamp(480px, 70dvh, 700px); padding: 2.75rem; background: #161616; border-color: rgba(255,255,255,0.16); }
+.booking-page-wrap .booking-wizard { min-height: clamp(480px, 70svh, 700px); min-height: clamp(480px, 70dvh, 700px); max-height: clamp(580px, 86svh, 860px); max-height: clamp(580px, 86dvh, 860px); padding: 2.75rem; background: #161616; border-color: rgba(255,255,255,0.16); }
 .booking-page-wrap .booking-barber-card { background: rgba(255,255,255,0.055); border-color: rgba(255,255,255,0.11); }
 .booking-page-wrap .booking-barber-card:hover { background: rgba(255,255,255,0.09); border-color: rgba(255,255,255,0.25); }
 .booking-page-wrap .booking-services-list { border-color: rgba(255,255,255,0.11); }
@@ -810,7 +811,7 @@ section { padding-block: var(--space-section-y); padding-inline: var(--space-sec
 .booking-page-wrap .booking-summary-box { border-color: rgba(255,255,255,0.11); }
 .booking-page-wrap .bsum-row { border-bottom-color: rgba(255,255,255,0.08); }
 .booking-page-wrap .booking-contact-fields { border-color: rgba(255,255,255,0.13); }
-.booking-page-wrap .booking-wizard-nav { border-top-color: rgba(255,255,255,0.1); }
+.booking-page-wrap .booking-wizard-nav { border-top-color: rgba(255,255,255,0.1); background: #161616; }
 .booking-page-wrap .booking-progress-track { background: rgba(255,255,255,0.12); }
 
 /* FOOTER */
@@ -862,15 +863,15 @@ footer.footer-pro { background: var(--ink); border-top: 0.5px solid #1a1a1a; pad
 .footer-pro-address-line a { color: var(--text-faint-dark); text-decoration: none; transition: color 0.3s; }
 .footer-pro-address-line a:hover { color: var(--paper-strong); }
 .footer-pro-bottom { display: flex; align-items: center; justify-content: space-between; padding: 1.5rem 5rem 1.5rem 3rem; gap: 2rem; flex-wrap: wrap; }
-.footer-pro-copy { font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-muted-dark); }
+.footer-pro-copy { font-size: 0.71rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-muted-dark); font-weight: 600; }
 .footer-pro-legal { display: flex; align-items: center; gap: 0.75rem; }
-.footer-pro-legal-link { font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-faint-dark); text-decoration: none; background: none; border: none; cursor: pointer; font-family: 'Inter', sans-serif; padding: 0; transition: color 0.3s; }
+.footer-pro-legal-link { font-size: 0.71rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-faint-dark); text-decoration: none; background: none; border: none; cursor: pointer; font-family: 'Inter', sans-serif; font-weight: 600; padding: 0; transition: color 0.3s; }
 .footer-pro-legal-link:hover { color: var(--paper-strong); }
 .footer-pro-legal-sep { color: var(--text-muted-dark); font-size: 0.7rem; }
-.footer-credit { font-size: 0.78rem; letter-spacing: 0.15em; color: var(--text-faint-dark); text-transform: uppercase; display: flex; align-items: center; gap: 0.4rem; }
-.footer-credit-logo { height: 17px; width: auto; opacity: 0.95; filter: brightness(0) saturate(100%) invert(68%) sepia(95%) saturate(159%) hue-rotate(160deg) brightness(105%); }
-.footer-credit a { color: var(--color-accent); text-decoration: none; border-bottom: 0.5px solid rgba(143,217,251,0.5); padding-bottom: 1px; transition: color 0.3s, border-color 0.3s; }
-.footer-credit a:hover { color: #8FD9FB; border-color: #8FD9FB; }
+.footer-credit { font-size: 0.71rem; letter-spacing: 0.15em; color: var(--text-faint-dark); text-transform: uppercase; font-weight: 600; display: flex; align-items: center; gap: 0.35rem; }
+.footer-credit-logo { height: 13px; width: auto; opacity: 0.9; filter: brightness(0) saturate(100%) invert(40%) sepia(100%) saturate(650%) hue-rotate(345deg) brightness(105%); }
+.footer-credit a { color: #E85A2A; text-decoration: none; border-bottom: 0.5px solid rgba(232,90,42,0.45); padding-bottom: 1px; transition: color 0.3s, border-color 0.3s; }
+.footer-credit a:hover { color: #ff6a3a; border-color: #ff6a3a; }
 /* old social-link kept for any leftover refs */
 .social-link { display: flex; align-items: center; color: var(--ink); text-decoration: none; transition: color 0.3s; cursor: pointer; }
 .social-link:hover { color: #555; }
@@ -1085,7 +1086,7 @@ body.nav-drawer-is-open .mobile-app-bar { opacity: 0; pointer-events: none; }
   /* Booking subpage — match specificity of the desktop overrides */
   .booking-page-wrap .booking-section { padding-top: 8.5rem; }
   .booking-page-wrap .booking-layout { grid-template-columns: 1fr; gap: 2rem; }
-  .booking-page-wrap .booking-wizard { min-height: unset; padding: 1.5rem; order: -1; }
+  .booking-page-wrap .booking-wizard { min-height: unset; max-height: 80svh; padding: 1.5rem; order: -1; }
   .booking-page-wrap .booking-text { order: 0; }
 
   /* Footer — mobile single-column redesign */
@@ -1112,9 +1113,9 @@ body.nav-drawer-is-open .mobile-app-bar { opacity: 0; pointer-events: none; }
 
   /* Bottom bar */
   .footer-pro-bottom { padding: 1.25rem 1.5rem; flex-direction: column; align-items: center; text-align: center; gap: 0.75rem; }
-  .footer-pro-copy { font-size: 0.58rem; }
-  .footer-pro-legal-link { font-size: 0.58rem; }
-  .footer-credit { font-size: 0.58rem; }
+  .footer-pro-copy { font-size: 0.71rem; }
+  .footer-pro-legal-link { font-size: 0.71rem; }
+  .footer-credit { font-size: 0.71rem; }
   .barber-page-hero-content { padding: 6rem 1.5rem 2.5rem; }
 
   /* Scroll top btn */
@@ -1142,7 +1143,7 @@ body.nav-drawer-is-open .mobile-app-bar { opacity: 0; pointer-events: none; }
   .booking-text p { max-width: 100%; }
   .map-layout   { grid-template-columns: 1fr; gap: 2rem; }
   .booking-page-wrap .booking-layout { grid-template-columns: 1fr; gap: 2.5rem; }
-  .booking-page-wrap .booking-wizard { min-height: unset; order: -1; }
+  .booking-page-wrap .booking-wizard { min-height: unset; max-height: 80svh; order: -1; }
   .booking-page-wrap .booking-text { order: 0; }
   .booking-page-wrap .booking-section { padding-top: 10rem; }
 }
@@ -1161,9 +1162,9 @@ body.nav-drawer-is-open .mobile-app-bar { opacity: 0; pointer-events: none; }
   .footer-pro-tagline { font-size: 0.6rem; }
   .footer-pro-socials { margin-top: 0.8rem; gap: 0.7rem; }
   .footer-pro-bottom { padding: 0.85rem 1.2rem; gap: 0.5rem; }
-  .footer-pro-copy { font-size: 0.55rem; }
-  .footer-pro-legal-link { font-size: 0.55rem; }
-  .footer-credit { font-size: 0.55rem; }
+  .footer-pro-copy { font-size: 0.58rem; }
+  .footer-pro-legal-link { font-size: 0.58rem; }
+  .footer-credit { font-size: 0.58rem; }
 }
 
 /* NARROW FOLDABLE / SMALL-COVER (Galaxy Z Fold cover screen ~344px, Z Flip cover) — extra
@@ -1466,7 +1467,6 @@ nav.nav--light .nav-links a.nav-link--active::after { background: var(--ink-stro
   .gallery-page-count, .contact-label, .map-info-label, .crew-card-title,
   .crew-card-cta, .barber-page-section-label, .barber-page-placeholder-label,
   .bcat-num,
-  .footer-pro-copy, .footer-pro-legal-link, .footer-credit,
   .contact-action-link {
     font-size: 0.625rem;
   }
