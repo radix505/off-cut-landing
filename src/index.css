@@ -987,6 +987,11 @@ footer.footer-pro { background: var(--ink); border-top: 0.5px solid #1a1a1a; pad
   align-items: flex-end;
   justify-content: space-around;
   transition: opacity 0.25s, transform 0.25s;
+  /* Promote to GPU compositing layer so Chrome mobile keeps the bar
+     pinned to the visual viewport while the browser chrome animates */
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  will-change: transform;
 }
 body.nav-drawer-is-open .mobile-app-bar { opacity: 0; pointer-events: none; }
 
@@ -1037,6 +1042,7 @@ body.nav-drawer-is-open .mobile-app-bar { opacity: 0; pointer-events: none; }
        (orientation: landscape) and (max-width: 1024px) and (pointer: coarse) {
   /* Hero */
   .hero { padding: 8rem 1.5rem 3rem; min-height: 600px; }
+  .hero-rebook { display: none; }
   .hero-grid-lines { display: none; }
   .hero-year { display: none; }
   .hero-title { font-size: clamp(68px, 19vw, 108px); }
