@@ -52,19 +52,28 @@ export default function MobileAppBar() {
     if (!vv || !barRef.current) return;
     const bar = barRef.current;
 
+    let rafId;
     const pin = () => {
-      // When the Chrome address bar slides or iOS rubber-bands, the visual
-      // viewport shifts relative to the layout viewport. Counteract with a
-      // translateY so the bar always hugs the bottom of the visible screen.
-      const offset = -(vv.offsetTop ?? 0);
-      bar.style.transform = `translateY(${offset}px) translateZ(0)`;
+      cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(() => {
+        // In Safari, when the page elastic-scrolls (rubber-band), the visual
+        // viewport shifts relative to the layout viewport. Counteract with a
+        // translateY so the bar stays at the visible bottom.
+        // In Chrome the offset is always 0, so we clear the inline style and
+        // let the CSS @supports rule handle GPU compositing for Safari only.
+        const offsetTop = vv.offsetTop ?? 0;
+        if (offsetTop === 0) {
+          bar.style.transform = '';
+        } else {
+          bar.style.transform = `translateY(${-offsetTop}px) translateZ(0)`;
+        }
+      });
     };
 
     vv.addEventListener('scroll', pin, { passive: true });
-    vv.addEventListener('resize', pin, { passive: true });
     return () => {
       vv.removeEventListener('scroll', pin);
-      vv.removeEventListener('resize', pin);
+      cancelAnimationFrame(rafId);
     };
   }, []);
 

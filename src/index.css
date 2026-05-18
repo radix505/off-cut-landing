@@ -235,9 +235,10 @@ nav.nav--light .nav-logo-sub { text-shadow: 0 1px 3px rgba(0,0,0,0.08); }
   nav.nav--light .nav-logo-icon { filter: invert(1) drop-shadow(0 1px 8px rgba(0,0,0,0.45)); }
   nav.nav--light .nav-pill--center,
   nav.nav--light .nav-pill--right { border-color: inherit; background: inherit; }
-  nav.nav--light .lang-toggle { background: inherit; }
-  nav.nav--light .lang-toggle-opt { color: inherit; }
-  nav.nav--light .lang-toggle-opt--on { color: inherit; background: inherit; }
+  /* lang-toggle always keeps its own white styling on mobile — the nav-bg is always dark */
+  nav.nav--light .lang-toggle { background: rgba(255,255,255,0.08); }
+  nav.nav--light .lang-toggle-opt { color: rgba(255,255,255,0.38); }
+  nav.nav--light .lang-toggle-opt--on { background: rgba(255,255,255,0.18); color: var(--paper-strong); }
 }
 nav.nav-scrolled .nav-logo-icon { transform: none; }
 nav.nav-hidden { transform: translateZ(0) translateY(-110%); }
@@ -971,6 +972,8 @@ footer.footer-pro { background: var(--ink); border-top: 0.5px solid #1a1a1a; pad
   .nav-drawer { display: flex; }
   .nav-logo-icon { height: 34px; }
   nav.nav-scrolled .nav-logo-icon { transform: none; }
+  /* On mobile the pills are hidden — the logo is the only brand element, keep it visible */
+  nav.nav-scrolled .nav-logo { opacity: 1; pointer-events: auto; }
   .nav-logo-off,
   .nav-logo-cut { font-size: 1.0rem; letter-spacing: 0.22em; }
   .nav-logo-sub { font-size: 0.48rem; }
@@ -986,12 +989,16 @@ footer.footer-pro { background: var(--ink); border-top: 0.5px solid #1a1a1a; pad
   padding-bottom: env(safe-area-inset-bottom, 0px);
   align-items: flex-end;
   justify-content: space-around;
-  transition: opacity 0.25s, transform 0.25s;
-  /* Promote to GPU compositing layer so Chrome mobile keeps the bar
-     pinned to the visual viewport while the browser chrome animates */
-  transform: translateZ(0);
-  -webkit-transform: translateZ(0);
-  will-change: transform;
+  transition: opacity 0.25s;
+}
+/* Safari only: GPU layer prevents elastic-scroll detachment.
+   Chrome on Android must NOT have this — it breaks fixed-position tracking
+   during URL-bar animation, making the bar appear to "fly". */
+@supports (-webkit-overflow-scrolling: touch) {
+  .mobile-app-bar {
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+  }
 }
 body.nav-drawer-is-open .mobile-app-bar { opacity: 0; pointer-events: none; }
 
