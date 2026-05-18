@@ -1,22 +1,22 @@
 import { InlineKeyboard } from 'grammy';
 import * as bookingsRepo from '../data/bookingsRepo.js';
-import * as barbersRepo from '../data/barbersRepo.js';
-import * as servicesRepo from '../data/servicesRepo.js';
 import {
   helpMessage, formatDayOverview, formatRangeOverview,
-  formatBookingCard, formatStats, formatBarbers, formatServices,
+  formatBookingCard, formatStats,
   todayInWarsaw, addDaysIso, isoToHumanPl, formatStatus,
 } from './format.js';
 
 const ISO_DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 const HTML = { parse_mode: 'HTML' };
 
-export function bookingKeyboard(b) {
+export function bookingKeyboard(b, { hideUndo = false } = {}) {
   const kb = new InlineKeyboard();
+  const hu = hideUndo ? 1 : 0;
   if (b.status === 'pending') {
-    kb.text('✅ Potwierdź', `bk:confirm:${b.id}`).text('❌ Anuluj', `bk:cancel:${b.id}`);
+    kb.text('✅ Potwierdź', `bk:confirm:${b.id}`).text('❌ Anuluj', `bk:cancelq:${b.id}:${hu}`);
   } else if (b.status === 'confirmed') {
-    kb.text('❌ Anuluj', `bk:cancel:${b.id}`).text('↩️ Cofnij', `bk:pending:${b.id}`);
+    kb.text('❌ Anuluj', `bk:cancelq:${b.id}:${hu}`);
+    if (!hideUndo) kb.text('↩️ Cofnij', `bk:pending:${b.id}`);
   } else if (b.status === 'cancelled') {
     kb.text('↩️ Przywróć (oczekuje)', `bk:pending:${b.id}`);
   }
@@ -26,16 +26,16 @@ export function bookingKeyboard(b) {
   return kb;
 }
 
-async function sendBookingCard(ctx, b) {
+async function sendBookingCard(ctx, b, kbOpts) {
   return ctx.reply(formatBookingCard(b), {
     ...HTML,
-    reply_markup: bookingKeyboard(b),
+    reply_markup: bookingKeyboard(b, kbOpts),
   });
 }
 
-async function sendOverviewWithCards(ctx, headerText, bookings) {
+async function sendOverviewWithCards(ctx, headerText, bookings, kbOpts) {
   await ctx.reply(headerText, HTML);
-  for (const b of bookings) await sendBookingCard(ctx, b);
+  for (const b of bookings) await sendBookingCard(ctx, b, kbOpts);
 }
 
 export function registerHandlers(bot) {
@@ -93,7 +93,7 @@ export function registerHandlers(bot) {
     if (rows.length === 0) {
       return ctx.reply(`Brak wyników dla: <b>${q}</b>`, HTML);
     }
-    await sendOverviewWithCards(ctx, `🔎 <b>Wyniki: ${rows.length}</b>`, rows);
+    await sendOverviewWithCards(ctx, `🔎 <b>Wyniki: ${rows.length}</b>`, rows, { hideUndo: true });
   });
 
   bot.command('booking', async (ctx) => {
@@ -119,12 +119,41 @@ export function registerHandlers(bot) {
     );
   });
 
-  bot.command('barbers', async (ctx) =>
-    ctx.reply(formatBarbers(await barbersRepo.listActiveBrief()), HTML),
-  );
-  bot.command('services', async (ctx) =>
-    ctx.reply(formatServices(await servicesRepo.listActiveBrief()), HTML),
-  );
+  // Tapping ❌ Anuluj asks for confirmation instead of cancelling immediately.
+  bot.callbackQuery(/^bk:cancelq:(\d+):(0|1)$/, async (ctx) => {
+    const id = Number(ctx.match[1]);
+    const hu = ctx.match[2];
+    const b = await bookingsRepo.findById(id);
+    if (!b) {
+      await ctx.answerCallbackQuery({ text: `Brak rezerwacji #${id}`, show_alert: true });
+      return;
+    }
+    if (b.status === 'cancelled') {
+      await ctx.answerCallbackQuery({ text: 'Już anulowana', show_alert: false });
+      return;
+    }
+    const kb = new InlineKeyboard()
+      .text(`⚠️ Anulować rezerwację #${id}?`, 'bk:noop').row()
+      .text('✅ Tak, anuluj', `bk:cancel:${id}`)
+      .text('↩️ Nie', `bk:kb:${id}:${hu}`);
+    await ctx.editMessageReplyMarkup({ reply_markup: kb });
+    await ctx.answerCallbackQuery();
+  });
+
+  // "Nie" — restore the original card keyboard (hideUndo preserved).
+  bot.callbackQuery(/^bk:kb:(\d+):(0|1)$/, async (ctx) => {
+    const id = Number(ctx.match[1]);
+    const hideUndo = ctx.match[2] === '1';
+    const b = await bookingsRepo.findById(id);
+    if (!b) {
+      await ctx.answerCallbackQuery({ text: `Brak rezerwacji #${id}`, show_alert: true });
+      return;
+    }
+    await ctx.editMessageReplyMarkup({ reply_markup: bookingKeyboard(b, { hideUndo }) });
+    await ctx.answerCallbackQuery();
+  });
+
+  bot.callbackQuery('bk:noop', (ctx) => ctx.answerCallbackQuery());
 
   bot.callbackQuery(/^bk:(confirm|cancel|pending):(\d+)$/, async (ctx) => {
     const action = ctx.match[1];
@@ -152,6 +181,18 @@ export function registerHandlers(bot) {
     await ctx.answerCallbackQuery({ text: `Status: ${formatStatus(status)}` });
   });
 
+  // Tapping a booking in the /calendar day view — open the full card (like /find).
+  bot.callbackQuery(/^bk:show:(\d+)$/, async (ctx) => {
+    const id = Number(ctx.match[1]);
+    const b = await bookingsRepo.findById(id);
+    if (!b) {
+      await ctx.answerCallbackQuery({ text: `Brak rezerwacji #${id}`, show_alert: true });
+      return;
+    }
+    await ctx.answerCallbackQuery();
+    await sendBookingCard(ctx, b, { hideUndo: true });
+  });
+
   bot.on('message:text', async (ctx) => {
     const txt = ctx.message.text.trim();
     if (txt.startsWith('/')) {
@@ -166,7 +207,7 @@ export function registerHandlers(bot) {
       if (rows.length === 0) {
         return ctx.reply(`Brak wyników dla: <b>${txt}</b>\n\nWpisz /help, aby zobaczyć komendy.`, HTML);
       }
-      await sendOverviewWithCards(ctx, `🔎 <b>Wyniki: ${rows.length}</b>`, rows);
+      await sendOverviewWithCards(ctx, `🔎 <b>Wyniki: ${rows.length}</b>`, rows, { hideUndo: true });
     }
   });
 }

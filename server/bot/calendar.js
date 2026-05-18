@@ -55,11 +55,14 @@ async function renderMonth(ctx, barberId, year, month, { edit = false } = {}) {
 
   const kb = new InlineKeyboard();
 
-  // Nav row: ‹ prev · header · next ›
+  // Nav row: ‹ · spacer · header · spacer · › — spacers widen the header
+  // relative to the single-cell arrows (Telegram splits a row equally).
   const prev = prevMonth(year, month);
   const next = nextMonth(year, month);
   kb.text('‹', `cal:m:${barberId}:${prev.y}:${prev.m}`)
+    .text(' ', NOOP)
     .text(`${monthHeaderPl(year, month)}`, NOOP)
+    .text(' ', NOOP)
     .text('›', `cal:m:${barberId}:${next.y}:${next.m}`)
     .row();
 
@@ -136,6 +139,9 @@ async function renderDay(ctx, barberId, year, month, day, { edit = true } = {}) 
   const isClosed = !BUSINESS_HOURS[dow];
 
   const bookings = await bookingsRepo.findByBarberAndDate(barberId, iso);
+  const realBookings = bookings
+    .filter((b) => !b.is_block)
+    .sort((a, b) => a.slot.localeCompare(b.slot));
   const grid = buildSlotsForISODate(iso);
   const unavailable = computeUnavailable(bookings, iso);
   const freeSlots = grid.filter((s) => !unavailable.has(s));
@@ -150,6 +156,10 @@ async function renderDay(ctx, barberId, year, month, day, { edit = true } = {}) 
 
   const isPast = iso < todayInWarsaw();
   const kb = new InlineKeyboard();
+  realBookings.forEach((b, i) => {
+    const name = String(b.customer_name ?? '').slice(0, 40);
+    kb.text(`${i + 1} · ${b.slot} ${name}`, `bk:show:${b.id}`).row();
+  });
   if (!isClosed && !isPast) {
     if (freeSlots.length > 0) {
       kb.text('🚫 Zablokuj czas', `cal:blk:${barberId}:${year}:${month}:${day}`)

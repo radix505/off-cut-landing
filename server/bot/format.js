@@ -222,10 +222,8 @@ export function helpMessage() {
     `/find &lt;imię/telefon&gt; — szukaj`,
     `/booking &lt;id&gt; — pokaż rezerwację`,
     ``,
-    `<b>Statystyki / katalog:</b>`,
+    `<b>Statystyki:</b>`,
     `/stats — dziś + 7 dni`,
-    `/barbers — lista fryzjerów`,
-    `/services — cennik`,
     ``,
     `<b>Pomoc:</b>`,
     `/help — ta wiadomość`,
@@ -249,7 +247,15 @@ export function formatCalendarDayView({ isoDate, barberName, bookings, freeSlots
   if (bookings.length === 0) {
     lines.push('<i>Brak rezerwacji ani blokad.</i>');
   } else {
-    for (const b of mergeAdjacentBlocks(bookings)) lines.push(formatBookingLine(b));
+    let n = 0;
+    for (const b of mergeAdjacentBlocks(bookings)) {
+      if (b.is_block) {
+        lines.push(formatBookingLine(b, { prefix: '' }));
+      } else {
+        n += 1;
+        lines.push(formatBookingLine(b, { prefix: `${n}.` }));
+      }
+    }
   }
   lines.push('');
   if (freeSlots.length === 0) {
