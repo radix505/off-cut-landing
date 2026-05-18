@@ -992,9 +992,11 @@ footer.footer-pro { background: var(--ink); border-top: 0.5px solid #1a1a1a; pad
   transition: opacity 0.25s;
 }
 /* Safari only: GPU layer prevents elastic-scroll detachment.
-   Chrome on Android must NOT have this — it breaks fixed-position tracking
-   during URL-bar animation, making the bar appear to "fly". */
-@supports (-webkit-overflow-scrolling: touch) {
+   -webkit-touch-callout is supported by Safari but not Chrome (even on iOS),
+   so this selector stays Safari-exclusive. Chrome must NOT have translateZ(0)
+   on a fixed element — it breaks fixed-position tracking during URL-bar
+   animation, making the bar appear to "fly". */
+@supports (-webkit-touch-callout: none) {
   .mobile-app-bar {
     -webkit-transform: translateZ(0);
     transform: translateZ(0);
