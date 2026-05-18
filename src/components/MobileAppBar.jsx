@@ -52,27 +52,48 @@ export default function MobileAppBar() {
     if (!vv || !barRef.current) return;
     const bar = barRef.current;
 
+    // Chrome for iOS includes "CriOS" in its UA string.
+    // translateZ(0) creates the GPU compositing layer Safari needs to prevent
+    // elastic-scroll detachment, but it BREAKS Chrome's fixed-position tracking
+    // during URL-bar animation — making the bar "fly". Never apply it for Chrome.
+    const isChromeIOS = /CriOS/i.test(navigator.userAgent);
+
+    if (!isChromeIOS) {
+      // Safari: prime the compositing layer immediately so elastic-scroll can't detach it.
+      bar.style.transform = 'translateZ(0)';
+    }
+
     let rafId;
     const pin = () => {
       cancelAnimationFrame(rafId);
       rafId = requestAnimationFrame(() => {
-        // In Safari, when the page elastic-scrolls (rubber-band), the visual
-        // viewport shifts relative to the layout viewport. Counteract with a
-        // translateY so the bar stays at the visible bottom.
-        // In Chrome the offset is always 0, so we clear the inline style and
-        // let the CSS @supports rule handle GPU compositing for Safari only.
         const offsetTop = vv.offsetTop ?? 0;
-        if (offsetTop === 0) {
-          bar.style.transform = '';
-        } else {
+        // On Chrome iOS, window.innerHeight stays at layout-viewport height while
+        // vv.height shrinks when the URL bar is visible. The gap tells us how far
+        // below the visual-viewport bottom the bar currently sits.
+        const gap = window.innerHeight - vv.height - offsetTop;
+
+        if (!isChromeIOS && offsetTop !== 0) {
+          // Safari elastic-scroll: shift the bar up to stay in the visible area.
           bar.style.transform = `translateY(${-offsetTop}px) translateZ(0)`;
+          bar.style.bottom = '';
+        } else if (gap > 1) {
+          // Chrome URL-bar (or keyboard): visual viewport is shorter than layout viewport.
+          // Raise the bar so it sits at the visual-viewport bottom.
+          bar.style.bottom = `${gap}px`;
+          bar.style.transform = isChromeIOS ? '' : 'translateZ(0)';
+        } else {
+          bar.style.bottom = '';
+          bar.style.transform = isChromeIOS ? '' : 'translateZ(0)';
         }
       });
     };
 
     vv.addEventListener('scroll', pin, { passive: true });
+    vv.addEventListener('resize', pin, { passive: true });
     return () => {
       vv.removeEventListener('scroll', pin);
+      vv.removeEventListener('resize', pin);
       cancelAnimationFrame(rafId);
     };
   }, []);

@@ -774,6 +774,12 @@ section { padding-block: var(--space-section-y); padding-inline: var(--space-sec
 .form-label { display: block; font-size: 0.7rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--text-muted-dark); padding: 0.9rem 1.1rem 0; }
 .form-input { width: 100%; border: none; background: transparent; font-family: 'Inter', sans-serif; font-size: 0.9rem; color: var(--paper-strong); padding: 0.35rem 1.1rem 0.9rem; outline: none; letter-spacing: 0.03em; box-sizing: border-box; }
 .form-input::placeholder { color: oklch(40% 0.005 40); }
+/* iOS auto-zooms any input with font-size < 16px on focus; after blur the zoom
+   stays and crashes the layout. Force 16px on touch devices to prevent this. */
+@media (pointer: coarse) {
+  .form-input { font-size: 16px; }
+  .blog-email-input { font-size: 16px; }
+}
 
 /* Wizard nav */
 .booking-wizard-nav { display: flex; align-items: center; justify-content: space-between; padding-top: 1.25rem; border-top: 0.5px solid #141414; margin-top: auto; }
@@ -991,17 +997,9 @@ footer.footer-pro { background: var(--ink); border-top: 0.5px solid #1a1a1a; pad
   justify-content: space-around;
   transition: opacity 0.25s;
 }
-/* Safari only: GPU layer prevents elastic-scroll detachment.
-   -webkit-touch-callout is supported by Safari but not Chrome (even on iOS),
-   so this selector stays Safari-exclusive. Chrome must NOT have translateZ(0)
-   on a fixed element — it breaks fixed-position tracking during URL-bar
-   animation, making the bar appear to "fly". */
-@supports (-webkit-touch-callout: none) {
-  .mobile-app-bar {
-    -webkit-transform: translateZ(0);
-    transform: translateZ(0);
-  }
-}
+/* translateZ(0) is applied in JS only for Safari — see MobileAppBar.jsx.
+   Chrome on iOS (CriOS) must NOT get it; that would break fixed-position
+   tracking during URL-bar animation and make the bar "fly". */
 body.nav-drawer-is-open .mobile-app-bar { opacity: 0; pointer-events: none; }
 
 .mab-item {
