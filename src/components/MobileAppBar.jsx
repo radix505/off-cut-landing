@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react';
 import { useT } from '../context/LangContext';
 import { useRouter } from '../context/RouterContext';
 
@@ -44,13 +45,36 @@ const CalendarIcon = () => (
 
 export default function MobileAppBar() {
   const { navigate, page } = useRouter();
+  const barRef = useRef(null);
+
+  useEffect(() => {
+    const vv = window.visualViewport;
+    if (!vv || !barRef.current) return;
+    const bar = barRef.current;
+
+    const pin = () => {
+      // When the Chrome address bar slides or iOS rubber-bands, the visual
+      // viewport shifts relative to the layout viewport. Counteract with a
+      // translateY so the bar always hugs the bottom of the visible screen.
+      const offset = -(vv.offsetTop ?? 0);
+      bar.style.transform = `translateY(${offset}px) translateZ(0)`;
+    };
+
+    vv.addEventListener('scroll', pin, { passive: true });
+    vv.addEventListener('resize', pin, { passive: true });
+    return () => {
+      vv.removeEventListener('scroll', pin);
+      vv.removeEventListener('resize', pin);
+    };
+  }, []);
+
   const isHome = page === 'home';
   const isServices = page === 'services';
   const isGallery = page === 'gallery';
   const isContact = page === 'contact';
 
   return (
-    <div className="mobile-app-bar" role="navigation" aria-label={useT('Nawigacja', 'Navigation')}>
+    <div ref={barRef} className="mobile-app-bar" role="navigation" aria-label={useT('Nawigacja', 'Navigation')}>
       <button
         className={`mab-item${isHome ? ' mab-item--active' : ''}`}
         onClick={() => navigate('/')}

@@ -59,8 +59,6 @@ export default function Hero() {
           <span className="hero-title-line" onAnimationEnd={e => { e.currentTarget.style.animation = 'none'; }}>ART</span>
         </h1>
         <div className="hero-cta">
-          <button className="btn-primary" onClick={() => navigate('/booking')}>{useT('Zarezerwuj wizytę', 'Book an appointment')}</button>
-          <button className="btn-ghost" onClick={() => navigate('/services')}>{useT('Zobacz usługi', 'View Services')}</button>
           {lastBooking && (
             <button
               className="hero-rebook"
@@ -71,6 +69,8 @@ export default function Hero() {
               {rebookLabel} →
             </button>
           )}
+          <button className="btn-primary" onClick={() => navigate('/booking')}>{useT('Zarezerwuj wizytę', 'Book an appointment')}</button>
+          <button className="btn-ghost" onClick={() => navigate('/services')}>{useT('Zobacz usługi', 'View Services')}</button>
         </div>
       </div>
 
