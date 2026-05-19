@@ -673,6 +673,7 @@ section { padding-block: var(--space-section-y); padding-inline: var(--space-sec
 .booking-step-body--dt { display: grid; grid-template-columns: 1fr; gap: 1.5rem; align-items: start; }
 @container wizard (min-width: 480px) {
   .booking-step-body--dt { grid-template-columns: 1fr 1fr; }
+  .booking-step-body--dt.booking-step-body--dt-collapsed { grid-template-columns: 1fr; }
 }
 .booking-cal { display: flex; flex-direction: column; gap: 0.75rem; background: rgba(255,255,255,0.04); border: 0.5px solid rgba(255,255,255,0.12); padding: 1.4rem; }
 .booking-time-col { display: flex; flex-direction: column; gap: 0.75rem; }
@@ -787,6 +788,9 @@ section { padding-block: var(--space-section-y); padding-inline: var(--space-sec
 .form-label { display: block; font-size: 0.7rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--text-muted-dark); padding: 0.9rem 1.1rem 0; }
 .form-input { width: 100%; border: none; background: transparent; font-family: 'Inter', sans-serif; font-size: 0.9rem; color: var(--paper-strong); padding: 0.35rem 1.1rem 0.9rem; outline: none; letter-spacing: 0.03em; box-sizing: border-box; }
 .form-input::placeholder { color: oklch(40% 0.005 40); }
+.form-group--invalid { box-shadow: inset 2px 0 0 #d2685a; }
+.form-group--invalid .form-label { color: #d2685a; }
+.form-error { display: block; padding: 0 1.1rem 0.7rem; font-size: 0.7rem; letter-spacing: 0.05em; color: #d2685a; line-height: 1.4; }
 /* iOS auto-zooms any input with font-size < 16px on focus; after blur the zoom
    stays and crashes the layout. Force 16px on touch devices to prevent this. */
 @media (pointer: coarse) {
@@ -810,7 +814,27 @@ section { padding-block: var(--space-section-y); padding-inline: var(--space-sec
 .booking-error { margin-top: 1rem; padding: 0.7rem 0.9rem; border: 0.5px solid #b04a3a; background: rgba(176, 74, 58, 0.08); color: #d2685a; font-size: 0.7rem; letter-spacing: 0.05em; line-height: 1.4; }
 
 /* Success state */
+@keyframes booking-success-rise {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes booking-success-icon-pop {
+  0%   { opacity: 0; transform: scale(0.4); }
+  60%  { opacity: 1; transform: scale(1.12); }
+  100% { opacity: 1; transform: scale(1); }
+}
 .booking-success { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 5rem 2rem; text-align: center; gap: 1.25rem; }
+.booking-success > * { opacity: 0; animation: booking-success-rise 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.booking-success > *:nth-child(1) { animation-delay: 0.05s; animation: booking-success-icon-pop 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) 0.05s forwards; }
+.booking-success > *:nth-child(2) { animation-delay: 0.18s; }
+.booking-success > *:nth-child(3) { animation-delay: 0.28s; }
+.booking-success > *:nth-child(4) { animation-delay: 0.38s; }
+.booking-success > *:nth-child(5) { animation-delay: 0.48s; }
+.booking-success > *:nth-child(6) { animation-delay: 0.58s; }
+@media (prefers-reduced-motion: reduce) {
+  .booking-success > *,
+  .booking-success > *:nth-child(1) { animation: none; opacity: 1; transform: none; }
+}
 .booking-success-icon { width: 52px; height: 52px; border-radius: 50%; border: 0.5px solid rgba(255,255,255,0.25); color: var(--paper-strong); font-size: 1.1rem; display: flex; align-items: center; justify-content: center; }
 .booking-success-title { font-family: 'Bebas Neue', sans-serif; font-size: 2.2rem; letter-spacing: 0.1em; color: var(--paper-strong); }
 .booking-success-text { font-size: 0.88rem; letter-spacing: 0.04em; color: var(--text-muted-dark); line-height: 1.7; max-width: var(--measure); }

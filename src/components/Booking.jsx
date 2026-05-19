@@ -16,6 +16,16 @@ function toISODate(d) {
   return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
 }
 
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+function isValidEmail(s) { return EMAIL_RE.test((s ?? '').trim()); }
+function isValidPhone(s) {
+  const digits = (s ?? '').replace(/\D/g, '');
+  if (digits.length === 9) return true;
+  if (digits.length === 11 && digits.startsWith('48')) return true;
+  return false;
+}
+function isValidName(s) { return (s ?? '').trim().length >= 2; }
+
 function buildCalDays(year, month) {
   const first = new Date(year, month, 1).getDay();
   const offset = first === 0 ? 6 : first - 1;
@@ -99,6 +109,7 @@ export default function Booking() {
   const [service,   setService]   = useState(null);
   const [date,      setDate]      = useState(null);
   const [slot,      setSlot]      = useState(null);
+  const [calOpen,   setCalOpen]   = useState(true);
   const [calBase,   setCalBase]   = useState(() => { const d = new Date(); d.setDate(1); return d; });
   const [name,      setName]      = useState('');
   const [phone,     setPhone]     = useState('');
@@ -110,7 +121,21 @@ export default function Booking() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMsg,     setErrorMsg]     = useState('');
   const [filteredBarberIds, setFilteredBarberIds] = useState(null);
+  const [touched, setTouched] = useState({ name: false, phone: false, email: false });
+  const [isMobile, setIsMobile] = useState(() =>
+    typeof window !== 'undefined' && window.matchMedia('(max-width: 540px)').matches
+  );
   const wizardEndRef = useRef(null);
+
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 540px)');
+    const update = () => {
+      setIsMobile(mq.matches);
+      if (!mq.matches) setCalOpen(true);
+    };
+    mq.addEventListener('change', update);
+    return () => mq.removeEventListener('change', update);
+  }, []);
 
   const calYear  = calBase.getFullYear();
   const calMonth = calBase.getMonth();
@@ -245,6 +270,10 @@ export default function Booking() {
   }
 
   function goForward() {
+    if (step === 4 && !canAdvance[3]()) {
+      setTouched({ name: true, phone: true, email: true });
+      return;
+    }
     if (!canAdvance[step - 1]() || isSubmitting) return;
     if (stepIdx < visibleSteps.length - 1) setStep(visibleSteps[stepIdx + 1]);
     else submitBooking();
@@ -263,6 +292,7 @@ export default function Booking() {
     if (picked < today) return;
     if (BUSINESS_HOURS[picked.getDay()] == null) return;
     setDate(picked); setSlot(null);
+    if (isMobile) setCalOpen(false);
   }
 
   const isPast        = d => d && new Date(calYear, calMonth, d) < today;
@@ -275,14 +305,16 @@ export default function Booking() {
     () => !!barber,
     () => !!service,
     () => !!date && !!slot && !unavailable.has(slot),
-    () => name.trim().length > 1 && phone.trim().length > 5,
+    () => isValidName(name) && isValidPhone(phone) && isValidEmail(email),
   ];
 
   function reset() {
     setStep(1); setBarber(null); setCategory(null); setService(null); setDate(null); setSlot(null);
+    setCalOpen(true);
     setName(''); setPhone(''); setEmail(''); setSubmitted(false);
     setUnavailable(new Set()); setIsSubmitting(false); setErrorMsg('');
     setFilteredBarberIds(null);
+    setTouched({ name: false, phone: false, email: false });
   }
 
   async function submitBooking() {
@@ -347,6 +379,11 @@ export default function Booking() {
   const dateLabel = date
     ? date.toLocaleDateString(lang==='pl'?'pl-PL':'en-GB', { weekday:'short', day:'numeric', month:'short' })
     : '';
+  const dateChipLabel = date
+    ? `${(lang==='pl' ? DAYS_PL : DAYS_EN)[(date.getDay()+6)%7]} ${date.getDate()} ${(lang==='pl' ? MONTH_PL : MONTH_EN)[date.getMonth()]}`.toUpperCase()
+    : '';
+  const tChangeDate = useT('Zmień datę','Change date');
+  const tChange     = useT('ZMIEŃ','CHANGE');
 
   if (submitted) return (
     <section id="booking" className="booking-section" ref={ref}>
@@ -355,11 +392,11 @@ export default function Booking() {
           <div className="section-number">{useT('05 / REZERWACJA','05 / BOOKING')}</div>
         </div>
       </div>
-      <div className="booking-success reveal">
+      <div className="booking-success">
         <div className="booking-success-icon">✓</div>
-        <div className="booking-success-title">{useT('Prośba wysłana!','Request Sent!')}</div>
+        <div className="booking-success-title">{useT('Rezerwacja wysłana!','Booking Sent!')}</div>
         <p className="booking-success-text">
-          {useT('Potwierdzimy Twoją wizytę telefonicznie, SMS-em lub e-mailem.','We\'ll confirm your appointment by phone, SMS or email.')}
+          {useT('Potwierdzimy Twoją wizytę e-mailem.','We\'ll confirm your appointment by email.')}
         </p>
         <div className="booking-success-email">
           <span className="booking-success-email-label">{useT('Potwierdzenie na e-mail', 'Confirmation email')}</span>
@@ -543,38 +580,56 @@ export default function Booking() {
 
           {/* ── STEP 3: Date + Time ── */}
           {step === 3 && (
-            <div className="booking-step-body booking-step-body--dt">
+            <div className={`booking-step-body booking-step-body--dt${date && !calOpen ? ' booking-step-body--dt-collapsed' : ''}`}>
 
-              {/* Calendar — always visible */}
-              <div className="booking-cal">
-                <div className="bcal-header">
-                  <button type="button" className="bcal-nav" onClick={prevMonth}>
-                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><polyline points="15 18 9 12 15 6"/></svg>
-                  </button>
-                  <span className="bcal-title">
-                    {lang==='pl' ? MONTH_PL[calMonth] : MONTH_EN[calMonth]} {calYear}
-                  </span>
-                  <button type="button" className="bcal-nav" onClick={nextMonth}>
-                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><polyline points="9 18 15 12 9 6"/></svg>
-                  </button>
+              {/* Calendar OR collapsed date chip */}
+              {date && !calOpen ? (
+                <button
+                  type="button"
+                  className="booking-date-chip"
+                  onClick={() => setCalOpen(true)}
+                  aria-label={tChangeDate}
+                >
+                  <svg className="booking-date-chip-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="3" y="4" width="18" height="18" rx="2"/>
+                    <line x1="16" y1="2" x2="16" y2="6"/>
+                    <line x1="8"  y1="2" x2="8"  y2="6"/>
+                    <line x1="3"  y1="10" x2="21" y2="10"/>
+                  </svg>
+                  <span className="booking-date-chip-date">{dateChipLabel}</span>
+                  <span className="booking-date-chip-change">{tChange}</span>
+                </button>
+              ) : (
+                <div className="booking-cal">
+                  <div className="bcal-header">
+                    <button type="button" className="bcal-nav" onClick={prevMonth}>
+                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+                    </button>
+                    <span className="bcal-title">
+                      {lang==='pl' ? MONTH_PL[calMonth] : MONTH_EN[calMonth]} {calYear}
+                    </span>
+                    <button type="button" className="bcal-nav" onClick={nextMonth}>
+                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><polyline points="9 18 15 12 9 6"/></svg>
+                    </button>
+                  </div>
+                  <div className="bcal-daynames">
+                    {(lang==='pl' ? DAYS_PL : DAYS_EN).map(n => <div key={n} className="bcal-dn">{n}</div>)}
+                  </div>
+                  <div className="bcal-grid">
+                    {calDays.map((d, i) => (
+                      <button
+                        key={i}
+                        className={`bcal-day${!d?' empty':''}${d&&isPast(d)?' past':''}${isToday(d)?' today':''}${isSelected(d)?' sel':''}${(!isPast(d)&&(isFullyBooked(d)||isClosed(d)))?' unavail':''}`}
+                        onClick={() => pickDay(d)}
+                        disabled={!d || isPast(d) || isClosed(d)}
+                        title={isClosed(d) ? (lang==='pl' ? 'Zamknięte' : 'Closed') : isFullyBooked(d) ? (lang==='pl' ? 'Brak wolnych terminów' : 'No slots available') : undefined}
+                      >{d||''}</button>
+                    ))}
+                  </div>
                 </div>
-                <div className="bcal-daynames">
-                  {(lang==='pl' ? DAYS_PL : DAYS_EN).map(n => <div key={n} className="bcal-dn">{n}</div>)}
-                </div>
-                <div className="bcal-grid">
-                  {calDays.map((d, i) => (
-                    <button
-                      key={i}
-                      className={`bcal-day${!d?' empty':''}${d&&isPast(d)?' past':''}${isToday(d)?' today':''}${isSelected(d)?' sel':''}${(!isPast(d)&&(isFullyBooked(d)||isClosed(d)))?' unavail':''}`}
-                      onClick={() => pickDay(d)}
-                      disabled={!d || isPast(d) || isClosed(d)}
-                      title={isClosed(d) ? (lang==='pl' ? 'Zamknięte' : 'Closed') : isFullyBooked(d) ? (lang==='pl' ? 'Brak wolnych terminów' : 'No slots available') : undefined}
-                    >{d||''}</button>
-                  ))}
-                </div>
-              </div>
+              )}
 
-              {/* Time slots — right column */}
+              {/* Time slots — appears once a date is picked */}
               {date ? (
                 <div className="booking-time-col">
                   <div className="bwiz-heading bwiz-heading--slots">
@@ -615,17 +670,60 @@ export default function Booking() {
                 ))}
               </div>
               <div className="booking-contact-fields">
-                <div className="form-group">
+                <div className={`form-group${touched.name && !isValidName(name) ? ' form-group--invalid' : ''}`}>
                   <label className="form-label">{useT('Imię i nazwisko','Full name')}</label>
-                  <input className="form-input" type="text" placeholder="Jan Kowalski" value={name} onChange={e => setName(e.target.value)} />
+                  <input
+                    className="form-input"
+                    type="text"
+                    placeholder="Jan Kowalski"
+                    value={name}
+                    onChange={e => setName(e.target.value)}
+                    onBlur={() => setTouched(t => ({ ...t, name: true }))}
+                    aria-invalid={touched.name && !isValidName(name) || undefined}
+                  />
+                  {touched.name && !isValidName(name) && (
+                    <span className="form-error" role="alert">
+                      {useT('Podaj imię (min. 2 znaki).','Enter your name (min 2 characters).')}
+                    </span>
+                  )}
                 </div>
-                <div className="form-group">
+                <div className={`form-group${touched.phone && !isValidPhone(phone) ? ' form-group--invalid' : ''}`}>
                   <label className="form-label">{useT('Telefon','Phone')}</label>
-                  <input className="form-input" type="tel" placeholder="+48 513 340 013" value={phone} onChange={e => setPhone(e.target.value)} />
+                  <input
+                    className="form-input"
+                    type="tel"
+                    inputMode="tel"
+                    autoComplete="tel"
+                    placeholder="+48 513 340 013"
+                    value={phone}
+                    onChange={e => setPhone(e.target.value)}
+                    onBlur={() => setTouched(t => ({ ...t, phone: true }))}
+                    aria-invalid={touched.phone && !isValidPhone(phone) || undefined}
+                  />
+                  {touched.phone && !isValidPhone(phone) && (
+                    <span className="form-error" role="alert">
+                      {useT('Podaj poprawny numer (9 cyfr lub +48 i 9 cyfr).','Enter a valid number (9 digits, or +48 followed by 9 digits).')}
+                    </span>
+                  )}
                 </div>
-                <div className="form-group">
+                <div className={`form-group${touched.email && !isValidEmail(email) ? ' form-group--invalid' : ''}`}>
                   <label className="form-label">{useT('E-mail','E-mail')}</label>
-                  <input className="form-input" type="email" placeholder="jan@example.com" value={email} onChange={e => setEmail(e.target.value)} />
+                  <input
+                    className="form-input"
+                    type="email"
+                    inputMode="email"
+                    autoComplete="email"
+                    placeholder="jan@example.com"
+                    value={email}
+                    onChange={e => setEmail(e.target.value)}
+                    onBlur={() => setTouched(t => ({ ...t, email: true }))}
+                    aria-invalid={touched.email && !isValidEmail(email) || undefined}
+                  />
+                  {touched.email && !isValidEmail(email) && (
+                    <span className="form-error" role="alert">
+                      {useT('Podaj poprawny adres e-mail (np. jan@example.com).','Enter a valid email address (e.g. jan@example.com).')}
+                    </span>
+                  )}
                 </div>
               </div>
             </div>
