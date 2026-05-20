@@ -100,7 +100,11 @@ async function renderMonth(ctx, booking, year, month, { edit = true } = {}) {
     `✂️ ${escapeHtml(booking.barber_name)} · 👤 ${escapeHtml(booking.customer_name)}`,
     ``,
     `📅 <b>${escapeHtml(monthHeaderPl(year, month))}</b> — wybierz nowy dzień`,
-    `<i>📍 obecny dzień &nbsp; • rezerwacje &nbsp; 🚫 blokady &nbsp; ✕ zamknięte &nbsp; · przeszłe</i>`,
+    `<i>📍 obecny dzień</i>`,
+    `<i>• rezerwacje</i>`,
+    `<i>🚫 blokady</i>`,
+    `<i>✕ zamknięte</i>`,
+    `<i>· przeszłe</i>`,
   ].join('\n');
 
   return reply(ctx, text, kb, edit);

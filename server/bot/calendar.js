@@ -55,14 +55,11 @@ async function renderMonth(ctx, barberId, year, month, { edit = false } = {}) {
 
   const kb = new InlineKeyboard();
 
-  // Nav row: ‹ · spacer · header · spacer · › — spacers widen the header
-  // relative to the single-cell arrows (Telegram splits a row equally).
+  // Nav row: ‹ · header · › — header absorbs the central width.
   const prev = prevMonth(year, month);
   const next = nextMonth(year, month);
   kb.text('‹', `cal:m:${barberId}:${prev.y}:${prev.m}`)
-    .text(' ', NOOP)
     .text(`${monthHeaderPl(year, month)}`, NOOP)
-    .text(' ', NOOP)
     .text('›', `cal:m:${barberId}:${next.y}:${next.m}`)
     .row();
 
@@ -124,7 +121,10 @@ async function renderMonth(ctx, barberId, year, month, { edit = false } = {}) {
     `📅 <b>${escapeHtml(monthHeaderPl(year, month))}</b>`,
     `✂️ ${escapeHtml(barber.name)}`,
     ``,
-    `<i>• rezerwacje &nbsp; 🚫 blokady &nbsp; ✕ zamknięte &nbsp; · przeszłe</i>`,
+    `<i>• rezerwacje</i>`,
+    `<i>🚫 blokady</i>`,
+    `<i>✕ zamknięte</i>`,
+    `<i>· przeszłe</i>`,
   ].join('\n');
 
   return reply(ctx, text, kb, edit);
