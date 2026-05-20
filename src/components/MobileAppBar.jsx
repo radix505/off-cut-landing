@@ -111,7 +111,7 @@ export default function MobileAppBar() {
         aria-current={isHome ? 'page' : undefined}
       >
         <span className="mab-icon"><HomeIcon /></span>
-        <span className="mab-label">{useT('Strona', 'Home')}</span>
+        <span className="mab-label">{useT('Home', 'Home')}</span>
       </button>
 
       <button
