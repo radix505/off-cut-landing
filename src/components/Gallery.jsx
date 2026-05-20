@@ -87,7 +87,6 @@ export default function Gallery() {
     <section id="gallery" className="gallery-section" ref={ref}>
       <div className="section-header">
         <div>
-          <div className="section-number">{useT('03 / GALERIA', '03 / GALLERY')}</div>
           <div className="section-title">{useT('Nasza praca', 'The Work')}</div>
         </div>
         <a className="section-link" href="https://www.instagram.com/off_cut_barbershop/" target="_blank" rel="noopener noreferrer">

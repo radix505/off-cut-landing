@@ -16,7 +16,6 @@ export default function Blog() {
     <section id="blog" className="blog-section" ref={ref}>
       <div className="section-header">
         <div>
-          <div className="section-number">{useT('06 / BLOG', '06 / BLOG')}</div>
           <div className="section-title">{useT('Ze świata Off Cut', 'From the Off Cut World')}</div>
         </div>
       </div>

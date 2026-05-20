@@ -10,7 +10,6 @@ export default function Map() {
     <section id="location" className="map-section" ref={ref}>
       <div className="section-header">
         <div>
-          <div className="section-number">{useT('07 / LOKALIZACJA', '07 / LOCATION')}</div>
           <div className="section-title">{useT('Znajdź nas', 'Find Us')}</div>
         </div>
         <a

@@ -120,7 +120,6 @@ export default function Reviews() {
   const [gridRef, { cols, rows }] = useGridDims();
   const { lang } = useLang();
 
-  const sectionNumber = useT('04 / OPINIE', '04 / REVIEWS');
   const sectionTitle = useT('Co mówią klienci', 'What Clients Say');
   const aggregateLabel = useT('Ocena w Google', 'Google rating');
   const seeReviewsLabel = useT('Zobacz opinie', 'Read reviews');
@@ -158,7 +157,6 @@ export default function Reviews() {
 
       <div className="reviews-overlay">
         <div className="reviews-overlay-inner reveal">
-          <div className="section-number">{sectionNumber}</div>
           <h2 className="reviews-overlay-title">{sectionTitle}</h2>
           <div className="reviews-aggregate">
             <div className="reviews-aggregate-score">5.0</div>

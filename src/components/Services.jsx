@@ -126,7 +126,6 @@ export default function Services() {
   const { lang } = useLang();
   const { barbers, services, loading, error } = useCatalog();
 
-  const sectionNumber = useT('01 / USŁUGI', '01 / SERVICES');
   const sectionTitle = useT('Co robimy', 'What We Do');
   const fullPriceLink = useT('Pełny cennik →', 'Full price list →');
   const errorLine = useT('Cennik chwilowo niedostępny.', 'Price list temporarily unavailable.');
@@ -152,7 +151,6 @@ export default function Services() {
     <section id="services" className="services-section" ref={ref}>
       <div className="section-header">
         <div>
-          <div className="section-number">{sectionNumber}</div>
           <div className="section-title">{sectionTitle}</div>
         </div>
         <a className="section-link" onClick={() => navigate('/services')} style={{ cursor: 'pointer' }}>
