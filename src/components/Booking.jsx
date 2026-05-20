@@ -123,6 +123,7 @@ export default function Booking() {
   const [errorMsg,     setErrorMsg]     = useState('');
   const [filteredBarberIds, setFilteredBarberIds] = useState(null);
   const [touched, setTouched] = useState({ name: false, phone: false, email: false });
+  const [step4Phase, setStep4Phase] = useState('form'); // 'form' | 'resume'
   const [isMobile, setIsMobile] = useState(() =>
     typeof window !== 'undefined' && window.matchMedia('(max-width: 540px)').matches
   );
@@ -270,14 +271,23 @@ export default function Booking() {
   const stepIdx = visibleSteps.indexOf(step);
 
   function goBack() {
+    if (step === 4 && step4Phase === 'resume') { setStep4Phase('form'); return; }
     if (step === 2 && category) { setCategory(null); setService(null); return; }
     if (stepIdx <= 0) return;
     setStep(visibleSteps[stepIdx - 1]);
   }
 
   function goForward() {
-    if (step === 4 && !canAdvance[3]()) {
-      setTouched({ name: true, phone: true, email: true });
+    if (step === 4) {
+      if (step4Phase === 'form') {
+        if (!canAdvance[3]()) {
+          setTouched({ name: true, phone: true, email: true });
+          return;
+        }
+        setStep4Phase('resume');
+        return;
+      }
+      if (!isSubmitting) submitBooking();
       return;
     }
     if (!canAdvance[step - 1]() || isSubmitting) return;
@@ -321,6 +331,7 @@ export default function Booking() {
     setUnavailable(new Set()); setIsSubmitting(false); setErrorMsg('');
     setFilteredBarberIds(null);
     setTouched({ name: false, phone: false, email: false });
+    setStep4Phase('form');
   }
 
   async function submitBooking() {
@@ -659,22 +670,10 @@ export default function Booking() {
             </div>
           )}
 
-          {/* ── STEP 4: Details ── */}
-          {step === 4 && (
+          {/* ── STEP 4a: Contact form ── */}
+          {step === 4 && step4Phase === 'form' && (
             <div className="booking-step-body">
               <div className="bwiz-heading">{t('Twoje dane','Your details')}</div>
-              <div className="booking-summary-box">
-                {[
-                  [t('Barber','Barber'), barber?.name],
-                  [t('Usługa','Service'), lang==='pl' ? service?.namePL : service?.nameEN],
-                  [t('Termin','Date'), `${dateLabel} · ${slot}`],
-                ].map(([label, val]) => (
-                  <div key={label} className="bsum-row">
-                    <span className="bsum-label">{label}</span>
-                    <span className="bsum-val">{val}</span>
-                  </div>
-                ))}
-              </div>
               <div className="booking-contact-fields">
                 <div className={`form-group${touched.name && !isValidName(name) ? ' form-group--invalid' : ''}`}>
                   <label className="form-label">{t('Imię i nazwisko','Full name')}</label>
@@ -735,13 +734,47 @@ export default function Booking() {
             </div>
           )}
 
+          {/* ── STEP 4b: Resume ── */}
+          {step === 4 && step4Phase === 'resume' && (
+            <div className="booking-step-body">
+              <div className="bwiz-heading">{t('Podsumowanie','Summary')}</div>
+              <div className="booking-summary-box">
+                <div className="bsum-row">
+                  <span className="bsum-label">{t('Barber','Barber')}</span>
+                  <span className="bsum-val">{barber?.name}</span>
+                </div>
+                <div className="bsum-row">
+                  <span className="bsum-label">{t('Usługa','Service')}</span>
+                  <span className="bsum-val">{lang==='pl' ? service?.namePL : service?.nameEN}</span>
+                </div>
+                <div className="bsum-row">
+                  <span className="bsum-label">{t('Termin','Date')}</span>
+                  <span className="bsum-val">{dateLabel} · {slot}</span>
+                </div>
+                <div className="bsum-separator" />
+                <div className="bsum-row">
+                  <span className="bsum-label">{t('Imię','Name')}</span>
+                  <span className="bsum-val">{name}</span>
+                </div>
+                <div className="bsum-row">
+                  <span className="bsum-label">{t('Telefon','Phone')}</span>
+                  <span className="bsum-val">{phone}</span>
+                </div>
+                <div className="bsum-row">
+                  <span className="bsum-label">{t('E-mail','E-mail')}</span>
+                  <span className="bsum-val">{email}</span>
+                </div>
+              </div>
+            </div>
+          )}
+
           {errorMsg && (
             <div className="booking-error" role="alert">{errorMsg}</div>
           )}
 
           {/* Navigation */}
           <div className="booking-wizard-nav" ref={wizardEndRef}>
-            {(stepIdx > 0 || (step === 2 && category))
+            {(stepIdx > 0 || (step === 2 && category) || (step === 4 && step4Phase === 'resume'))
               ? <button className="bwiz-back" onClick={goBack} disabled={isSubmitting}>← {t('Wróć','Back')}</button>
               : <span />}
             <button
@@ -749,9 +782,9 @@ export default function Booking() {
               disabled={isSubmitting}
               onClick={goForward}
             >
-              {stepIdx < visibleSteps.length - 1
-                ? t('Dalej','Next')
-                : isSubmitting ? t('Wysyłanie…','Sending…') : t('Wyślij →','Send →')}
+              {step === 4 && step4Phase === 'resume'
+                ? (isSubmitting ? t('Wysyłanie…','Sending…') : t('Wyślij →','Send →'))
+                : t('Dalej','Next')}
             </button>
           </div>
 
