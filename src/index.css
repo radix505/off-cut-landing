@@ -1374,7 +1374,7 @@ body.nav-drawer-is-open .mobile-app-bar { opacity: 0; pointer-events: none; }
 .prices-hero-cta { display: flex; flex-direction: row; gap: 1rem; margin-top: 2.5rem; flex-wrap: wrap; }
 .page-back-btn { position: absolute; top: 6.5rem; left: 3rem; z-index: 10; display: flex; align-items: center; gap: 6px; padding: 0.7rem 1.2rem; background: rgba(245,243,239,0.55); border: none; color: var(--ink); font-family: 'Inter', sans-serif; font-size: 0.72rem; letter-spacing: 0.25em; text-transform: uppercase; font-weight: 500; cursor: pointer; border-radius: 100px; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); transition: background 0.2s; min-height: var(--touch-min); }
 .page-back-btn:hover { background: rgba(245,243,239,0.85); }
-@media (max-width: 768px) { .page-back-btn { top: 5.5rem; left: 1.5rem; } }
+@media (max-width: 768px) { .page-back-btn { display: none; } }
 .prices-full-section { background: #fff; }
 .prices-groups { max-width: 900px; margin: 0 auto; padding: 0 3rem 4rem; display: flex; flex-direction: column; gap: 0; background: #fff; }
 .prices-group { border-bottom: 0.5px solid #ece9e2; }
