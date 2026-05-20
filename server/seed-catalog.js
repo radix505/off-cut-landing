@@ -219,7 +219,7 @@ export async function suspendInitialBarbersIfNeeded(logger) {
     );
     if (rows.length === 0) return false;
 
-    await client.query('UPDATE barbers SET suspended = 1, active = 1 WHERE id IN (1, 3)');
+    await client.query('UPDATE barbers SET suspended = true, active = 1 WHERE id IN (1, 3)');
     logger?.info?.({ ids: [1, 3] }, 'initial barbers suspended');
     return true;
   });

@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect, useRef } from 'react';
-import { useT, useLang } from '../context/LangContext';
+import { useLang } from '../context/LangContext';
 import { useReveal } from '../hooks/useReveal';
 import { useRouter } from '../context/RouterContext';
 import { buildSlots } from '../data/booking-config';
@@ -100,6 +100,7 @@ const CATEGORY_DEFS = [
 export default function Booking() {
   const ref = useReveal();
   const { lang } = useLang();
+  const t = (pl, en) => (lang === 'pl' ? pl : en);
   const { navState, clearNavState } = useRouter();
   const { barbers: BARBERS, services: ALL_SERVICES } = useCatalog();
 
@@ -143,17 +144,22 @@ export default function Booking() {
   const slots    = useMemo(() => buildSlots(date), [date]);
 
   useEffect(() => {
-    if (!barber || !date) { setUnavailable(new Set()); return; }
+    if (!barber || !date || !service) { setUnavailable(new Set()); return; }
     const iso = toISODate(date);
     const ctrl = new AbortController();
     setLoadingAvail(true);
-    fetch(`/api/availability?barberId=${encodeURIComponent(barber.id)}&date=${iso}`, { signal: ctrl.signal })
+    const params = new URLSearchParams({
+      barberId: String(barber.id),
+      date: iso,
+      serviceId: service.id,
+    });
+    fetch(`/api/availability?${params}`, { signal: ctrl.signal })
       .then(r => r.ok ? r.json() : Promise.reject(new Error(`HTTP ${r.status}`)))
       .then(data => setUnavailable(new Set(data.unavailable ?? [])))
       .catch(err => { if (err.name !== 'AbortError') setUnavailable(new Set()); })
       .finally(() => setLoadingAvail(false));
     return () => ctrl.abort();
-  }, [barber?.id, date]);
+  }, [barber?.id, date, service?.id]);
 
   useEffect(() => {
     if (!barber || !service) { setFullyBookedDates(new Set()); return; }
@@ -373,7 +379,7 @@ export default function Booking() {
   }
 
   const stepLabels = [
-    useT('Barber','Barber'), useT('Usługa','Service'), useT('Termin','Date'), useT('Dane','Details')
+    t('Barber','Barber'), t('Usługa','Service'), t('Termin','Date'), t('Dane','Details')
   ];
 
   const dateLabel = date
@@ -382,26 +388,26 @@ export default function Booking() {
   const dateChipLabel = date
     ? `${(lang==='pl' ? DAYS_PL : DAYS_EN)[(date.getDay()+6)%7]} ${date.getDate()} ${(lang==='pl' ? MONTH_PL : MONTH_EN)[date.getMonth()]}`.toUpperCase()
     : '';
-  const tChangeDate = useT('Zmień datę','Change date');
-  const tChange     = useT('ZMIEŃ','CHANGE');
+  const tChangeDate = t('Zmień datę','Change date');
+  const tChange     = t('ZMIEŃ','CHANGE');
 
   if (submitted) return (
     <section id="booking" className="booking-section" ref={ref}>
       <div className="section-header">
         <div>
-          <div className="section-number">{useT('05 / REZERWACJA','05 / BOOKING')}</div>
+          <div className="section-number">{t('05 / REZERWACJA','05 / BOOKING')}</div>
         </div>
       </div>
       <div className="booking-success">
         <div className="booking-success-icon">✓</div>
-        <div className="booking-success-title">{useT('Rezerwacja wysłana!','Booking Sent!')}</div>
+        <div className="booking-success-title">{t('Rezerwacja wysłana!','Booking Sent!')}</div>
         <p className="booking-success-text">
-          {useT('Potwierdzimy Twoją wizytę e-mailem.','We\'ll confirm your appointment by email.')}
+          {t('Potwierdzimy Twoją wizytę e-mailem.','We\'ll confirm your appointment by email.')}
         </p>
         <div className="booking-success-email">
-          <span className="booking-success-email-label">{useT('Potwierdzenie na e-mail', 'Confirmation email')}</span>
+          <span className="booking-success-email-label">{t('Potwierdzenie na e-mail', 'Confirmation email')}</span>
           <span className="booking-success-email-addr">
-            {email.trim() || useT('— podaj e-mail przy następnej rezerwacji', '— add your email at next booking')}
+            {email.trim() || t('— podaj e-mail przy następnej rezerwacji', '— add your email at next booking')}
           </span>
         </div>
         <div className="booking-success-summary">
@@ -410,7 +416,7 @@ export default function Booking() {
           <span>{dateLabel}</span><span className="bss-dot">·</span>
           <span>{slot}</span>
         </div>
-        <button className="booking-reset-btn" onClick={reset}>{useT('Nowa rezerwacja','New booking')}</button>
+        <button className="booking-reset-btn" onClick={reset}>{t('Nowa rezerwacja','New booking')}</button>
       </div>
     </section>
   );
@@ -419,7 +425,7 @@ export default function Booking() {
     <section id="booking" className="booking-section" ref={ref}>
       <div className="section-header">
         <div>
-          <div className="section-number">{useT('05 / REZERWACJA','05 / BOOKING')}</div>
+          <div className="section-number">{t('05 / REZERWACJA','05 / BOOKING')}</div>
         </div>
       </div>
 
@@ -428,14 +434,14 @@ export default function Booking() {
         {/* ── LEFT INFO ── */}
         <div className="booking-text reveal">
           <h2>
-            {useT('ZAREZERWUJ','BOOK')}<br />
-            {useT('SWÓJ','YOUR')}<br />
-            {useT('TERMIN','SLOT')}
+            {t('ZAREZERWUJ','BOOK')}<br />
+            {t('SWÓJ','YOUR')}<br />
+            {t('TERMIN','SLOT')}
           </h2>
-          <p>{useT('Wizyty walk-in dostępne gdy mamy wolne miejsca. Aby mieć pewność co do wybranego barbera, rezerwuj z wyprzedzeniem.','Walk-ins welcome when available. For guaranteed access to your preferred barber, book ahead.')}</p>
+          <p>{t('Wizyty walk-in dostępne gdy mamy wolne miejsca. Aby mieć pewność co do wybranego barbera, rezerwuj z wyprzedzeniem.','Walk-ins welcome when available. For guaranteed access to your preferred barber, book ahead.')}</p>
           <div className="booking-info-row">
             <div className="booking-info-item">
-              <span className="booking-info-label">{useT('Godziny','Hours')}</span>
+              <span className="booking-info-label">{t('Godziny','Hours')}</span>
               {HOURS_SUMMARY.map((slot, i) => (
                 <span
                   key={slot.labelEN}
@@ -447,11 +453,11 @@ export default function Booking() {
               ))}
             </div>
             <div className="booking-info-item">
-              <span className="booking-info-label">{useT('Telefon','Phone')}</span>
+              <span className="booking-info-label">{t('Telefon','Phone')}</span>
               <a className="booking-info-link" href="tel:+48513340013">+48 513 340 013</a>
             </div>
             <div className="booking-info-item">
-              <span className="booking-info-label">{useT('Adres','Location')}</span>
+              <span className="booking-info-label">{t('Adres','Location')}</span>
               <span className="booking-info-value">Krzywoustego 27 U4<br />Szczecin</span>
             </div>
           </div>
@@ -482,7 +488,7 @@ export default function Booking() {
           {/* ── STEP 1: Barber ── */}
           {step === 1 && (
             <div className="booking-step-body">
-              <div className="bwiz-heading">{useT('Wybierz barbera','Choose your barber')}</div>
+              <div className="bwiz-heading">{t('Wybierz barbera','Choose your barber')}</div>
               <div className="booking-barbers-grid">
                 {BARBERS.filter(b => !filteredBarberIds || filteredBarberIds.has(b.id)).map(b => {
                   const suspended = !!b.suspended;
@@ -516,7 +522,7 @@ export default function Booking() {
             <div className="booking-step-body">
               {!category ? (
                 <>
-                  <div className="bwiz-heading">{useT('Wybierz kategorię','Choose a category')}</div>
+                  <div className="bwiz-heading">{t('Wybierz kategorię','Choose a category')}</div>
                   <div className="booking-categories-grid">
                     {CATEGORY_DEFS.map((cat, i) => {
                       const empty = ALL_SERVICES.filter(s =>
@@ -555,7 +561,7 @@ export default function Booking() {
                       })()}
                     </span>
                   </button>
-                  <div className="bwiz-heading">{useT('Wybierz usługę','Choose a service')}</div>
+                  <div className="bwiz-heading">{t('Wybierz usługę','Choose a service')}</div>
                   <div className="booking-services-list">
                     {ALL_SERVICES
                       .filter(s => barber && (s.barberIds ?? []).includes(barber.id) && categorize(s) === category)
@@ -633,7 +639,7 @@ export default function Booking() {
               {date ? (
                 <div className="booking-time-col">
                   <div className="bwiz-heading bwiz-heading--slots">
-                    {useT('Wybierz godzinę','Choose a time')}
+                    {t('Wybierz godzinę','Choose a time')}
                   </div>
                   <BookingTimeWheel
                     slots={slots}
@@ -646,7 +652,7 @@ export default function Booking() {
                 </div>
               ) : (
                 <div className="booking-time-prompt">
-                  {useT('Wybierz dzień','Select a day')}
+                  {t('Wybierz dzień','Select a day')}
                 </div>
               )}
 
@@ -656,12 +662,12 @@ export default function Booking() {
           {/* ── STEP 4: Details ── */}
           {step === 4 && (
             <div className="booking-step-body">
-              <div className="bwiz-heading">{useT('Twoje dane','Your details')}</div>
+              <div className="bwiz-heading">{t('Twoje dane','Your details')}</div>
               <div className="booking-summary-box">
                 {[
-                  [useT('Barber','Barber'), barber?.name],
-                  [useT('Usługa','Service'), lang==='pl' ? service?.namePL : service?.nameEN],
-                  [useT('Termin','Date'), `${dateLabel} · ${slot}`],
+                  [t('Barber','Barber'), barber?.name],
+                  [t('Usługa','Service'), lang==='pl' ? service?.namePL : service?.nameEN],
+                  [t('Termin','Date'), `${dateLabel} · ${slot}`],
                 ].map(([label, val]) => (
                   <div key={label} className="bsum-row">
                     <span className="bsum-label">{label}</span>
@@ -671,7 +677,7 @@ export default function Booking() {
               </div>
               <div className="booking-contact-fields">
                 <div className={`form-group${touched.name && !isValidName(name) ? ' form-group--invalid' : ''}`}>
-                  <label className="form-label">{useT('Imię i nazwisko','Full name')}</label>
+                  <label className="form-label">{t('Imię i nazwisko','Full name')}</label>
                   <input
                     className="form-input"
                     type="text"
@@ -683,12 +689,12 @@ export default function Booking() {
                   />
                   {touched.name && !isValidName(name) && (
                     <span className="form-error" role="alert">
-                      {useT('Podaj imię (min. 2 znaki).','Enter your name (min 2 characters).')}
+                      {t('Podaj imię (min. 2 znaki).','Enter your name (min 2 characters).')}
                     </span>
                   )}
                 </div>
                 <div className={`form-group${touched.phone && !isValidPhone(phone) ? ' form-group--invalid' : ''}`}>
-                  <label className="form-label">{useT('Telefon','Phone')}</label>
+                  <label className="form-label">{t('Telefon','Phone')}</label>
                   <input
                     className="form-input"
                     type="tel"
@@ -702,12 +708,12 @@ export default function Booking() {
                   />
                   {touched.phone && !isValidPhone(phone) && (
                     <span className="form-error" role="alert">
-                      {useT('Podaj poprawny numer (9 cyfr lub +48 i 9 cyfr).','Enter a valid number (9 digits, or +48 followed by 9 digits).')}
+                      {t('Podaj poprawny numer (9 cyfr lub +48 i 9 cyfr).','Enter a valid number (9 digits, or +48 followed by 9 digits).')}
                     </span>
                   )}
                 </div>
                 <div className={`form-group${touched.email && !isValidEmail(email) ? ' form-group--invalid' : ''}`}>
-                  <label className="form-label">{useT('E-mail','E-mail')}</label>
+                  <label className="form-label">{t('E-mail','E-mail')}</label>
                   <input
                     className="form-input"
                     type="email"
@@ -721,7 +727,7 @@ export default function Booking() {
                   />
                   {touched.email && !isValidEmail(email) && (
                     <span className="form-error" role="alert">
-                      {useT('Podaj poprawny adres e-mail (np. jan@example.com).','Enter a valid email address (e.g. jan@example.com).')}
+                      {t('Podaj poprawny adres e-mail (np. jan@example.com).','Enter a valid email address (e.g. jan@example.com).')}
                     </span>
                   )}
                 </div>
@@ -736,7 +742,7 @@ export default function Booking() {
           {/* Navigation */}
           <div className="booking-wizard-nav" ref={wizardEndRef}>
             {(stepIdx > 0 || (step === 2 && category))
-              ? <button className="bwiz-back" onClick={goBack} disabled={isSubmitting}>← {useT('Wróć','Back')}</button>
+              ? <button className="bwiz-back" onClick={goBack} disabled={isSubmitting}>← {t('Wróć','Back')}</button>
               : <span />}
             <button
               className={`bwiz-next${canAdvance[step-1]() && !isSubmitting ? '' : ' off'}`}
@@ -744,8 +750,8 @@ export default function Booking() {
               onClick={goForward}
             >
               {stepIdx < visibleSteps.length - 1
-                ? useT('Dalej','Next')
-                : isSubmitting ? useT('Wysyłanie…','Sending…') : useT('Wyślij →','Send →')}
+                ? t('Dalej','Next')
+                : isSubmitting ? t('Wysyłanie…','Sending…') : t('Wyślij →','Send →')}
             </button>
           </div>
 

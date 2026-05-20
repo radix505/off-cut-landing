@@ -30,7 +30,7 @@ export async function getCatalog() {
     bio: { pl: r.bio_pl ?? '', en: r.bio_en ?? '' },
     longBio: { pl: r.long_bio_pl ?? '', en: r.long_bio_en ?? '' },
     tags: tagsByBarber.get(r.id) ?? [],
-    suspended: r.suspended === 1,
+    suspended: !!r.suspended,
   }));
 
   const linksByService = new Map();

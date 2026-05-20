@@ -1,5 +1,5 @@
 import { withTransaction } from '../db.js';
-import { computeUnavailable, blockOverlapsExisting } from '../availability.js';
+import { computeUnavailableStarts, blockOverlapsExisting } from '../availability.js';
 import { getBarberIdSet, getServiceById, isBarberLinkedToService } from '../catalog.js';
 import { buildSlotsForISODate } from '../../src/data/booking-config.js';
 import { SLOT_STEP_MIN } from '../../src/data/businessHours.js';
@@ -23,21 +23,26 @@ export default async function bookingsRoutes(fastify) {
     schema: {
       querystring: {
         type: 'object',
-        required: ['barberId', 'date'],
+        required: ['barberId', 'date', 'serviceId'],
         properties: {
-          barberId: { type: 'integer', minimum: 1 },
-          date:     { type: 'string', pattern: ISO_DATE.source },
+          barberId:  { type: 'integer', minimum: 1 },
+          date:      { type: 'string', pattern: ISO_DATE.source },
+          serviceId: { type: 'string', minLength: 1 },
         },
       },
     },
     handler: async (req, reply) => {
-      const { barberId, date } = req.query;
+      const { barberId, date, serviceId } = req.query;
       const ids = await getBarberIdSet();
       if (!ids.has(barberId)) {
         return reply.code(422).send({ error: 'unknown_barber' });
       }
+      const service = await getServiceById(serviceId);
+      if (!service) {
+        return reply.code(422).send({ error: 'unknown_service' });
+      }
       const rows = await bookingsRepo.findActiveByBarberAndDate(barberId, date);
-      const unavailable = [...computeUnavailable(rows, date)].sort();
+      const unavailable = [...computeUnavailableStarts(rows, date, service.duration_min)].sort();
       return { unavailable };
     },
   });

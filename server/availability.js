@@ -29,3 +29,21 @@ export function blockOverlapsExisting(newSlot, newDurationMin, existingBookings,
   }
   return false;
 }
+
+// Start slots where a new booking of `durationMin` cannot begin — either it
+// would overlap an existing booking or run past end-of-day.
+export function computeUnavailableStarts(bookings, isoDate, durationMin) {
+  const grid = buildSlotsForISODate(isoDate);
+  const blocks = Math.ceil(durationMin / SLOT_STEP_MIN);
+  const unavailable = new Set();
+  for (let i = 0; i < grid.length; i++) {
+    if (i + blocks > grid.length) {
+      unavailable.add(grid[i]);
+      continue;
+    }
+    if (blockOverlapsExisting(grid[i], durationMin, bookings, isoDate)) {
+      unavailable.add(grid[i]);
+    }
+  }
+  return unavailable;
+}

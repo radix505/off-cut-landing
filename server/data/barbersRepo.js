@@ -11,11 +11,11 @@ const SQL_LIST_FOR_CATALOG = `
 const SQL_LIST_ACTIVE_BRIEF = `
   SELECT id, name, title_pl
   FROM barbers
-  WHERE active = 1 AND suspended = 0
+  WHERE active = 1 AND suspended = false
   ORDER BY sort_order, id
 `;
 
-const SQL_ACTIVE_IDS = `SELECT id FROM barbers WHERE active = 1 AND suspended = 0`;
+const SQL_ACTIVE_IDS = `SELECT id FROM barbers WHERE active = 1 AND suspended = false`;
 
 const SQL_LIST_TAGS = `
   SELECT barber_id, tag_pl, tag_en
