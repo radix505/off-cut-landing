@@ -16,6 +16,20 @@ export const SCHEMA = [
    )`,
   `CREATE INDEX IF NOT EXISTS idx_barbers_slug ON barbers(slug)`,
   `ALTER TABLE barbers ADD COLUMN IF NOT EXISTS suspended BOOLEAN NOT NULL DEFAULT false`,
+  // Earlier installs created `suspended` as INTEGER. ADD COLUMN IF NOT EXISTS
+  // above is a no-op on those DBs, so convert it here. Idempotent: skipped when
+  // already boolean.
+  `DO $$
+   BEGIN
+     IF EXISTS (
+       SELECT 1 FROM information_schema.columns
+       WHERE table_name = 'barbers' AND column_name = 'suspended' AND data_type = 'integer'
+     ) THEN
+       ALTER TABLE barbers ALTER COLUMN suspended DROP DEFAULT;
+       ALTER TABLE barbers ALTER COLUMN suspended TYPE boolean USING (suspended <> 0);
+       ALTER TABLE barbers ALTER COLUMN suspended SET DEFAULT false;
+     END IF;
+   END$$`,
 
   `CREATE TABLE IF NOT EXISTS services (
                                          id             TEXT PRIMARY KEY,
