@@ -55,11 +55,14 @@ async function renderMonth(ctx, barberId, year, month, { edit = false } = {}) {
 
   const kb = new InlineKeyboard();
 
-  // Nav row: ‹ · header · › — header absorbs the central width.
+  // Nav row: ‹ · header · ›. Telegram allocates row width by text length,
+  // so we pad the header with em-spaces (U+2003) to force it wider than
+  // the single-glyph arrows.
   const prev = prevMonth(year, month);
   const next = nextMonth(year, month);
+  const pad = ' '.repeat(6);
   kb.text('‹', `cal:m:${barberId}:${prev.y}:${prev.m}`)
-    .text(`${monthHeaderPl(year, month)}`, NOOP)
+    .text(`${pad}${monthHeaderPl(year, month)}${pad}`, NOOP)
     .text('›', `cal:m:${barberId}:${next.y}:${next.m}`)
     .row();
 

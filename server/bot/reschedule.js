@@ -38,8 +38,9 @@ async function renderMonth(ctx, booking, year, month, { edit = true } = {}) {
   const kb = new InlineKeyboard();
   const prev = prevMonth(year, month);
   const next = nextMonth(year, month);
+  const pad = ' '.repeat(6);
   kb.text('‹', `rs:m:${booking.id}:${prev.y}:${prev.m}`)
-    .text(monthHeaderPl(year, month), NOOP)
+    .text(`${pad}${monthHeaderPl(year, month)}${pad}`, NOOP)
     .text('›', `rs:m:${booking.id}:${next.y}:${next.m}`)
     .row();
 
