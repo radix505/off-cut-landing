@@ -1132,9 +1132,9 @@ body.nav-drawer-is-open .mobile-app-bar { opacity: 0; pointer-events: none; }
   .bsi-meta { gap: 0.65rem; }
   /* booking-step-body--dt is now driven by @container wizard query (above) */
   /* Booking subpage — match specificity of the desktop overrides */
-  .booking-page-wrap .booking-section { padding-top: 8.5rem; }
+  .booking-page-wrap .booking-section { padding-top: 6rem; }
   .booking-page-wrap .booking-layout { grid-template-columns: 1fr; gap: 2rem; }
-  .booking-page-wrap .booking-wizard { min-height: unset; max-height: 80svh; padding: 1.5rem; order: -1; }
+  .booking-page-wrap .booking-wizard { min-height: unset; max-height: clamp(380px, calc(100svh - 10.5rem), 680px); max-height: clamp(380px, calc(100dvh - 10.5rem), 680px); padding: 1.5rem; order: -1; }
   .booking-page-wrap .booking-text { order: 0; }
 
   /* Footer — mobile single-column redesign */
