@@ -57,7 +57,7 @@ export default function ContactPage() {
               <div className="contact-item">
                 <div className="contact-label">{useT('Adres', 'Address')}</div>
                 <p className="contact-value">Bolesława Krzywoustego 27 U4<br />70-316 Szczecin</p>
-                <a className="contact-action-link" href="https://maps.google.com/?q=Bolesława+Krzywoustego+27+U4,+Szczecin" target="_blank" rel="noopener noreferrer">
+                <a className="contact-action-link" href="https://maps.google.com/?q=Off+Cut+Barbershop+Szczecin" target="_blank" rel="noopener noreferrer">
                   {useT('Otwórz w mapach →', 'Open in Maps →')}
                 </a>
               </div>
@@ -128,7 +128,7 @@ export default function ContactPage() {
       <div className="contact-map-section">
         <iframe
           title="map"
-          src="https://maps.google.com/maps?q=Boles%C5%82awa+Krzywoustego+27+U4%2C+Szczecin&output=embed&z=16"
+          src="https://maps.google.com/maps?q=Off+Cut+Barbershop+Szczecin&output=embed&z=16"
           allowFullScreen="" loading="lazy" referrerPolicy="no-referrer-when-downgrade"
         />
       </div>
