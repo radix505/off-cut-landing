@@ -140,7 +140,7 @@ export default function Footer() {
           <button className="footer-pro-legal-link" onClick={() => navigate('/cookies')}>Cookies</button>
         </div>
         <div className="footer-credit">
-          {useT('Stworzone przez', 'Created by')} <img src="/drawing.svg" alt="Corelaners" className="footer-credit-logo" /><a href="https://corelaners.eu" target="_blank" rel="noopener noreferrer">corelaners.eu</a>
+          {useT('Stworzone przez', 'Created by')} <img src="https://corelaners.eu/public/drawing.svg" alt="Corelaners" className="footer-credit-logo" /><a href="https://corelaners.eu" target="_blank" rel="noopener noreferrer">corelaners.eu</a>
         </div>
       </div>
     </footer>
