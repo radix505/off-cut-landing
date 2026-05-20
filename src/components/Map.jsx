@@ -14,7 +14,7 @@ export default function Map() {
         </div>
         <a
           className="section-link"
-          href="https://maps.google.com/?q=Bolesława+Krzywoustego+27+U4,+Szczecin"
+          href="https://maps.google.com/?q=Off+Cut+Barbershop+Szczecin"
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -31,7 +31,7 @@ export default function Map() {
             </div>
             <a
               className="map-directions-cta"
-              href="https://www.google.com/maps/dir/?api=1&destination=Bole%C5%82awa+Krzywoustego+27+U4%2C+Szczecin"
+              href="https://www.google.com/maps/dir/?api=1&destination=Off+Cut+Barbershop+Szczecin"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -72,7 +72,7 @@ export default function Map() {
           <iframe
             className="map-frame"
             title={useT('Lokalizacja Off Cut Barbershop', 'Off Cut Barbershop Location')}
-            src="https://maps.google.com/maps?q=Boles%C5%82awa+Krzywoustego+27+U4%2C+Szczecin&output=embed&z=16"
+            src="https://maps.google.com/maps?q=Off+Cut+Barbershop+Szczecin&output=embed&z=16"
             allowFullScreen=""
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"
