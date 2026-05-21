@@ -6,6 +6,7 @@ import { buildSlots } from '../data/booking-config';
 import { BUSINESS_HOURS, HOURS_SUMMARY } from '../data/businessHours';
 import { useCatalog } from '../context/CatalogContext';
 import BookingTimeWheel from './BookingTimeWheel';
+import { trackEvent } from '../lib/analytics';
 
 const MONTH_PL = ['Styczeń','Luty','Marzec','Kwiecień','Maj','Czerwiec','Lipiec','Sierpień','Wrzesień','Październik','Listopad','Grudzień'];
 const MONTH_EN = ['January','February','March','April','May','June','July','August','September','October','November','December'];
@@ -349,6 +350,7 @@ export default function Booking() {
           name:      name.trim(),
           phone:     phone.trim(),
           email:     email.trim(),
+          lang,
         }),
       });
       if (res.ok) {
@@ -360,6 +362,14 @@ export default function Booking() {
             completedAt: Date.now(),
           }));
         } catch {}
+        trackEvent('booking_submitted', {
+          barber_id: barber.id,
+          barber_name: barber.name,
+          service_id: service.id,
+          service_name: lang === 'pl' ? service.namePL : service.nameEN,
+          value: service.priceNumeric ?? service.price_pln ?? undefined,
+          currency: 'PLN',
+        });
         setSubmitted(true);
         return;
       }
@@ -413,7 +423,10 @@ export default function Booking() {
         <div className="booking-success-icon">✓</div>
         <div className="booking-success-title">{t('Rezerwacja wysłana!','Booking Sent!')}</div>
         <p className="booking-success-text">
-          {t('Potwierdzimy Twoją wizytę e-mailem.','We\'ll confirm your appointment by email.')}
+          {t(
+            'Termin trafił do nas. Mail z potwierdzeniem zgłoszenia jest już w drodze; drugi wyślemy z plikiem do kalendarza, jak tylko barber zatwierdzi rezerwację.',
+            'Your booking is in. We\'ve just sent a confirmation that it was received; a second email with a calendar file will follow as soon as the barber approves it.',
+          )}
         </p>
         <div className="booking-success-email">
           <span className="booking-success-email-label">{t('Potwierdzenie na e-mail', 'Confirmation email')}</span>

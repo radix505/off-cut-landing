@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useT } from '../context/LangContext';
 import { useRouter } from '../context/RouterContext';
+import { updateConsent } from '../lib/analytics';
 
 export default function CookieBanner() {
   const [visible, setVisible] = useState(() => !localStorage.getItem('offcut-consent'));
@@ -17,11 +18,13 @@ export default function CookieBanner() {
 
   function accept() {
     localStorage.setItem('offcut-consent', 'accepted');
+    updateConsent(true);
     setVisible(false);
   }
 
   function decline() {
     localStorage.setItem('offcut-consent', 'declined');
+    updateConsent(false);
     setVisible(false);
   }
 
@@ -29,8 +32,8 @@ export default function CookieBanner() {
     <div className="cookie-banner">
       <p className="cookie-banner-text">
         {useT(
-          'Używamy niezbędnych plików cookie do poprawnego działania strony.',
-          'We use essential cookies to keep this site running.'
+          'Używamy plików cookie do działania strony i — za Twoją zgodą — do anonimowej statystyki ruchu (Google Analytics).',
+          'We use cookies to keep this site running and — with your consent — for anonymous traffic analytics (Google Analytics).',
         )}{' '}
         <button className="cookie-banner-link" onClick={() => navigate('/cookies')}>
           {useT('Dowiedz się więcej', 'Learn more')}

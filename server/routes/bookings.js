@@ -5,6 +5,7 @@ import { buildSlotsForISODate } from '../../src/data/booking-config.js';
 import { SLOT_STEP_MIN } from '../../src/data/businessHours.js';
 import * as bookingsRepo from '../data/bookingsRepo.js';
 import { notifyNewBooking } from '../bot/index.js';
+import { sendBookingReceived } from '../mail/index.js';
 
 const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
 const SLOT     = /^\d{2}:\d{2}$/;
@@ -107,7 +108,7 @@ export default async function bookingsRoutes(fastify) {
     schema: {
       body: {
         type: 'object',
-        required: ['barberId', 'serviceId', 'date', 'slot', 'name', 'phone'],
+        required: ['barberId', 'serviceId', 'date', 'slot', 'name', 'phone', 'email'],
         additionalProperties: false,
         properties: {
           barberId:  { type: 'integer', minimum: 1 },
@@ -116,11 +117,13 @@ export default async function bookingsRoutes(fastify) {
           slot:      { type: 'string', pattern: SLOT.source },
           name:      { type: 'string', minLength: 2, maxLength: 100 },
           phone:     { type: 'string', pattern: PHONE.source },
+          email:     { type: 'string', format: 'email', maxLength: 254 },
+          lang:      { type: 'string', enum: ['pl', 'en'], default: 'pl' },
         },
       },
     },
     handler: async (req, reply) => {
-      const { barberId, serviceId, date, slot, name, phone } = req.body;
+      const { barberId, serviceId, date, slot, name, phone, email, lang } = req.body;
 
       const ids = await getBarberIdSet();
       if (!ids.has(barberId)) return reply.code(422).send({ error: 'unknown_barber' });
@@ -161,6 +164,8 @@ export default async function bookingsRoutes(fastify) {
               slot,
               name: name.trim(),
               phone: phone.trim(),
+              email: email.trim(),
+              lang: lang ?? 'pl',
             },
             { client },
           );
@@ -169,6 +174,8 @@ export default async function bookingsRoutes(fastify) {
         const created = await bookingsRepo.findById(newId);
         if (created) {
           notifyNewBooking(created).catch((err) => req.log.warn({ err }, 'notifyNewBooking failed'));
+          sendBookingReceived(created, { log: req.log })
+            .catch((err) => req.log.warn({ err }, 'sendBookingReceived failed'));
         }
         return reply.code(201).send({ id: newId, status: 'pending' });
       } catch (err) {

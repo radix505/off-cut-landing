@@ -8,6 +8,7 @@ import CookieBanner from './components/CookieBanner';
 import ScissorsTransition from './components/ScissorsTransition';
 import MobileAppBar from './components/MobileAppBar';
 import HomePage from './pages/HomePage';
+import { useAnalyticsPageview } from './hooks/useAnalyticsPageview';
 
 class ErrorBoundary extends Component {
   state = { error: null };
@@ -42,6 +43,7 @@ const ContactPage = lazy(() => import('./pages/ContactPage'));
 
 function AppRoutes() {
   const { page, pageVisible } = useRouter();
+  useAnalyticsPageview();
   return (
     <div className={`page-content${pageVisible ? ' visible' : ''}`}>
       <Suspense fallback={null}>

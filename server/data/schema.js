@@ -63,6 +63,10 @@ export const SCHEMA = [
     )`,
   `CREATE INDEX IF NOT EXISTS idx_bookings_lookup ON bookings(barber_id, date)`,
   `ALTER TABLE bookings ADD COLUMN IF NOT EXISTS is_block BOOLEAN NOT NULL DEFAULT false`,
+  `ALTER TABLE bookings ADD COLUMN IF NOT EXISTS email TEXT`,
+  `ALTER TABLE bookings ADD COLUMN IF NOT EXISTS lang TEXT NOT NULL DEFAULT 'pl' CHECK (lang IN ('pl','en'))`,
+  `ALTER TABLE bookings ADD COLUMN IF NOT EXISTS confirmation_email_sent_at TIMESTAMPTZ`,
+  `ALTER TABLE bookings ADD COLUMN IF NOT EXISTS received_email_sent_at TIMESTAMPTZ`,
 
   `CREATE TABLE IF NOT EXISTS service_barbers (
                                                 service_id TEXT    NOT NULL REFERENCES services(id) ON DELETE CASCADE,

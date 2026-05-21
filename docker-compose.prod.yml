@@ -17,7 +17,14 @@ services:
       retries: 10
 
   app:
-    build: .
+    build:
+      context: .
+      args:
+        # Vite bakes VITE_* into the static bundle at build time. Dokploy
+        # forwards repo env vars to compose, which forwards them as
+        # build-args, which the Dockerfile re-exports as ENV before
+        # `npm run build`.
+        VITE_GTM_ID: ${VITE_GTM_ID:-}
     restart: unless-stopped
     depends_on:
       postgres:
@@ -30,6 +37,10 @@ services:
       LOG_LEVEL: ${LOG_LEVEL:-info}
       TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN:-}
       TELEGRAM_MANAGER_IDS: ${TELEGRAM_MANAGER_IDS:-}
+      RESEND_API_KEY: ${RESEND_API_KEY:-}
+      MAIL_FROM: ${MAIL_FROM:-}
+      MAIL_REPLY_TO: ${MAIL_REPLY_TO:-}
+      MAIL_DRY_RUN: ${MAIL_DRY_RUN:-}
     ports:
       - "3001:3001"
     networks:

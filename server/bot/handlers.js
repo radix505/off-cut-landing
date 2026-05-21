@@ -5,6 +5,7 @@ import {
   formatBookingCard, formatStats,
   todayInWarsaw, addDaysIso, isoToHumanPl, formatStatus,
 } from './format.js';
+import { sendBookingConfirmation } from '../mail/index.js';
 
 const ISO_DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 const HTML = { parse_mode: 'HTML' };
@@ -179,6 +180,10 @@ export function registerHandlers(bot) {
       reply_markup: bookingKeyboard(after),
     });
     await ctx.answerCallbackQuery({ text: `Status: ${formatStatus(status)}` });
+
+    if (action === 'confirm' && after?.status === 'confirmed') {
+      sendBookingConfirmation(after).catch(() => {});
+    }
   });
 
   // Tapping a booking in the /calendar day view — open the full card (like /find).

@@ -2,6 +2,13 @@ FROM node:20-bookworm-slim AS build
 
 WORKDIR /app
 
+# Vite bakes VITE_* env vars into the static bundle at build time, so any
+# such variable has to arrive as a Docker --build-arg and be re-exported
+# as ENV before `npm run build` runs. Add new build-args here when you
+# introduce more VITE_* knobs.
+ARG VITE_GTM_ID=""
+ENV VITE_GTM_ID=$VITE_GTM_ID
+
 RUN apt-get update && apt-get install -y --no-install-recommends \
     python3 make g++ ca-certificates \
   && rm -rf /var/lib/apt/lists/*

@@ -2,9 +2,12 @@ import { pool } from '../db.js';
 
 const SELECT_BOOKING_BASE = `
   SELECT b.id, b.barber_id, ba.name AS barber_name,
-         b.service_id, s.name_pl AS service_name,
+         b.service_id, s.name_pl AS service_name, s.name_en AS service_name_en,
+         s.duration_label AS service_duration_label, s.price_pln AS service_price_pln,
          b.duration_min, b.date, b.slot,
-         b.name AS customer_name, b.phone, b.status, b.is_block, b.created_at
+         b.name AS customer_name, b.phone, b.email, b.lang,
+         b.status, b.is_block, b.created_at,
+         b.confirmation_email_sent_at, b.received_email_sent_at
   FROM bookings b
          JOIN barbers ba ON ba.id = b.barber_id
          LEFT JOIN services s ON s.id = b.service_id
@@ -94,8 +97,22 @@ const SQL_TOTAL_REVENUE_IN_RANGE = `
 const SQL_UPDATE_STATUS = `UPDATE bookings SET status = $1 WHERE id = $2`;
 
 const SQL_INSERT = `
-  INSERT INTO bookings (barber_id, service_id, duration_min, date, slot, name, phone)
-  VALUES ($1, $2, $3, $4, $5, $6, $7)
+  INSERT INTO bookings (barber_id, service_id, duration_min, date, slot, name, phone, email, lang)
+  VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+  RETURNING id
+`;
+
+const SQL_MARK_CONFIRMATION_EMAIL_SENT = `
+  UPDATE bookings
+     SET confirmation_email_sent_at = now()
+   WHERE id = $1 AND confirmation_email_sent_at IS NULL
+  RETURNING id
+`;
+
+const SQL_MARK_RECEIVED_EMAIL_SENT = `
+  UPDATE bookings
+     SET received_email_sent_at = now()
+   WHERE id = $1 AND received_email_sent_at IS NULL
   RETURNING id
 `;
 
@@ -201,13 +218,24 @@ export async function updateStatus(id, status, { client } = {}) {
 }
 
 export async function insert(
-  { barberId, serviceId, durationMin, date, slot, name, phone },
+  { barberId, serviceId, durationMin, date, slot, name, phone, email, lang },
   { client } = {},
 ) {
   const { rows } = await runner(client).query(SQL_INSERT, [
     barberId, serviceId, durationMin, date, slot, name, phone,
+    email ?? null, lang ?? 'pl',
   ]);
   return rows[0].id;
+}
+
+export async function markConfirmationEmailSent(id, { client } = {}) {
+  const { rows } = await runner(client).query(SQL_MARK_CONFIRMATION_EMAIL_SENT, [id]);
+  return rows.length > 0;
+}
+
+export async function markReceivedEmailSent(id, { client } = {}) {
+  const { rows } = await runner(client).query(SQL_MARK_RECEIVED_EMAIL_SENT, [id]);
+  return rows.length > 0;
 }
 
 export async function insertBlock(

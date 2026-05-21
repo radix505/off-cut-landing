@@ -11,8 +11,60 @@
     <link rel="preload" href="/fonts/LetMeRide.woff2" as="font" type="font/woff2" crossorigin>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>OFF CUT Barbershop</title>
+
+    <!-- Google Consent Mode v2: declare default state BEFORE GTM loads.
+         If the visitor previously chose in the cookie banner, restore that;
+         otherwise everything non-essential is denied until they click Accept. -->
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      (function () {
+        var granted = 'denied';
+        try {
+          if (localStorage.getItem('offcut-consent') === 'accepted') granted = 'granted';
+        } catch (e) {}
+        gtag('consent', 'default', {
+          ad_storage: granted,
+          analytics_storage: granted,
+          ad_user_data: granted,
+          ad_personalization: granted,
+          functionality_storage: 'granted',
+          security_storage: 'granted',
+          wait_for_update: 500
+        });
+      })();
+    </script>
+
+    <!-- Google Tag Manager (only injects when VITE_GTM_ID is set at build time) -->
+    <script>
+      (function (gtmId) {
+        if (!gtmId) return;
+        (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer',gtmId);
+      })('%VITE_GTM_ID%');
+    </script>
+    <!-- End Google Tag Manager -->
   </head>
   <body>
+    <!-- Google Tag Manager (noscript): only renders the iframe when GTM ID is set -->
+    <script>
+      (function (gtmId) {
+        if (!gtmId) return;
+        var ns = document.createElement('noscript');
+        var iframe = document.createElement('iframe');
+        iframe.src = 'https://www.googletagmanager.com/ns.html?id=' + gtmId;
+        iframe.height = '0';
+        iframe.width = '0';
+        iframe.style.cssText = 'display:none;visibility:hidden';
+        ns.appendChild(iframe);
+        document.body.insertBefore(ns, document.body.firstChild);
+      })('%VITE_GTM_ID%');
+    </script>
+    <!-- End Google Tag Manager (noscript) -->
+
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
