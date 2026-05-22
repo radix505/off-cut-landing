@@ -274,7 +274,6 @@ function buildHtml(booking, lang, state, { wordmarkMode = 'cid' } = {}) {
   // not-yet-active. The colour shift between mail #1 and mail #2 is the
   // visual story of the booking lifecycle.
   const slotColor = isConfirmed ? ACCENT : PAPER_STRONG;
-  const sectionTwoEyebrow = lang === 'pl' ? 'ZMIANA' : 'CHANGES';
 
   // Detail row — workshop tag layout: small uppercase label on the left,
   // value in larger body type on the right, hairline rule beneath.
@@ -352,9 +351,6 @@ function buildHtml(booking, lang, state, { wordmarkMode = 'cid' } = {}) {
 
                     <!-- Section number row -->
                     <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
-                      <tr>
-                        <td align="left" style="font-family:${BODY_STACK};font-size:10px;letter-spacing:0.35em;text-transform:uppercase;color:${TEXT_MUTED_DARK};font-weight:500;padding:0 0 6px 0;">${s.sectionNumber} / ${escapeHtml(s.eyebrow)}</td>
-                      </tr>
                       <tr>
                         <td align="left" style="padding:0 0 32px 0;line-height:0;">
                           <!-- Orange foreman-mark rule (the only accent) -->
@@ -463,9 +459,6 @@ function buildHtml(booking, lang, state, { wordmarkMode = 'cid' } = {}) {
                 <tr>
                   <td class="pad-x" style="padding:36px 48px 0 48px;">
                     <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
-                      <tr>
-                        <td style="padding:0 0 8px 0;font-family:${BODY_STACK};font-size:10px;letter-spacing:0.35em;text-transform:uppercase;color:${TEXT_MUTED_LIGHT};font-weight:500;">02 / ${sectionTwoEyebrow}</td>
-                      </tr>
                       <tr>
                         <td class="display" style="font-family:${DISPLAY_STACK};font-size:28px;line-height:1.05;letter-spacing:0.04em;color:${INK};font-weight:400;text-transform:uppercase;padding:0 0 12px 0;">${escapeHtml(s.needToChangeTitle)}</td>
                       </tr>
