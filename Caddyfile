@@ -1,0 +1,24 @@
+# Caddy v2 — production config for off-cut-landing.
+#
+# Caddy auto-issues Let's Encrypt certs for every hostname named here,
+# auto-redirects http → https on :80, and serves HTTP/3 on :443/udp.
+#
+# To reload without dropping connections:
+#   docker compose -f docker-compose.prod.yml exec caddy caddy reload --config /etc/caddy/Caddyfile
+{
+	email offcutszczecin@gmail.com
+}
+
+# ── Canonical site ────────────────────────────────────────────────────
+off-cut.pl {
+	encode zstd gzip
+	reverse_proxy app:3001
+	log
+}
+
+# ── Mirror domains + www → 301 to https://off-cut.pl{uri} ─────────────
+www.off-cut.pl,
+off-cut-barbershop.pl,
+www.off-cut-barbershop.pl {
+	redir https://off-cut.pl{uri} permanent
+}

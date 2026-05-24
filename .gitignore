@@ -34,3 +34,6 @@ dist-ssr
 artifacts
 .playwright-mcp
 *.png
+
+# Production state (live on the VPS, not in git)
+backups/

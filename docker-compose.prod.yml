@@ -1,15 +1,25 @@
 services:
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"   # HTTP/3 (QUIC)
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+
   postgres:
     image: postgres:16-alpine
     restart: unless-stopped
     environment:
       POSTGRES_USER: offcut
-      POSTGRES_PASSWORD: offcut
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
       POSTGRES_DB: offcut
     volumes:
       - postgres-data:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U offcut -d offcut"]
       interval: 5s
@@ -20,17 +30,13 @@ services:
     build:
       context: .
       args:
-        # Vite bakes VITE_* into the static bundle at build time. Dokploy
-        # forwards repo env vars to compose, which forwards them as
-        # build-args, which the Dockerfile re-exports as ENV before
-        # `npm run build`.
         VITE_GTM_ID: ${VITE_GTM_ID:-}
     restart: unless-stopped
     depends_on:
       postgres:
         condition: service_healthy
     environment:
-      DATABASE_URL: ${DATABASE_URL:-postgres://offcut:offcut@postgres:5432/offcut}
+      DATABASE_URL: postgres://offcut:${POSTGRES_PASSWORD}@postgres:5432/offcut
       NODE_ENV: production
       HOST: 0.0.0.0
       PORT: "3001"
@@ -41,15 +47,35 @@ services:
       MAIL_FROM: ${MAIL_FROM:-}
       MAIL_REPLY_TO: ${MAIL_REPLY_TO:-}
       MAIL_DRY_RUN: ${MAIL_DRY_RUN:-}
-    ports:
-      - "3001:3001"
-    networks:
-      - default
-      - dokploy-network
+
+  backup:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      PGPASSWORD: ${POSTGRES_PASSWORD}
+      RETENTION_DAYS: "14"
+    volumes:
+      - ./backups:/backups
+    command:
+      - sh
+      - -c
+      - |
+        set -eu
+        while true; do
+          ts=$$(date +%Y%m%d-%H%M%S)
+          if pg_dump -h postgres -U offcut -d offcut -F c -f /backups/offcut-$$ts.dump; then
+            echo "[backup] wrote /backups/offcut-$$ts.dump"
+          else
+            echo "[backup] FAILED at $$ts" >&2
+          fi
+          find /backups -type f -name 'offcut-*.dump' -mtime +$$RETENTION_DAYS -delete || true
+          sleep 86400
+        done
 
 volumes:
   postgres-data:
-
-networks:
-  dokploy-network:
-    external: true
+  caddy-data:
+  caddy-config:
