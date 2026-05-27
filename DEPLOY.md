@@ -2,7 +2,9 @@
 
 Production stack: **Caddy v2 + Fastify/Vite app + Postgres 16 + nightly pg_dump sidecar**, all in `docker-compose.prod.yml`.
 
-Canonical domain: **off-cut.pl**. `off-cut-barbershop.pl` and `offcut.pl` (and `www.*` for each) 301-redirect to it. Caddy auto-issues + renews Let's Encrypt certs for all six hostnames, and HTTP→HTTPS redirects are on by default.
+Canonical domain: **off-cut-barbershop.pl**. `www.off-cut-barbershop.pl` 301-redirects to it. Caddy auto-issues + renews Let's Encrypt certs for both hostnames, and HTTP→HTTPS redirects are on by default.
+
+> The Caddyfile previously listed `off-cut.pl` and `offcut.pl` (+ www variants) too. Those domains are not currently DNS'd at the VPS and have been dropped from the Caddyfile to keep cert issuance clean. Add them back (as redirects to `off-cut-barbershop.pl`) once their A records point here.
 
 ## 0. VPS prerequisites
 
@@ -20,21 +22,17 @@ sudo ufw enable
 
 ## 1. DNS
 
-Add A records pointing every hostname at the VPS IP:
+Add A records pointing both hostnames at the VPS IP:
 
 ```
-off-cut.pl                  A   <VPS_IP>
-www.off-cut.pl              A   <VPS_IP>
 off-cut-barbershop.pl       A   <VPS_IP>
 www.off-cut-barbershop.pl   A   <VPS_IP>
-offcut.pl                   A   <VPS_IP>
-www.offcut.pl               A   <VPS_IP>
 ```
 
 Verify before you start the stack — Let's Encrypt fails fast if a hostname doesn't resolve:
 
 ```sh
-for h in off-cut.pl www.off-cut.pl off-cut-barbershop.pl www.off-cut-barbershop.pl offcut.pl www.offcut.pl; do
+for h in off-cut-barbershop.pl www.off-cut-barbershop.pl; do
   echo "$h -> $(dig +short A "$h" | head -n1)"
 done
 ```
@@ -62,14 +60,12 @@ docker compose -f docker-compose.prod.yml logs -f caddy
 Smoke test:
 
 ```sh
-curl -sI https://off-cut.pl/api/health        # → 200 OK, body {"ok":true}
-curl -sI http://off-cut.pl/                   # → 308 to https (Caddy default)
-curl -sI https://www.off-cut.pl/              # → 301 to https://off-cut.pl/
-curl -sI https://offcut.pl/whatever?x=1       # → 301 to https://off-cut.pl/whatever?x=1
-curl -sI https://off-cut-barbershop.pl/       # → 301 to https://off-cut.pl/
+curl -sI https://off-cut-barbershop.pl/api/health   # → 200 OK, body {"ok":true}
+curl -sI http://off-cut-barbershop.pl/              # → 308 to https (Caddy default)
+curl -sI https://www.off-cut-barbershop.pl/         # → 301 to https://off-cut-barbershop.pl/
 
 # Confirm HTTP/3 is advertised
-curl -sI https://off-cut.pl/ | grep -i alt-svc       # → alt-svc: h3=":443"; ma=...
+curl -sI https://off-cut-barbershop.pl/ | grep -i alt-svc   # → alt-svc: h3=":443"; ma=...
 ```
 
 ## 3. Subsequent deploys
@@ -152,7 +148,7 @@ If a deploy ships a broken DB migration, restore the most recent dump *before* r
 Automatic. Caddy renews ~30 days before expiry over HTTP-01. Verify any time:
 
 ```sh
-openssl s_client -servername off-cut.pl -connect off-cut.pl:443 </dev/null 2>/dev/null \
+openssl s_client -servername off-cut-barbershop.pl -connect off-cut-barbershop.pl:443 </dev/null 2>/dev/null \
   | openssl x509 -noout -dates
 ```
 

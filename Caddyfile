@@ -16,8 +16,7 @@ off-cut-barbershop.pl {
 	log
 }
 
-# ── Mirror domains + www → 301 to https://off-cut-barbershop.pl{uri} ─────────────
-off-cut-barbershop.pl,
+# ── www → 301 to https://off-cut-barbershop.pl{uri} ───────────────────
 www.off-cut-barbershop.pl {
 	redir https://off-cut-barbershop.pl{uri} permanent
 }
