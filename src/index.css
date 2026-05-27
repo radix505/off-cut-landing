@@ -918,9 +918,9 @@ footer.footer-pro { background: var(--ink); border-top: 0.5px solid #1a1a1a; pad
 .footer-pro-legal-link:hover { color: var(--paper-strong); }
 .footer-pro-legal-sep { color: var(--text-muted-dark); font-size: 0.7rem; }
 .footer-credit { font-size: 0.71rem; letter-spacing: 0.15em; color: var(--text-faint-dark); text-transform: uppercase; font-weight: 600; display: flex; align-items: center; gap: 0.35rem; }
-.footer-credit-logo { height: 13px; width: auto; opacity: 0.9; filter: brightness(0) saturate(100%) invert(40%) sepia(100%) saturate(650%) hue-rotate(345deg) brightness(105%); }
-.footer-credit a { color: #E85A2A; text-decoration: none; border-bottom: 0.5px solid rgba(232,90,42,0.45); padding-bottom: 1px; transition: color 0.3s, border-color 0.3s; }
-.footer-credit a:hover { color: #ff6a3a; border-color: #ff6a3a; }
+.footer-credit-logo { height: 13px; width: auto; opacity: 0.9; filter: brightness(0) invert(1); }
+.footer-credit a { color: #ffffff; text-decoration: none; border-bottom: 0.5px solid rgba(255,255,255,0.45); padding-bottom: 1px; transition: color 0.3s, border-color 0.3s; }
+.footer-credit a:hover { color: #ffffff; border-color: #ffffff; }
 /* old social-link kept for any leftover refs */
 .social-link { display: flex; align-items: center; color: var(--ink); text-decoration: none; transition: color 0.3s; cursor: pointer; }
 .social-link:hover { color: #555; }
