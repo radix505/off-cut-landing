@@ -10,15 +10,14 @@
 }
 
 # ── Canonical site ────────────────────────────────────────────────────
-off-cut.pl {
+off-cut-barbershop.pl {
 	encode zstd gzip
 	reverse_proxy app:3001
 	log
 }
 
-# ── Mirror domains + www → 301 to https://off-cut.pl{uri} ─────────────
-www.off-cut.pl,
+# ── Mirror domains + www → 301 to https://off-cut-barbershop.pl{uri} ─────────────
 off-cut-barbershop.pl,
 www.off-cut-barbershop.pl {
-	redir https://off-cut.pl{uri} permanent
+	redir https://off-cut-barbershop.pl{uri} permanent
 }

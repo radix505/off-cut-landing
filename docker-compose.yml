@@ -39,13 +39,6 @@ services:
       - .:/app:cached         # live source — HMR picks up changes
       - /app/node_modules     # mask host node_modules with container-installed deps
     command: npm run dev:all
-    networks:
-      - default
-      - dokploy-network
 
 volumes:
   postgres-data:
-
-networks:
-  dokploy-network:
-    external: true
