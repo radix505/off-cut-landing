@@ -690,7 +690,7 @@ section { padding-block: var(--space-section-y); padding-inline: var(--space-sec
 .bcal-day:not(.empty):not(.past):not(.today):not(.sel):hover { background: rgba(255,255,255,0.1); color: #fff; }
 .bcal-day.empty { cursor: default; }
 .bcal-day.unavail:not(.sel):not(.today) { color: #5a3a35; text-decoration: line-through; text-decoration-thickness: 1px; }
-.bcal-day.past, .bcal-day.today { color: #2e2e2e; cursor: not-allowed; }
+.bcal-day.past, .bcal-day.today { color: #4f4f4f; cursor: not-allowed; }
 .bcal-day.sel { background: var(--color-accent-warm); color: #fff; font-weight: 600; }
 .booking-slots { display: flex; flex-direction: column; gap: 0.75rem; }
 
