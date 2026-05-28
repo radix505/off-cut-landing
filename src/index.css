@@ -866,7 +866,10 @@ section { padding-block: var(--space-section-y); padding-inline: var(--space-sec
   60%  { opacity: 1; transform: scale(1.12); }
   100% { opacity: 1; transform: scale(1); }
 }
-.booking-success { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 5rem 2rem; text-align: center; gap: 1.25rem; }
+/* Mirror the wizard's height so the page total height doesn't collapse when
+   the success view replaces the layout — otherwise the footer rises above
+   the viewport bottom and leaves a white strip below it on tall screens. */
+.booking-success { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 5rem 2rem; text-align: center; gap: 1.25rem; min-height: clamp(520px, 82svh, 760px); min-height: clamp(520px, 82dvh, 760px); }
 .booking-success > * { opacity: 0; animation: booking-success-rise 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
 .booking-success > *:nth-child(1) { animation-delay: 0.05s; animation: booking-success-icon-pop 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) 0.05s forwards; }
 .booking-success > *:nth-child(2) { animation-delay: 0.18s; }
@@ -889,11 +892,28 @@ section { padding-block: var(--space-section-y); padding-inline: var(--space-sec
 .booking-success-email-label { font-size: 0.68rem; letter-spacing: 0.28em; text-transform: uppercase; color: var(--text-muted-dark); }
 .booking-success-email-addr { font-size: 0.95rem; letter-spacing: 0.04em; color: rgba(143,217,251,0.9); font-family: 'Inter', sans-serif; }
 
+/* Desktop-only enlargement of the success view — mobile keeps the compact
+   sizes above so the whole confirmation stays comfortably on a phone screen. */
+@media (min-width: 769px) {
+  .booking-success { gap: 1.5rem; }
+  .booking-success-icon { width: 72px; height: 72px; font-size: 1.5rem; }
+  .booking-success-title { font-size: 3.5rem; }
+  .booking-success-text { font-size: 1.15rem; }
+  .booking-success-summary { font-size: 1rem; gap: 0.8rem; }
+  .booking-reset-btn { font-size: 0.9rem; padding: 0.9rem 2.25rem; }
+  .booking-success-email { padding: 1.1rem 2.25rem; gap: 0.5rem; }
+  .booking-success-email-label { font-size: 0.85rem; }
+  .booking-success-email-addr { font-size: 1.25rem; }
+}
+
 /* BOOKING SUBPAGE overrides */
 .booking-page-wrap .booking-section { padding-top: 10rem; padding-bottom: 2rem; }
 .booking-page-wrap .booking-section .section-header { display: none; }
 .booking-page-wrap .booking-layout { grid-template-columns: 1fr 1.55fr; gap: 3.5rem; }
 .booking-page-wrap .booking-wizard { height: clamp(580px, 86svh, 860px); height: clamp(580px, 86dvh, 860px); padding: 2.75rem 2.75rem 0; background: #161616; border-color: rgba(255,255,255,0.16); }
+/* Match the subpage wizard's height so the /booking page doesn't shrink
+   when the success view takes over. */
+.booking-page-wrap .booking-success { min-height: clamp(580px, 86svh, 860px); min-height: clamp(580px, 86dvh, 860px); }
 .booking-page-wrap .booking-barber-card { background: rgba(255,255,255,0.055); border-color: rgba(255,255,255,0.11); }
 .booking-page-wrap .booking-barber-card:hover { background: rgba(255,255,255,0.09); border-color: rgba(255,255,255,0.25); }
 .booking-page-wrap .booking-services-list { border-color: rgba(255,255,255,0.11); }
@@ -1165,6 +1185,7 @@ body.nav-drawer-is-open .mobile-app-bar { opacity: 0; pointer-events: none; }
      emulation render the same vertical budget, and (b) the page doesn't
      jump between booking steps. */
   .booking-wizard { padding: 1.5rem 1.5rem 0; height: 580px; }
+  .booking-success { min-height: 580px; }
   .booking-wizard-nav { padding-bottom: 1.5rem; }
   .booking-barbers-grid { gap: 0.5rem; }
   /* Step 2 mobile tightening: the base rules already give 1-col stretchy grid +
@@ -1187,6 +1208,7 @@ body.nav-drawer-is-open .mobile-app-bar { opacity: 0; pointer-events: none; }
   .booking-page-wrap .booking-section { padding-top: 6rem; }
   .booking-page-wrap .booking-layout { grid-template-columns: 1fr; gap: 2rem; }
   .booking-page-wrap .booking-wizard { height: 600px; padding: 1.5rem 1.5rem 0; order: -1; }
+  .booking-page-wrap .booking-success { min-height: 600px; }
   .booking-page-wrap .booking-wizard-nav { padding-bottom: 1.5rem; }
   .booking-page-wrap .booking-text { order: 0; }
 
@@ -1245,6 +1267,7 @@ body.nav-drawer-is-open .mobile-app-bar { opacity: 0; pointer-events: none; }
   .map-layout   { grid-template-columns: 1fr; gap: 2rem; }
   .booking-page-wrap .booking-layout { grid-template-columns: 1fr; gap: 2.5rem; }
   .booking-page-wrap .booking-wizard { height: 80svh; order: -1; }
+  .booking-page-wrap .booking-success { min-height: 80svh; }
   .booking-page-wrap .booking-text { order: 0; }
   .booking-page-wrap .booking-section { padding-top: 10rem; }
 }

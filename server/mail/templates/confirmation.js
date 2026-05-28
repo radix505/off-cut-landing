@@ -452,14 +452,20 @@ function buildHtml(booking, lang, state, { wordmarkMode = 'url', oldBooking = nu
 </head>
 <body class="body" style="margin:0;padding:0;background:${PAPER};-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;">
 
-  <!-- Preheader (hidden, shown in inbox preview / push notification).
-       Each segment is its own block so Gmail iOS / Apple Mail extract them
-       as separate paragraphs and render the notification on two lines:
+  <!-- Preheader (hidden visually, shown in inbox preview / push notification).
+       Each segment is rendered as its own block-level element (NOT
+       display:none) so Gmail iOS / Apple Mail extract them as two separate
+       paragraphs and render the notification on two visible lines:
          "Piątek 29.05, 16:30"
          "Trymowanie Brody"
-       The third block flushes body content out of the preview budget. -->
-  <div class="preheader-segment" style="display:none;font-size:1px;line-height:1px;max-height:0;max-width:0;opacity:0;overflow:hidden;mso-hide:all;color:${PAPER};">${preheaderLine1}</div>
-  <div class="preheader-segment" style="display:none;font-size:1px;line-height:1px;max-height:0;max-width:0;opacity:0;overflow:hidden;mso-hide:all;color:${PAPER};">${preheaderLine2}</div>
+       display:none would let the extractor collapse the two segments onto
+       one line because nothing in the layout tells it where paragraphs
+       break. Instead we use max-height:0 + overflow:hidden + font-size:1px
+       + paper-colour text - the divs ARE laid out, just clipped to zero
+       pixels and invisible to the human eye. The trailing padding div stays
+       display:none since it only needs to flush body content. -->
+  <div style="max-height:0;overflow:hidden;font-size:1px;line-height:1px;color:${PAPER};mso-hide:all;">${preheaderLine1}</div>
+  <div style="max-height:0;overflow:hidden;font-size:1px;line-height:1px;color:${PAPER};mso-hide:all;">${preheaderLine2}</div>
   <div style="display:none;font-size:1px;line-height:1px;max-height:0;max-width:0;opacity:0;overflow:hidden;mso-hide:all;color:${PAPER};">${PREHEADER_PADDING}</div>
 
   <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" bgcolor="${PAPER}" style="background:${PAPER};">
