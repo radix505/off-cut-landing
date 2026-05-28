@@ -451,19 +451,6 @@ function buildHtml(booking, lang, state, { wordmarkMode = 'url', oldBooking = nu
   </style>
 </head>
 <body class="body" style="margin:0;padding:0;background:${PAPER};-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;">
-
-  <!-- Preheader (hidden visually, shown in inbox preview / push notification).
-       Each segment is rendered as its own block-level element (NOT
-       display:none) so Gmail iOS / Apple Mail extract them as two separate
-       paragraphs and render the notification on two visible lines:
-         "Piątek 29.05, 16:30"
-         "Trymowanie Brody"
-       display:none would let the extractor collapse the two segments onto
-       one line because nothing in the layout tells it where paragraphs
-       break. Instead we use max-height:0 + overflow:hidden + font-size:1px
-       + paper-colour text - the divs ARE laid out, just clipped to zero
-       pixels and invisible to the human eye. The trailing padding div stays
-       display:none since it only needs to flush body content. -->
   <div style="max-height:0;overflow:hidden;font-size:1px;line-height:1px;color:${PAPER};mso-hide:all;">${preheaderLine1}</div>
   <div style="max-height:0;overflow:hidden;font-size:1px;line-height:1px;color:${PAPER};mso-hide:all;">${preheaderLine2}</div>
   <div style="display:none;font-size:1px;line-height:1px;max-height:0;max-width:0;opacity:0;overflow:hidden;mso-hide:all;color:${PAPER};">${PREHEADER_PADDING}</div>
@@ -471,11 +458,7 @@ function buildHtml(booking, lang, state, { wordmarkMode = 'url', oldBooking = nu
   <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" bgcolor="${PAPER}" style="background:${PAPER};">
     <tr>
       <td align="center" style="padding:32px 16px 48px 16px;">
-
-        <!-- ─── Container ─────────────────────────────────────────── -->
         <table role="presentation" class="container" cellpadding="0" cellspacing="0" border="0" width="600" style="width:600px;max-width:600px;background:${PAPER};">
-
-          <!-- ─── Wordmark row ─── -->
           <tr>
             <td class="pad-x" style="padding:0 8px 24px 8px;font-family:${BODY_STACK};font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:${TEXT_MUTED_LIGHT};font-weight:500;" align="left">
               <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
@@ -487,8 +470,6 @@ function buildHtml(booking, lang, state, { wordmarkMode = 'url', oldBooking = nu
               </table>
             </td>
           </tr>
-
-          <!-- ─── INK BAND (hero) ─── -->
           <tr>
             <td bgcolor="${INK}" style="background:${INK};padding:0;">
               <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" bgcolor="${INK}" style="background:${INK};">
@@ -506,8 +487,6 @@ function buildHtml(booking, lang, state, { wordmarkMode = 'url', oldBooking = nu
                         </td>
                       </tr>
                     </table>
-
-                    <!-- Hero lockup -->
                     <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
                       <tr>
                         <td align="left" class="display hero-headline" style="font-family:${DISPLAY_STACK};font-size:84px;line-height:0.88;letter-spacing:0.02em;color:${PAPER_STRONG};font-weight:400;text-transform:uppercase;padding:0 0 28px 0;">${escapeHtml(s.headline)}</td>
@@ -528,8 +507,6 @@ function buildHtml(booking, lang, state, { wordmarkMode = 'url', oldBooking = nu
               </table>
             </td>
           </tr>
-
-          <!-- ─── Body card on paper ─── -->
           <tr>
             <td bgcolor="${PAPER}" style="background:${PAPER};padding:0;">
               <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" bgcolor="${PAPER}" style="background:${PAPER};">
@@ -538,8 +515,6 @@ function buildHtml(booking, lang, state, { wordmarkMode = 'url', oldBooking = nu
                     ${escapeHtml(s.intro(customerName))}
                   </td>
                 </tr>
-
-                <!-- Detail table -->
                 <tr>
                   <td class="pad-x" style="padding:24px 48px 12px 48px;">
                     <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="border-top:1px solid ${LINE_PAPER};">
@@ -584,10 +559,6 @@ function buildHtml(booking, lang, state, { wordmarkMode = 'url', oldBooking = nu
                     </table>
                   </td>
                 </tr>
-
-                <!-- Info card (state-aware): on received this is the
-                     "what next" explainer; on confirmed it points at the
-                     attached .ics. Same shell, different copy. -->
                 <tr>
                   <td class="pad-x" style="padding:28px 48px 0 48px;">
                     <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="border:1px solid ${LINE_PAPER};background:${PAPER_STRONG};">
@@ -601,7 +572,6 @@ function buildHtml(booking, lang, state, { wordmarkMode = 'url', oldBooking = nu
                   </td>
                 </tr>
 
-                <!-- Need-to-change block -->
                 <tr>
                   <td class="pad-x" style="padding:36px 48px 0 48px;">
                     <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
@@ -618,7 +588,6 @@ function buildHtml(booking, lang, state, { wordmarkMode = 'url', oldBooking = nu
                   </td>
                 </tr>
 
-                <!-- Closing notes -->
                 <tr>
                   <td class="pad-x" style="padding:36px 48px 8px 48px;">
                     <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="border-top:1px solid ${LINE_PAPER};">
@@ -636,7 +605,6 @@ function buildHtml(booking, lang, state, { wordmarkMode = 'url', oldBooking = nu
             </td>
           </tr>
 
-          <!-- ─── Footer ink band ─── -->
           <tr>
             <td bgcolor="${INK}" style="background:${INK};padding:0;">
               <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" bgcolor="${INK}" style="background:${INK};">
@@ -692,12 +660,6 @@ function buildEmail(booking, state, opts = {}) {
   const lang = booking.lang === 'en' ? 'en' : 'pl';
   const t = T[lang];
   const s = t[state];
-  // Subject is "Off Cut · <Wizyta zapisana|potwierdzona|przełożona|...>".
-  // The preheader (rendered in buildHtml) carries the date + time + service
-  // so a notification on iOS / Gmail reads as:
-  //   Off Cut · Wizyta przełożona
-  //   pt 22.05, 18:30 · Strzyżenie + Broda
-  // i.e. brand + intent on line 1, when + what on line 2.
   const subject = `Off Cut · ${s.subjectStatus}`;
   return {
     subject,
@@ -727,16 +689,10 @@ export function buildReceivedEmail(booking, opts = {}) {
   return buildEmail(booking, 'received', opts);
 }
 
-// Mail #4 in the lifecycle: barber cancelled a booking via the Telegram bot.
-// The hero stays muted (slot in paper-strong, not accent) because the slot is
-// no longer "active". The .ics attachment uses METHOD:CANCEL so calendar
-// clients drop the existing entry for that UID.
 export function buildCancellationEmail(booking, opts = {}) {
   const lang = booking.lang === 'en' ? 'en' : 'pl';
   const out = buildEmail(booking, 'cancelled', opts);
-  // Calendar tooling still needs SUMMARY/DESCRIPTION/LOCATION for the CANCEL
-  // event - clients match on UID and drop the entry, but they typically log
-  // the supplied SUMMARY so it remains useful to populate.
+
   const summary = lang === 'en'
     ? `Off Cut - ${pickServiceName(booking, 'en')} with ${booking.barber_name}`
     : `Off Cut - ${pickServiceName(booking, 'pl')} u ${booking.barber_name}`;
@@ -751,10 +707,6 @@ export function buildCancellationEmail(booking, opts = {}) {
   };
 }
 
-// Mail #3 in the lifecycle: barber rescheduled an existing booking via the
-// Telegram bot. `newBooking` is the post-update row (with the new date/slot);
-// `oldBooking` carries the pre-update date/slot so the template can render
-// the "PRZENIESIONO Z" diff line below the hero slot.
 export function buildRescheduleEmail(newBooking, oldBooking, opts = {}) {
   const lang = newBooking.lang === 'en' ? 'en' : 'pl';
   const out = buildEmail(newBooking, 'rescheduled', { ...opts, oldBooking });

@@ -8,6 +8,7 @@ import fastifyStatic from '@fastify/static';
 import { initSchema, waitForDb, pool, ping } from './db.js';
 import bookingsRoutes from './routes/bookings.js';
 import catalogRoutes from './routes/catalog.js';
+import mailAssetsRoutes from './routes/mail-assets.js';
 import { seedCatalogIfEmpty, suspendInitialBarbersIfNeeded, backfillBarberDetailsIfMissing, cleanServiceCopyIfNeeded } from './seed-catalog.js';
 import { startBot, stopBot } from './bot/index.js';
 
@@ -31,6 +32,7 @@ if (!isProd) {
 
 await fastify.register(catalogRoutes);
 await fastify.register(bookingsRoutes);
+await fastify.register(mailAssetsRoutes);
 
 fastify.get('/api/health', async () => {
   await ping(pool);
