@@ -35,5 +35,12 @@ artifacts
 .playwright-mcp
 *.png
 
+# Email wordmark PNGs are stable build artifacts (regenerated only when the
+# brand mark changes via server/mail/assets/build-logos.mjs). They MUST ship
+# in the Docker image because the mail-assets route serves them directly off
+# disk - the build script needs Chrome, which is not available in the prod
+# container.
+!server/mail/assets/wordmark-*.png
+
 # Production state (live on the VPS, not in git)
 backups/

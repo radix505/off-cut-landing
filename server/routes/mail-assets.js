@@ -19,7 +19,17 @@ export default async function mailAssetsRoutes(fastify) {
       return reply.code(404).send({ error: 'not_found' });
     }
     const filePath = resolve(ASSETS_DIR, filename);
-    const stat = statSync(filePath);
+    let stat;
+    try {
+      stat = statSync(filePath);
+    } catch (err) {
+      // Most likely the PNG wasn't shipped in the container (it's matched
+      // by the global *.png .gitignore rule unless the wordmark-*.png
+      // exception is in place). Log and 404 so Gmail just shows the alt
+      // text instead of a 500 page.
+      req.log.error({ err, filePath }, 'mail asset missing on disk');
+      return reply.code(404).send({ error: 'not_found' });
+    }
     return reply
       .type('image/png')
       .header('Cache-Control', 'public, max-age=31536000, immutable')
