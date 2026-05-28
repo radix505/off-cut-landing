@@ -67,12 +67,17 @@ const reviews = [
   { initials: 'E', name: 'Emil S.',      color: '#0D47A1', datePL: '4 dni temu',        dateEN: '4 days ago',    localGuide: true,  reviewCount: 44, textPL: 'Próbowałem wielu barberów - Off Cut wygrywa precyzją i atmosferą.',        textEN: 'Tried many barbershops - Off Cut wins on precision and atmosphere.' },
 ];
 
+const initialsOf = (name) => name.split(/\s+/).map((p) => p[0]).join('').slice(0, 2).toUpperCase();
+
 function ReviewCard({ r, lang, style, accent = false }) {
   const pick = (pl, en) => (lang === 'pl' ? pl : en);
   return (
     <div className="review-card" style={style}>
       <div className="review-card-top">
-        <div className={`review-avatar${accent ? ' review-avatar--accent' : ''}`}>{r.initials}</div>
+        <div
+          className={`review-avatar${accent ? ' review-avatar--accent' : ''}`}
+          style={accent ? undefined : { background: r.color }}
+        >{initialsOf(r.name)}</div>
         <div className="review-meta">
           <div className="review-author">{r.name}</div>
           <div className="review-submeta">
@@ -125,6 +130,11 @@ export default function Reviews() {
   const seeReviewsLabel = useT('Zobacz opinie', 'Read reviews');
   const googleMapsAria = useT('Zobacz opinie na Google Maps', 'See reviews on Google Maps');
 
+  const [shuffled] = useState(() => {
+    const shuffle = (arr) => [...arr].sort(() => Math.random() - 0.5);
+    return [...shuffle(reviews), ...shuffle(reviews)];
+  });
+
   const total = cols * rows;
   const bricks = [];
   for (let i = 0; i < total; i++) {
@@ -132,7 +142,7 @@ export default function Reviews() {
     const row = Math.floor(i / cols);
     // Fill order: bottom of column 0 first, up to top, then column 1 bottom→top, ...
     const order = col * rows + (rows - 1 - row);
-    const r = reviews[i % reviews.length];
+    const r = shuffled[i % shuffled.length];
     bricks.push(
       <ReviewCard
         key={`${col}-${row}`}
@@ -158,6 +168,9 @@ export default function Reviews() {
       <div className="reviews-overlay">
         <div className="reviews-overlay-inner reveal">
           <h2 className="reviews-overlay-title">{sectionTitle}</h2>
+          {lang === 'en' && (
+            <p className="reviews-overlay-subtitle">Reviews automatically translated from Polish</p>
+          )}
           <div className="reviews-aggregate">
             <div className="reviews-aggregate-score">5.0</div>
             <div className="reviews-aggregate-middle">

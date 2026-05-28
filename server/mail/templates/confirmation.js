@@ -78,6 +78,21 @@ function formatLongDate(iso, lang) {
   return `${DOW_PL[dow]}, ${d} ${MONTHS_PL[m - 1]} ${y}`;
 }
 
+// Tight format for the subject line so the day + time clear iOS's ~40-char
+// notification budget. PL: "śr 10.06", EN: "Wed 10 Jun".
+const DOW_SHORT_PL = ['ndz', 'pon', 'wt', 'śr', 'czw', 'pt', 'sob'];
+const DOW_SHORT_EN = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+const MONTHS_SHORT_EN = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+  'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+function formatShortDate(iso, lang) {
+  const { m, d, dow } = parts(iso);
+  if (lang === 'en') return `${DOW_SHORT_EN[dow]} ${d} ${MONTHS_SHORT_EN[m - 1]}`;
+  const dd = String(d).padStart(2, '0');
+  const mm = String(m).padStart(2, '0');
+  return `${DOW_SHORT_PL[dow]} ${dd}.${mm}`;
+}
+
 // Big "WTOREK 22 MAJA" lockup for the hero stamp.
 function formatHeroDate(iso, lang) {
   const { m, d, dow } = parts(iso);
@@ -95,7 +110,6 @@ function pickServiceName(booking, lang) {
 // the manager taps ✅ on Telegram).
 const T = {
   pl: {
-    subjectPrefix: 'Off Cut',
     labels: {
       barber: 'BARBER',
       service: 'USŁUGA',
@@ -112,9 +126,12 @@ const T = {
     walkInNote: 'Spóźnienie powyżej 10 minut może skrócić wizytę.',
     footerTagline: 'EST. 2019 - PREMIUM GROOMING - SZCZECIN',
     bookingNumber: (id) => `REZERWACJA #${id}`,
+    // Inline preheader (HTML preview hidden text). Carries service + barber
+    // so the notification's 2nd/3rd lines complement the subject's day+time
+    // instead of echoing it.
+    preheader: (svc, barber) => `${svc} u ${barber}.`,
     received: {
-      preheader: (slot, date) => `Mamy Twoje zgłoszenie - ${date}, ${slot}. Czekamy na potwierdzenie barbera.`,
-      subject: 'Wizyta zgłoszona',
+      subjectStatus: 'zgłoszona',
       eyebrow: 'ZGŁOSZENIE OTRZYMANE',
       sectionNumber: '00',
       slotEyebrow: 'OCZEKUJE NA POTWIERDZENIE',
@@ -128,8 +145,7 @@ const T = {
       footerLegal: 'Otrzymujesz tę wiadomość, ponieważ złożono zgłoszenie rezerwacji w Off Cut.',
     },
     confirmed: {
-      preheader: (slot, date) => `Wizyta potwierdzona - ${date}, ${slot}. Do zobaczenia w warsztacie.`,
-      subject: 'Wizyta potwierdzona',
+      subjectStatus: 'potwierdzona',
       eyebrow: 'WIZYTA POTWIERDZONA',
       sectionNumber: '01',
       slotEyebrow: null,
@@ -144,7 +160,6 @@ const T = {
     },
   },
   en: {
-    subjectPrefix: 'Off Cut',
     labels: {
       barber: 'BARBER',
       service: 'SERVICE',
@@ -161,9 +176,9 @@ const T = {
     walkInNote: 'Arriving more than 10 minutes late may shorten the appointment.',
     footerTagline: 'EST. 2019 - PREMIUM GROOMING - SZCZECIN',
     bookingNumber: (id) => `BOOKING #${id}`,
+    preheader: (svc, barber) => `${svc} with ${barber}.`,
     received: {
-      preheader: (slot, date) => `Booking received - ${date}, ${slot}. Waiting for the barber to confirm.`,
-      subject: 'Booking received',
+      subjectStatus: 'booking received',
       eyebrow: 'BOOKING RECEIVED',
       sectionNumber: '00',
       slotEyebrow: 'AWAITING CONFIRMATION',
@@ -177,8 +192,7 @@ const T = {
       footerLegal: 'You are receiving this because a booking request was submitted at Off Cut.',
     },
     confirmed: {
-      preheader: (slot, date) => `Appointment confirmed - ${date}, ${slot}. See you at the workshop.`,
-      subject: 'Appointment confirmed',
+      subjectStatus: 'appointment confirmed',
       eyebrow: 'APPOINTMENT CONFIRMED',
       sectionNumber: '01',
       slotEyebrow: null,
@@ -214,13 +228,20 @@ const ACCENT_GLOW = 'rgba(143,217,251,0.45)';
 const DISPLAY_STACK = "'Bebas Neue', 'Oswald', 'Impact', 'Arial Narrow', sans-serif";
 const BODY_STACK = "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif";
 
+// Invisible padding appended to the preheader so Gmail / Apple Mail run out
+// of preview budget inside the hidden block instead of pulling body content
+// ("REZERWACJA #35 Do zobaczenia. ŚRODA 10 CZERWCA 13:40 Radek…") into the
+// inbox preview. 60 pairs ≈ 180 chars of inert width, well beyond what any
+// known client samples.
+const PREHEADER_PADDING = '&nbsp;&zwnj;'.repeat(60);
+
 function buildPlainText(booking, lang, state) {
   const t = T[lang];
   const s = t[state];
   const svc = pickServiceName(booking, lang);
   const longDate = formatLongDate(booking.date, lang);
   const lines = [
-    `OFF CUT - ${s.subject.toUpperCase()}`,
+    `OFF CUT — ${s.subjectStatus.toUpperCase()} · ${longDate}, ${booking.slot}`,
     '',
     s.intro(booking.customer_name),
     '',
@@ -267,7 +288,7 @@ function buildHtml(booking, lang, state, { wordmarkMode = 'cid' } = {}) {
   const slot = escapeHtml(booking.slot);
   const duration = `${booking.duration_min} ${t.durationSuffix}`;
   const price = booking.service_price_pln ? `${booking.service_price_pln} ${t.priceSuffix}` : null;
-  const preheader = escapeHtml(s.preheader(booking.slot, longDate));
+  const preheader = escapeHtml(t.preheader(svc, booking.barber_name));
   const bookingNumberLabel = escapeHtml(t.bookingNumber(booking.id));
   // Slot lights up only when the booking is confirmed. On received state the
   // slot stays in paper-strong so the "00 / ZGŁOSZONE" eyebrow reads as
@@ -291,7 +312,7 @@ function buildHtml(booking, lang, state, { wordmarkMode = 'cid' } = {}) {
   <meta name="x-apple-disable-message-reformatting" />
   <meta name="color-scheme" content="light only" />
   <meta name="supported-color-schemes" content="light" />
-  <title>${escapeHtml(`${t.subjectPrefix} - ${t.subjectConfirmed}`)}</title>
+  <title>${escapeHtml(`Off Cut — ${s.subjectStatus}`)}</title>
   <!--[if mso]>
   <style>
     .display { font-family: 'Arial Narrow', Impact, sans-serif !important; }
@@ -319,7 +340,7 @@ function buildHtml(booking, lang, state, { wordmarkMode = 'cid' } = {}) {
 <body class="body" style="margin:0;padding:0;background:${PAPER};-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;">
 
   <!-- Preheader (hidden, shown in inbox preview) -->
-  <div style="display:none;font-size:1px;line-height:1px;max-height:0;max-width:0;opacity:0;overflow:hidden;mso-hide:all;color:${PAPER};">${preheader}&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;</div>
+  <div style="display:none;font-size:1px;line-height:1px;max-height:0;max-width:0;opacity:0;overflow:hidden;mso-hide:all;color:${PAPER};">${preheader}${PREHEADER_PADDING}</div>
 
   <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" bgcolor="${PAPER}" style="background:${PAPER};">
     <tr>
@@ -546,8 +567,14 @@ function buildEmail(booking, state, opts = {}) {
   const lang = booking.lang === 'en' ? 'en' : 'pl';
   const t = T[lang];
   const s = t[state];
-  const longDate = formatLongDate(booking.date, lang);
-  const subject = `${t.subjectPrefix} · ${s.subject} - ${longDate}, ${booking.slot}`;
+  // Subject leads with day + time (the only atoms the user can act on at
+  // a glance) and ends with the status word so a stack of two notifications
+  // — received followed by confirmed — is visually distinct on the first
+  // line. The "Off Cut · " prefix the old subject used is dropped: Gmail
+  // already renders the sender row ("OFF CUT Barbershop Szczecin") above
+  // the subject, so the prefix only stole chars from the truncation budget.
+  const shortDate = formatShortDate(booking.date, lang);
+  const subject = `${shortDate}, ${booking.slot} — ${s.subjectStatus}`;
   return {
     subject,
     html: buildHtml(booking, lang, state, opts),

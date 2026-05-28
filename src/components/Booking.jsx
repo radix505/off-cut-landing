@@ -412,14 +412,16 @@ export default function Booking() {
   const tChangeDate = t('Zmień datę','Change date');
   const tChange     = t('ZMIEŃ','CHANGE');
 
-  if (submitted) return (
+  return (
     <section id="booking" className="booking-section" ref={ref}>
       <div className="section-header">
         <div>
           <div className="section-number">{t('05 / REZERWACJA','05 / BOOKING')}</div>
         </div>
       </div>
-      <div className="booking-success">
+
+      {submitted ? (
+      <div key="success" className="booking-success">
         <div className="booking-success-icon">✓</div>
         <div className="booking-success-title">{t('Rezerwacja wysłana!','Booking Sent!')}</div>
         <p className="booking-success-text">
@@ -442,18 +444,8 @@ export default function Booking() {
         </div>
         <button className="booking-reset-btn" onClick={reset}>{t('Nowa rezerwacja','New booking')}</button>
       </div>
-    </section>
-  );
-
-  return (
-    <section id="booking" className="booking-section" ref={ref}>
-      <div className="section-header">
-        <div>
-          <div className="section-number">{t('05 / REZERWACJA','05 / BOOKING')}</div>
-        </div>
-      </div>
-
-      <div className="booking-layout">
+      ) : (
+      <div key="form" className="booking-layout">
 
         {/* ── LEFT INFO ── */}
         <div className="booking-text reveal">
@@ -803,6 +795,7 @@ export default function Booking() {
 
         </div>
       </div>
+      )}
     </section>
   );
 }

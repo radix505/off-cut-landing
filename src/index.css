@@ -1607,7 +1607,7 @@ nav.nav--light .nav-links a.nav-link--active::after { background: var(--ink-stro
 }
 
 .review-card-top { display: flex; align-items: flex-start; gap: 0.7rem; }
-.review-avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--ink); color: var(--paper); font-family: 'Inter', sans-serif; font-size: 0.95rem; font-weight: 600; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.review-avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--ink); color: var(--paper); font-family: 'Inter', sans-serif; font-size: 0.78rem; font-weight: 600; letter-spacing: 0.02em; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .review-avatar--accent { background: var(--color-accent); color: var(--ink-strong); }
 .review-meta { flex: 1; display: flex; flex-direction: column; gap: 0.15rem; min-width: 0; }
 .review-author { font-size: 0.82rem; font-weight: 600; color: var(--ink-strong); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -1651,6 +1651,14 @@ nav.nav--light .nav-links a.nav-link--active::after { background: var(--ink-stro
   line-height: 1;
   color: var(--ink);
   margin: 0;
+}
+.reviews-overlay-subtitle {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.78rem;
+  letter-spacing: 0.05em;
+  color: var(--text-muted-light);
+  margin: -0.9rem 0 0 0;
+  font-weight: 400;
 }
 /* Aggregate score box - keep current visual, recenter for overlay */
 .reviews-aggregate { display: flex; align-items: center; gap: 1.5rem; background: var(--paper-strong); border: 1px solid #e8eaed; border-radius: 12px; padding: 1.1rem 1.6rem; margin: 0; width: fit-content; box-shadow: 0 6px 24px rgba(0,0,0,0.06); }
