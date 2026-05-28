@@ -480,51 +480,53 @@ function buildHtml(booking, lang, state, { wordmarkMode = 'url', oldBooking = nu
       .stack-btns td { display:block !important; width:100% !important; padding:0 0 12px 0 !important; }
       .stack-btns a { display:block !important; width:100% !important; box-sizing:border-box !important; }
     }
-    /* Dark-mode palette. The brand is already ink-on-paper; in dark mode we
-       flip the paper surfaces to near-ink and re-tone the dark text to a
-       paper-ish off-white. Hero and footer ink bands stay as they are.
-       We target by attribute substring instead of refactoring every cell
-       so the same template renders in both modes with no inline changes.
-       Apple Mail, iOS Mail, Gmail iOS app and modern Gmail web honour
-       prefers-color-scheme; Gmail Android uses the [data-ogsc] hook. */
+    /* Dark-mode strategy: "paper card on ink canvas".
+       The brand simply does not survive inversion - ink text on auto-inverted
+       paper looks negative-photo broken. So we keep every element inside the
+       600px card in its light-mode colors, but flip the outer body + the
+       full-width wrapper table to ink. The result is a brand-correct paper
+       card sitting on a dark canvas, which blends with Gmail's dark chrome
+       and stops burning eyes at night.
+       Specificity trick: table[width="100%"] is more specific than the
+       generic [style*="background:#f5f3ef"] attribute selector so the outer
+       wrapper darkens while the inner .container card stays paper. */
     @media (prefers-color-scheme: dark) {
-      body, body[style] { background:#0e0e0e !important; }
-      /* Paper surfaces -> dark surfaces */
-      [bgcolor="#f5f3ef"],
-      [style*="background:#f5f3ef"],
-      [style*="background: #f5f3ef"] { background-color:#161616 !important; background:#161616 !important; }
-      [bgcolor="#fcfaf6"],
-      [style*="background:#fcfaf6"],
-      [style*="background: #fcfaf6"] { background-color:#1f1f1f !important; background:#1f1f1f !important; }
-      /* Ink-on-paper text -> paper-on-ink text */
-      [style*="color:#0a0a0a"]:not([href^="tel:"]):not([href^="http"]) { color:#f0ede5 !important; }
-      [style*="color:#4a463f"] { color:#b8b3a8 !important; }
-      [style*="color:#7a766f"] { color:#9a968f !important; }
-      /* Hairlines on paper -> subtle dark borders */
-      [style*="border:1px solid #ddd9d0"],
-      [style*="border-bottom:1px solid #ddd9d0"] { border-color:#2a2a2a !important; }
-      [style*="border:1px solid #e8e5df"],
-      [style*="border-bottom:1px solid #e8e5df"] { border-color:#262626 !important; }
-      /* CTA buttons: keep accent button as-is (baby blue works on dark);
-         flip the ghost (call) button so its paper fill + ink border become
-         dark fill + paper border. */
-      a.btn-ghost { background:#1f1f1f !important; border-color:#f0ede5 !important; color:#f0ede5 !important; }
+      body, body[style] { background:${INK} !important; }
+      table[width="100%"][bgcolor="${PAPER}"],
+      table[width="100%"][style*="background:${PAPER}"] { background-color:${INK} !important; background:${INK} !important; }
+      /* Re-pin every interior element to its light-mode value so partial
+         auto-invert can't recolor them. */
+      table.container,
+      [bgcolor="${PAPER}"]:not([width="100%"]),
+      [style*="background:${PAPER}"]:not([width="100%"]) { background-color:${PAPER} !important; background:${PAPER} !important; }
+      [bgcolor="${PAPER_STRONG}"],
+      [style*="background:${PAPER_STRONG}"] { background-color:${PAPER_STRONG} !important; background:${PAPER_STRONG} !important; }
+      [bgcolor="${INK}"],
+      [style*="background:${INK}"] { background-color:${INK} !important; background:${INK} !important; }
+      [style*="color:${INK}"] { color:${INK} !important; }
+      [style*="color:${INK_WEAK}"] { color:${INK_WEAK} !important; }
+      [style*="color:${TEXT_MUTED_LIGHT}"] { color:${TEXT_MUTED_LIGHT} !important; }
+      [style*="color:${PAPER}"] { color:${PAPER} !important; }
+      [style*="color:${PAPER_STRONG}"] { color:${PAPER_STRONG} !important; }
+      [style*="color:${TEXT_MUTED_DARK}"] { color:${TEXT_MUTED_DARK} !important; }
     }
-    /* Gmail Android exposes dark mode through a data attribute on body
-       instead of prefers-color-scheme. Mirror the rules. */
-    [data-ogsc] body, u + .body[data-ogsc] { background:#0e0e0e !important; }
-    [data-ogsc] [bgcolor="#f5f3ef"],
-    [data-ogsc] [style*="background:#f5f3ef"] { background-color:#161616 !important; background:#161616 !important; }
-    [data-ogsc] [bgcolor="#fcfaf6"],
-    [data-ogsc] [style*="background:#fcfaf6"] { background-color:#1f1f1f !important; background:#1f1f1f !important; }
-    [data-ogsc] [style*="color:#0a0a0a"]:not([href^="tel:"]):not([href^="http"]) { color:#f0ede5 !important; }
-    [data-ogsc] [style*="color:#4a463f"] { color:#b8b3a8 !important; }
-    [data-ogsc] [style*="color:#7a766f"] { color:#9a968f !important; }
-    [data-ogsc] [style*="border:1px solid #ddd9d0"],
-    [data-ogsc] [style*="border-bottom:1px solid #ddd9d0"] { border-color:#2a2a2a !important; }
-    [data-ogsc] [style*="border:1px solid #e8e5df"],
-    [data-ogsc] [style*="border-bottom:1px solid #e8e5df"] { border-color:#262626 !important; }
-    [data-ogsc] a.btn-ghost { background:#1f1f1f !important; border-color:#f0ede5 !important; color:#f0ede5 !important; }
+    /* Gmail Android dark-mode hook - mirror of the @media block above. */
+    [data-ogsc] body { background:${INK} !important; }
+    [data-ogsc] table[width="100%"][bgcolor="${PAPER}"],
+    [data-ogsc] table[width="100%"][style*="background:${PAPER}"] { background-color:${INK} !important; background:${INK} !important; }
+    [data-ogsc] table.container,
+    [data-ogsc] [bgcolor="${PAPER}"]:not([width="100%"]),
+    [data-ogsc] [style*="background:${PAPER}"]:not([width="100%"]) { background-color:${PAPER} !important; background:${PAPER} !important; }
+    [data-ogsc] [bgcolor="${PAPER_STRONG}"],
+    [data-ogsc] [style*="background:${PAPER_STRONG}"] { background-color:${PAPER_STRONG} !important; background:${PAPER_STRONG} !important; }
+    [data-ogsc] [bgcolor="${INK}"],
+    [data-ogsc] [style*="background:${INK}"] { background-color:${INK} !important; background:${INK} !important; }
+    [data-ogsc] [style*="color:${INK}"] { color:${INK} !important; }
+    [data-ogsc] [style*="color:${INK_WEAK}"] { color:${INK_WEAK} !important; }
+    [data-ogsc] [style*="color:${TEXT_MUTED_LIGHT}"] { color:${TEXT_MUTED_LIGHT} !important; }
+    [data-ogsc] [style*="color:${PAPER}"] { color:${PAPER} !important; }
+    [data-ogsc] [style*="color:${PAPER_STRONG}"] { color:${PAPER_STRONG} !important; }
+    [data-ogsc] [style*="color:${TEXT_MUTED_DARK}"] { color:${TEXT_MUTED_DARK} !important; }
   </style>
 </head>
 <body class="body" style="margin:0;padding:0;background:${PAPER};-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;">
@@ -563,10 +565,10 @@ function buildHtml(booking, lang, state, { wordmarkMode = 'url', oldBooking = nu
                         <td align="left" class="display hero-headline" style="font-family:${DISPLAY_STACK};font-size:84px;line-height:0.88;letter-spacing:0.02em;color:${PAPER_STRONG};font-weight:400;text-transform:uppercase;padding:0 0 28px 0;">${escapeHtml(s.headline)}</td>
                       </tr>
                       <tr>
-                        <td align="left" class="display hero-date" style="font-family:${DISPLAY_STACK};font-size:54px;line-height:1;letter-spacing:0.04em;color:${PAPER_STRONG};font-weight:400;text-transform:uppercase;padding:0 0 6px 0;">${escapeHtml(heroDate)}</td>
+                        <td align="left" class="display hero-date" style="font-family:${DISPLAY_STACK};font-size:54px;line-height:1;letter-spacing:0.04em;color:${PAPER_STRONG};font-weight:400;text-transform:uppercase;padding:0 0 6px 0;${isCancelled ? 'text-decoration:line-through;' : ''}">${escapeHtml(heroDate)}</td>
                       </tr>
                       <tr>
-                        <td align="left" class="display" style="font-family:${DISPLAY_STACK};font-size:54px;line-height:1;letter-spacing:0.06em;color:${slotColor};font-weight:400;text-transform:uppercase;padding:0 0 0 0;">${slot}</td>
+                        <td align="left" class="display" style="font-family:${DISPLAY_STACK};font-size:54px;line-height:1;letter-spacing:0.06em;color:${slotColor};font-weight:400;text-transform:uppercase;padding:0 0 0 0;${isCancelled ? 'text-decoration:line-through;' : ''}">${slot}</td>
                       </tr>
                       ${slotEyebrowText ? `<tr>
                         <td align="left" style="font-family:${BODY_STACK};font-size:10px;letter-spacing:0.35em;text-transform:uppercase;color:${TEXT_MUTED_DARK};font-weight:500;padding:14px 0 0 0;">${escapeHtml(slotEyebrowText)}</td>
@@ -592,8 +594,8 @@ function buildHtml(booking, lang, state, { wordmarkMode = 'url', oldBooking = nu
                     <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="border-top:1px solid ${LINE_PAPER};">
                       ${detailRow(t.labels.barber, barberName, { allowHtml: true })}
                       ${detailRow(t.labels.service, serviceName, { allowHtml: true })}
-                      ${detailRow(t.labels.date, longDate)}
-                      ${detailRow(t.labels.time, `${booking.slot}  ·  ${duration}`)}
+                      ${detailRow(t.labels.date, isCancelled ? `<s>${escapeHtml(longDate)}</s>` : longDate, { allowHtml: isCancelled })}
+                      ${detailRow(t.labels.time, isCancelled ? `<s>${escapeHtml(`${booking.slot}  ·  ${duration}`)}</s>` : `${booking.slot}  ·  ${duration}`, { allowHtml: isCancelled })}
                       ${price ? detailRow(t.labels.price, price) : ''}
                       ${detailRow(t.labels.address, `${escapeHtml(ADDRESS_LINE)}<br/><span style="font-family:${BODY_STACK};font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:${TEXT_MUTED_LIGHT};">Szczecin</span>`, { allowHtml: true })}
                     </table>
