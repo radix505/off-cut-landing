@@ -163,7 +163,7 @@ const T = {
       infoCardTitle: 'DODAJ DO KALENDARZA',
       infoCardBody: 'Plik .ics dołączony do tej wiadomości; otwórz go na telefonie lub w kalendarzu.',
       needToChangeTitle: 'Coś się zmieniło?',
-      needToChangeBody: 'Zadzwoń bezpośrednio do barbershopu.',
+      needToChangeBody: 'Zadzwoń do nas bezpośrednio.',
       showOnArrival: 'Zalecamy być 5 minut przed czasem.',
       footerLegal: 'Otrzymujesz tę wiadomość, ponieważ została potwierdzona Twoja rezerwacja w Off Cut.',
     },
@@ -175,9 +175,9 @@ const T = {
       headline: 'Nowy termin.',
       intro: (name) => `${name}, Twoja wizyta została przełożona na nowy termin. Pełne szczegóły poniżej.`,
       infoCardTitle: 'ZAKTUALIZUJ KALENDARZ',
-      infoCardBody: 'Załączony plik .ics zaktualizuje istniejący wpis w Twoim kalendarzu na nowy termin — wystarczy go otworzyć.',
+      infoCardBody: 'Załączony plik .ics zaktualizuje istniejący wpis w Twoim kalendarzu na nowy termin - wystarczy go otworzyć.',
       needToChangeTitle: 'Coś się zmieniło?',
-      needToChangeBody: 'Zadzwoń bezpośrednio do barbershopu.',
+      needToChangeBody: 'Zadzwoń do nas bezpośrednio.',
       showOnArrival: 'Zalecamy być 5 minut przed czasem.',
       footerLegal: 'Otrzymujesz tę wiadomość, ponieważ Twoja rezerwacja w Off Cut została przełożona na nowy termin.',
     },
@@ -187,11 +187,11 @@ const T = {
       sectionNumber: '03',
       slotEyebrow: 'TERMIN ZWOLNIONY',
       headline: 'Do następnego razu.',
-      intro: (name) => `${name}, Twoja wizyta została anulowana. Termin został zwolniony. Jeśli chcesz umówić się ponownie — zadzwoń lub zarezerwuj online.`,
+      intro: (name) => `${name}, Twoja wizyta została anulowana. Termin został zwolniony. Jeśli chcesz umówić się ponownie - zadzwoń lub zarezerwuj online.`,
       infoCardTitle: 'CHCESZ UMÓWIĆ SIĘ PONOWNIE?',
       infoCardBody: 'Zarezerwuj nowy termin na off-cut.pl lub zadzwoń. Załączony plik .ics usuwa anulowaną wizytę z Twojego kalendarza.',
       needToChangeTitle: 'Pomyłka?',
-      needToChangeBody: 'Jeśli anulowanie było błędem, zadzwoń od razu — w miarę możliwości przywrócimy ten sam termin.',
+      needToChangeBody: 'Jeśli anulowanie było błędem, zadzwoń od razu - w miarę możliwości przywrócimy ten sam termin.',
       showOnArrival: 'Czekamy na Ciebie następnym razem.',
       footerLegal: 'Otrzymujesz tę wiadomość, ponieważ Twoja rezerwacja w Off Cut została anulowana.',
     },
@@ -247,9 +247,9 @@ const T = {
       sectionNumber: '02',
       slotEyebrow: null,
       headline: 'New date.',
-      intro: (name) => `${name}, your appointment has been moved to a new time. The previous slot no longer applies — full details below.`,
+      intro: (name) => `${name}, your appointment has been moved to a new time. The previous slot no longer applies - full details below.`,
       infoCardTitle: 'UPDATE YOUR CALENDAR',
-      infoCardBody: 'The attached .ics file will update your existing calendar entry to the new time — just open it.',
+      infoCardBody: 'The attached .ics file will update your existing calendar entry to the new time - just open it.',
       needToChangeTitle: 'Something changed?',
       needToChangeBody: 'Call the shop directly. We sort it human to human.',
       showOnArrival: 'Just give your name at the door. We recommend arriving 5 minutes early.',
@@ -261,11 +261,11 @@ const T = {
       sectionNumber: '03',
       slotEyebrow: 'SLOT RELEASED',
       headline: 'Until next time.',
-      intro: (name) => `${name}, your appointment has been cancelled and the slot is now released. To book again — call us or reserve online.`,
+      intro: (name) => `${name}, your appointment has been cancelled and the slot is now released. To book again - call us or reserve online.`,
       infoCardTitle: 'WANT TO BOOK AGAIN?',
       infoCardBody: 'Reserve a new slot at off-cut.pl or give us a call. The attached .ics file removes the cancelled appointment from your calendar.',
       needToChangeTitle: 'Mistake?',
-      needToChangeBody: 'If this cancellation was an accident, call right away — we will try to restore the same slot.',
+      needToChangeBody: 'If this cancellation was an accident, call right away - we will try to restore the same slot.',
       showOnArrival: 'See you next time.',
       footerLegal: 'You are receiving this because your booking at Off Cut has been cancelled.',
     },
@@ -350,6 +350,10 @@ function buildHtml(booking, lang, state, { wordmarkMode = 'url', oldBooking = nu
   // customer can show up at. Received still shows paper-strong (not yet
   // active).
   const isActive = state === 'confirmed' || state === 'rescheduled';
+  // Cancelled emails reshape the body card: "Pomyłka?" jumps above the
+  // details (so a misclick can be corrected at a glance) and the map CTA
+  // is suppressed entirely (there's nothing to show up to).
+  const isCancelled = state === 'cancelled';
   // Resolve wordmark refs. Three modes:
   //   'url'  - hosted HTTPS image (production default; works in Gmail/Apple/Outlook)
   //   'data' - base64 data URL so file:// HTML previews render off disk
@@ -414,6 +418,37 @@ function buildHtml(booking, lang, state, { wordmarkMode = 'url', oldBooking = nu
       <td style="padding:14px 0 14px 0;border-bottom:1px solid ${LINE_PAPER_SOFT};font-family:${BODY_STACK};font-size:15px;line-height:1.5;color:${INK};font-weight:400;letter-spacing:0.01em;vertical-align:top;" align="right">${opts.allowHtml ? value : escapeHtml(value)}</td>
     </tr>`;
 
+  // "Pomyłka? / Coś się zmieniło?" headline + body + ZADZWOŃ ghost button.
+  // Rendered as a string so the cancelled email can hoist it above the
+  // appointment details (a misclick on Anuluj should let the customer
+  // undo immediately, without scrolling past a closed slot).
+  const needToChangeBlock = `
+                <tr>
+                  <td class="pad-x" style="padding:36px 48px 0 48px;">
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+                      <tr>
+                        <td class="display" style="font-family:${DISPLAY_STACK};font-size:28px;line-height:1.05;letter-spacing:0.04em;color:${INK};font-weight:400;text-transform:uppercase;padding:0 0 12px 0;">${escapeHtml(s.needToChangeTitle)}</td>
+                      </tr>
+                      <tr>
+                        <td style="font-family:${BODY_STACK};font-size:14px;line-height:1.7;color:${INK_WEAK};font-weight:300;letter-spacing:0.01em;padding:0 0 18px 0;">${escapeHtml(s.needToChangeBody)}</td>
+                      </tr>
+                      <tr>
+                        <td align="center" style="padding:0;text-align:center;">
+                          <!--[if mso]>
+                          <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="tel:${PHONE_TEL}" style="height:44px;v-text-anchor:middle;width:260px;" arcsize="50%" strokecolor="${INK}" fillcolor="${PAPER_STRONG}">
+                            <w:anchorlock/>
+                            <center style="color:${INK};font-family:Helvetica,Arial,sans-serif;font-size:11px;font-weight:600;letter-spacing:0.25em;text-transform:uppercase;">${escapeHtml(t.callCta)} ${escapeHtml(PHONE_DISPLAY)}</center>
+                          </v:roundrect>
+                          <![endif]-->
+                          <!--[if !mso]><!-- -->
+                          <a href="tel:${PHONE_TEL}" target="_blank" class="btn-ghost" style="display:inline-block;font-family:${BODY_STACK};font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:${INK};font-weight:600;background:${PAPER_STRONG};border:1px solid ${INK};padding:14px 26px;border-radius:999px;mso-line-height-rule:exactly;">${escapeHtml(t.callCta)} ${escapeHtml(PHONE_DISPLAY)}</a>
+                          <!--<![endif]-->
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>`;
+
   return `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="${lang}">
 <head>
@@ -422,7 +457,7 @@ function buildHtml(booking, lang, state, { wordmarkMode = 'url', oldBooking = nu
   <meta name="x-apple-disable-message-reformatting" />
   <meta name="color-scheme" content="light only" />
   <meta name="supported-color-schemes" content="light" />
-  <title>${escapeHtml(`Off Cut — ${s.subjectStatus}`)}</title>
+  <title>${escapeHtml(`Off Cut - ${s.subjectStatus}`)}</title>
   <!--[if mso]>
   <style>
     .display { font-family: 'Arial Narrow', Impact, sans-serif !important; }
@@ -457,14 +492,8 @@ function buildHtml(booking, lang, state, { wordmarkMode = 'url', oldBooking = nu
       <td align="center" style="padding:32px 16px 48px 16px;">
         <table role="presentation" class="container" cellpadding="0" cellspacing="0" border="0" width="600" style="width:600px;max-width:600px;background:${PAPER};">
           <tr>
-            <td class="pad-x" style="padding:0 8px 24px 8px;font-family:${BODY_STACK};font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:${TEXT_MUTED_LIGHT};font-weight:500;" align="left">
-              <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
-                <tr>
-                  <td align="left" valign="middle" style="line-height:0;">
-                    <img src="${wordmarkDarkSrc}" alt="Off Cut" width="180" height="40" style="display:block;border:0;outline:none;text-decoration:none;height:40px;width:180px;max-width:180px;" />
-                  </td>
-                </tr>
-              </table>
+            <td class="pad-x" align="center" style="padding:8px 8px 28px 8px;text-align:center;">
+              <img src="${wordmarkDarkSrc}" alt="Off Cut" width="260" height="60" style="display:inline-block;border:0;outline:none;text-decoration:none;height:60px;width:260px;max-width:260px;" />
             </td>
           </tr>
           <tr>
@@ -512,6 +541,7 @@ function buildHtml(booking, lang, state, { wordmarkMode = 'url', oldBooking = nu
                     ${escapeHtml(s.intro(customerName))}
                   </td>
                 </tr>
+                ${isCancelled ? needToChangeBlock : ''}
                 <tr>
                   <td class="pad-x" style="padding:24px 48px 12px 48px;">
                     <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="border-top:1px solid ${LINE_PAPER};">
@@ -527,8 +557,9 @@ function buildHtml(booking, lang, state, { wordmarkMode = 'url', oldBooking = nu
 
                 <!-- Map CTA (centered, accent fill - the primary visit
                      action). Call CTA lives below the "Coś się zmieniło?"
-                     copy and stays ghost since it's the secondary path. -->
-                <tr>
+                     copy and stays ghost since it's the secondary path.
+                     Suppressed on cancelled emails - nothing to show up to. -->
+                ${isCancelled ? '' : `<tr>
                   <td class="pad-x" align="center" style="padding:32px 48px 8px 48px;text-align:center;">
                     <!--[if mso]>
                     <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="${MAP_URL}" style="height:44px;v-text-anchor:middle;width:220px;" arcsize="50%" strokecolor="${ACCENT}" fillcolor="${ACCENT}">
@@ -540,7 +571,7 @@ function buildHtml(booking, lang, state, { wordmarkMode = 'url', oldBooking = nu
                     <a href="${MAP_URL}" target="_blank" class="btn-primary" style="display:inline-block;font-family:${BODY_STACK};font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:${INK};font-weight:600;background:${ACCENT};border:1px solid ${ACCENT};padding:14px 26px;border-radius:999px;box-shadow:0 0 22px 4px ${ACCENT_GLOW};mso-line-height-rule:exactly;">${escapeHtml(t.mapCta)}</a>
                     <!--<![endif]-->
                   </td>
-                </tr>
+                </tr>`}
                 <tr>
                   <td class="pad-x" style="padding:28px 48px 0 48px;">
                     <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="border:1px solid ${LINE_PAPER};background:${PAPER_STRONG};">
@@ -554,40 +585,13 @@ function buildHtml(booking, lang, state, { wordmarkMode = 'url', oldBooking = nu
                   </td>
                 </tr>
 
-                <tr>
-                  <td class="pad-x" style="padding:36px 48px 0 48px;">
-                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
-                      <tr>
-                        <td class="display" style="font-family:${DISPLAY_STACK};font-size:28px;line-height:1.05;letter-spacing:0.04em;color:${INK};font-weight:400;text-transform:uppercase;padding:0 0 12px 0;">${escapeHtml(s.needToChangeTitle)}</td>
-                      </tr>
-                      <tr>
-                        <td style="font-family:${BODY_STACK};font-size:14px;line-height:1.7;color:${INK_WEAK};font-weight:300;letter-spacing:0.01em;padding:0 0 18px 0;">${escapeHtml(s.needToChangeBody)}</td>
-                      </tr>
-                      <tr>
-                        <td align="center" style="padding:0;text-align:center;">
-                          <!--[if mso]>
-                          <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="tel:${PHONE_TEL}" style="height:44px;v-text-anchor:middle;width:260px;" arcsize="50%" strokecolor="${INK}" fillcolor="${PAPER_STRONG}">
-                            <w:anchorlock/>
-                            <center style="color:${INK};font-family:Helvetica,Arial,sans-serif;font-size:11px;font-weight:600;letter-spacing:0.25em;text-transform:uppercase;">${escapeHtml(t.callCta)} ${escapeHtml(PHONE_DISPLAY)}</center>
-                          </v:roundrect>
-                          <![endif]-->
-                          <!--[if !mso]><!-- -->
-                          <a href="tel:${PHONE_TEL}" target="_blank" class="btn-ghost" style="display:inline-block;font-family:${BODY_STACK};font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:${INK};font-weight:600;background:${PAPER_STRONG};border:1px solid ${INK};padding:14px 26px;border-radius:999px;mso-line-height-rule:exactly;">${escapeHtml(t.callCta)} ${escapeHtml(PHONE_DISPLAY)}</a>
-                          <!--<![endif]-->
-                        </td>
-                      </tr>
-                    </table>
-                  </td>
-                </tr>
+                ${isCancelled ? '' : needToChangeBlock}
 
                 <tr>
                   <td class="pad-x" style="padding:36px 48px 8px 48px;">
                     <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="border-top:1px solid ${LINE_PAPER};">
                       <tr>
                         <td style="padding:20px 0 6px 0;font-family:${BODY_STACK};font-size:13px;line-height:1.6;color:${INK_WEAK};font-weight:300;letter-spacing:0.01em;">${escapeHtml(s.showOnArrival)}</td>
-                      </tr>
-                      <tr>
-                        <td style="padding:0 0 0 0;font-family:${BODY_STACK};font-size:12px;line-height:1.6;color:${TEXT_MUTED_LIGHT};font-weight:300;letter-spacing:0.01em;">${escapeHtml(t.walkInNote)}</td>
                       </tr>
                     </table>
                   </td>
@@ -601,14 +605,8 @@ function buildHtml(booking, lang, state, { wordmarkMode = 'url', oldBooking = nu
             <td bgcolor="${INK}" style="background:${INK};padding:0;">
               <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" bgcolor="${INK}" style="background:${INK};">
                 <tr>
-                  <td class="pad-x" style="padding:36px 48px 12px 48px;border-top:1px solid ${LINE_INK};">
-                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
-                      <tr>
-                        <td align="left" valign="middle" style="line-height:0;">
-                          <img src="${wordmarkLightSrc}" alt="Off Cut" width="150" height="34" style="display:block;border:0;outline:none;text-decoration:none;height:34px;width:150px;max-width:150px;" />
-                        </td>
-                      </tr>
-                    </table>
+                  <td class="pad-x" align="center" style="padding:44px 48px 16px 48px;border-top:1px solid ${LINE_INK};text-align:center;">
+                    <img src="${wordmarkLightSrc}" alt="Off Cut" width="260" height="60" style="display:inline-block;border:0;outline:none;text-decoration:none;height:60px;width:260px;max-width:260px;" />
                   </td>
                 </tr>
                 <tr>
