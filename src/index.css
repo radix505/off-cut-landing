@@ -581,55 +581,57 @@ section { padding-block: var(--space-section-y); padding-inline: var(--space-sec
 .bwiz-heading { font-size: 0.72rem; letter-spacing: 0.28em; text-transform: uppercase; color: var(--text-muted-dark); }
 .bwiz-heading--slots { margin-top: 0.5rem; }
 
-/* Step 1 – Barbers */
-.booking-barbers-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; }
-.booking-barber-card { display: flex; flex-direction: column; align-items: center; gap: 0.6rem; padding: 1.5rem 1rem; background: rgba(255,255,255,0.03); border: 0.5px solid rgba(255,255,255,0.07); cursor: pointer; transition: border-color 0.2s, background 0.2s; }
-.booking-barber-card:hover:not(.suspended) { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.2); }
-.booking-barber-card.suspended { opacity: 0.28; cursor: not-allowed; filter: grayscale(1); pointer-events: none; }
-.booking-barber-card.selected { background: rgba(143, 217, 251, 0.1); border-color: var(--color-accent-warm); border-width: 1px; }
-.booking-barber-av { width: 64px; height: 64px; border-radius: 50%; object-fit: cover; object-position: top; display: block; filter: grayscale(0.3); transition: filter 0.25s; }
-.booking-barber-card.selected .booking-barber-av { filter: grayscale(0); border-color: rgba(220,80,48,0.4); }
-.booking-barber-name { font-family: 'Bebas Neue', sans-serif; font-size: 1.15rem; letter-spacing: 0.1em; color: var(--paper-strong); line-height: 1; }
-.booking-barber-card.selected .booking-barber-name { color: var(--color-accent-warm); }
-.booking-barber-title { font-size: 0.7rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-muted-dark); }
-.booking-barber-card.selected .booking-barber-title { color: rgba(143,217,251,0.85); }
-/* Mobile barber cards: stack as one-per-row with horizontal photo+text layout.
-   This block MUST come after the base .booking-barber-card rule above — both
-   selectors are 0,0,1,0 specificity, so source order decides the winner. */
-@media (max-width: 480px) {
-  /* Grid fills the step body's empty vertical space; auto rows split that
-     space equally between cards so 3 barbers stretch top-to-bottom. */
-  .booking-barbers-grid { grid-template-columns: 1fr; grid-auto-rows: 1fr; flex: 1; min-height: 0; }
-  /* Card layout: avatar on the left, name + title stacked and centered in
-     the remaining horizontal space. Grid lets the avatar span both text rows
-     without needing a name+title wrapper in the JSX. */
-  .booking-barber-card {
-    display: grid;
-    grid-template-columns: 48px 1fr;
-    grid-template-rows: 1fr 1fr;
-    gap: 0 1rem;
-    padding: 0.85rem 1rem;
-    align-items: center;
-  }
-  .booking-barber-av { grid-column: 1; grid-row: 1 / 3; width: 48px; height: 48px; }
-  .booking-barber-card .booking-barber-name { grid-column: 2; grid-row: 1; justify-self: center; align-self: end; font-size: 1.05rem; }
-  .booking-barber-card .booking-barber-title { grid-column: 2; grid-row: 2; justify-self: center; align-self: start; }
-}
-
-/* Step 2 – Categories */
-.booking-categories-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
-@container wizard (max-width: 380px) {
-  .booking-categories-grid { grid-template-columns: 1fr; }
-}
-.booking-category-card {
-  position: relative;
-  display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
-  gap: 0.85rem;
-  padding: 2.4rem 1rem 1.5rem;
+/* Step 1 – Barbers
+   Single-column grid at every viewport: cards stack one-per-row and stretch to
+   fill the step body's available height (which is the wizard minus chrome).
+   Each card uses an internal 2-col × 2-row grid so the avatar spans both text
+   rows on the left, with name + title stacked and centered in the right column. */
+.booking-barbers-grid { display: grid; grid-template-columns: 1fr; grid-auto-rows: 1fr; gap: 0.75rem; flex: 1; min-height: 0; }
+.booking-barber-card {
+  display: grid;
+  grid-template-columns: 100px 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 0 1.5rem;
+  padding: 1rem 1.5rem;
+  align-items: center;
   background: rgba(255,255,255,0.03);
   border: 0.5px solid rgba(255,255,255,0.07);
   cursor: pointer;
-  text-align: center;
+  transition: border-color 0.2s, background 0.2s;
+}
+.booking-barber-card:hover:not(.suspended) { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.2); }
+.booking-barber-card.suspended { opacity: 0.28; cursor: not-allowed; filter: grayscale(1); pointer-events: none; }
+.booking-barber-card.selected { background: rgba(143, 217, 251, 0.1); border-color: var(--color-accent-warm); border-width: 1px; }
+.booking-barber-av { grid-column: 1; grid-row: 1 / 3; width: 100px; height: 100px; border-radius: 50%; object-fit: cover; object-position: top; display: block; filter: grayscale(0.3); transition: filter 0.25s; }
+.booking-barber-card.selected .booking-barber-av { filter: grayscale(0); border-color: rgba(220,80,48,0.4); }
+.booking-barber-name { grid-column: 2; grid-row: 1; justify-self: center; align-self: end; font-family: 'Bebas Neue', sans-serif; font-size: 1.15rem; letter-spacing: 0.1em; color: var(--paper-strong); line-height: 1; }
+.booking-barber-card.selected .booking-barber-name { color: var(--color-accent-warm); }
+.booking-barber-title { grid-column: 2; grid-row: 2; justify-self: center; align-self: start; font-size: 0.7rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-muted-dark); }
+.booking-barber-card.selected .booking-barber-title { color: rgba(143,217,251,0.85); }
+/* Mobile: tighten the avatar size, gap, padding, and name font so each card
+   feels appropriately compact on phone-width viewports. Layout is identical. */
+@media (max-width: 480px) {
+  .booking-barber-card { grid-template-columns: 48px 1fr; gap: 0 1rem; padding: 0.85rem 1rem; }
+  .booking-barber-av { width: 48px; height: 48px; }
+  .booking-barber-card .booking-barber-name { font-size: 1.05rem; }
+}
+
+/* Step 2 – Categories
+   Mirrors the step-1 barbers treatment: single-column grid that stretches to
+   fill the step body, with each card laid out as icon-left + name/sub-centered
+   on the right using an internal 2-col × 2-row grid. */
+.booking-categories-grid { display: grid; grid-template-columns: 1fr; grid-auto-rows: 1fr; gap: 1rem; flex: 1; min-height: 0; }
+.booking-category-card {
+  position: relative;
+  display: grid;
+  grid-template-columns: 64px 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 0 1.5rem;
+  padding: 1rem 1.5rem;
+  align-items: center;
+  background: rgba(255,255,255,0.03);
+  border: 0.5px solid rgba(255,255,255,0.07);
+  cursor: pointer;
   color: #fff;
   font-family: 'Inter', sans-serif;
   transition: background 0.2s, border-color 0.2s, color 0.2s;
@@ -644,17 +646,19 @@ section { padding-block: var(--space-section-y); padding-inline: var(--space-sec
   font-size: 0.7rem; letter-spacing: 0.28em; color: var(--text-muted-dark);
 }
 .bcat-icon {
-  width: 44px; height: 44px;
+  grid-column: 1; grid-row: 1 / 3;
+  width: 64px; height: 64px;
   color: var(--paper-strong);
   display: inline-flex; align-items: center; justify-content: center;
 }
 .bcat-icon svg { width: 100%; height: 100%; }
 .bcat-name {
+  grid-column: 2; grid-row: 1; justify-self: center; align-self: end;
   font-family: 'Bebas Neue', sans-serif;
   font-size: 1.55rem; letter-spacing: 0.2em; color: var(--paper-strong); line-height: 1;
-  margin-top: 0.1rem;
 }
 .bcat-sub {
+  grid-column: 2; grid-row: 2; justify-self: center; align-self: start;
   font-size: 0.7rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--text-muted-dark);
 }
 .booking-cat-pill {
@@ -672,9 +676,13 @@ section { padding-block: var(--space-section-y); padding-inline: var(--space-sec
 .booking-cat-pill-label { font-size: 0.7rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--text-muted-dark); }
 .booking-cat-pill-name { font-size: 0.85rem; letter-spacing: 0.05em; color: var(--paper-strong); }
 
-/* Step 2 – Services */
-.booking-services-list { display: flex; flex-direction: column; border: 0.5px solid rgba(255,255,255,0.07); }
-.booking-service-item { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.85rem 1.1rem; background: transparent; border: none; border-bottom: 0.5px solid rgba(255,255,255,0.05); cursor: pointer; text-align: left; transition: background 0.15s; }
+/* Step 2 – Services
+   List grows to fill the step body's remaining height (`flex: 1`) and each
+   row is capped at one third of that height so sparse categories (1–2
+   services) keep the same row size as a 3-service category instead of one
+   giant row swallowing the whole list. 4+ services shrink to fit. */
+.booking-services-list { display: flex; flex-direction: column; border: 0.5px solid rgba(255,255,255,0.07); flex: 1; min-height: 0; }
+.booking-service-item { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.85rem 1.1rem; background: transparent; border: none; border-bottom: 0.5px solid rgba(255,255,255,0.05); cursor: pointer; text-align: left; transition: background 0.15s; flex: 0 1 33.333%; }
 .booking-service-item:last-child { border-bottom: none; }
 .booking-service-item:hover { background: rgba(255,255,255,0.04); }
 .booking-service-item.selected { background: #fff; }
@@ -801,21 +809,27 @@ section { padding-block: var(--space-section-y); padding-inline: var(--space-sec
 }
 
 /* Step 4 – Summary + Contact */
-.booking-summary-box { display: flex; flex-direction: column; border: 0.5px solid rgba(255,255,255,0.07); }
-.bsum-row { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.75rem 1rem; border-bottom: 0.5px solid rgba(255,255,255,0.05); }
+/* Step 4 summary: box grows to fill the step body's empty height, and each
+   row stretches equally so the layout mirrors barbers/categories/services. */
+.booking-summary-box { display: flex; flex-direction: column; border: 0.5px solid rgba(255,255,255,0.07); flex: 1; min-height: 0; }
+.bsum-row { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.75rem 1rem; border-bottom: 0.5px solid rgba(255,255,255,0.05); flex: 1; min-height: 0; }
 .bsum-row:last-child { border-bottom: none; }
-.bsum-label { font-size: 0.7rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--text-muted-dark); flex-shrink: 0; }
-.bsum-val { font-size: 0.78rem; letter-spacing: 0.03em; color: var(--paper-strong); text-align: right; }
-.bsum-separator { height: 0.5px; background: rgba(255,255,255,0.1); margin: 0; }
-.booking-contact-fields { display: flex; flex-direction: column; border: 0.5px solid rgba(255,255,255,0.1); }
-.form-group { border-bottom: 0.5px solid rgba(255,255,255,0.1); }
+.bsum-label { font-size: 0.95rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--text-muted-dark); flex-shrink: 0; }
+.bsum-val { font-size: 1.15rem; letter-spacing: 0.03em; color: var(--paper-strong); text-align: right; }
+/* Separator stays at 0.5px and doesn't grow — without flex: 0 it would
+   absorb a share of the box's flex-grown height like the other rows do. */
+.bsum-separator { height: 0.5px; background: rgba(255,255,255,0.1); margin: 0; flex: 0 0 0.5px; }
+/* Step 4 contact form: fields container grows to fill the step body and
+   the three form-groups (name / phone / email) split that height evenly. */
+.booking-contact-fields { display: flex; flex-direction: column; border: 0.5px solid rgba(255,255,255,0.1); flex: 1; min-height: 0; }
+.form-group { border-bottom: 0.5px solid rgba(255,255,255,0.1); flex: 1; min-height: 0; display: flex; flex-direction: column; justify-content: center; }
 .form-group:last-of-type { border-bottom: none; }
-.form-label { display: block; font-size: 0.7rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--text-muted-dark); padding: 0.9rem 1.1rem 0; }
-.form-input { width: 100%; border: none; background: transparent; font-family: 'Inter', sans-serif; font-size: 0.9rem; color: var(--paper-strong); padding: 0.35rem 1.1rem 0.9rem; outline: none; letter-spacing: 0.03em; box-sizing: border-box; }
+.form-label { display: block; font-size: 0.95rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--text-muted-dark); padding: 0.9rem 1.1rem 0; }
+.form-input { width: 100%; border: none; background: transparent; font-family: 'Inter', sans-serif; font-size: 1.15rem; color: var(--paper-strong); padding: 0.35rem 1.1rem 0.9rem; outline: none; letter-spacing: 0.03em; box-sizing: border-box; }
 .form-input::placeholder { color: oklch(40% 0.005 40); }
 .form-group--invalid { box-shadow: inset 2px 0 0 #d2685a; }
 .form-group--invalid .form-label { color: #d2685a; }
-.form-error { display: block; padding: 0 1.1rem 0.7rem; font-size: 0.7rem; letter-spacing: 0.05em; color: #d2685a; line-height: 1.4; }
+.form-error { display: block; padding: 0 1.1rem 0.7rem; font-size: 0.85rem; letter-spacing: 0.05em; color: #d2685a; line-height: 1.4; }
 /* iOS auto-zooms any input with font-size < 16px on focus; after blur the zoom
    stays and crashes the layout. Force 16px on touch devices to prevent this. */
 @media (pointer: coarse) {
@@ -1153,18 +1167,17 @@ body.nav-drawer-is-open .mobile-app-bar { opacity: 0; pointer-events: none; }
   .booking-wizard { padding: 1.5rem 1.5rem 0; height: 580px; }
   .booking-wizard-nav { padding-bottom: 1.5rem; }
   .booking-barbers-grid { gap: 0.5rem; }
-  /* Category grid and service list grow to fill the step body's empty space,
-     and their rows split that space equally — mirrors the step-1 barbers grid. */
-  .booking-categories-grid { gap: 0.5rem; grid-template-columns: 1fr; grid-auto-rows: 1fr; flex: 1; min-height: 0; }
-  .booking-category-card { flex-direction: row; align-items: center; padding: 0.9rem 1.1rem; gap: 0.9rem; text-align: left; min-height: 0; }
-  .bcat-icon { width: 30px; height: 30px; flex-shrink: 0; }
-  .bcat-name { font-size: 1.2rem; margin-top: 0; }
+  /* Step 2 mobile tightening: the base rules already give 1-col stretchy grid +
+     icon-left/text-right card layout (mirrors barbers); here we only shrink
+     sizes for phone-width viewports. */
+  .booking-categories-grid { gap: 0.5rem; }
+  .booking-category-card { grid-template-columns: 30px 1fr; gap: 0 1rem; padding: 0.85rem 1rem; }
+  .bcat-icon { width: 30px; height: 30px; }
+  .bcat-name { font-size: 1.2rem; }
   .bcat-sub { font-size: 0.62rem; }
-  .booking-services-list { flex: 1; min-height: 0; }
-  /* Cap each row at one third of the list height so sparse categories
-     (1 or 2 services) match the per-row size of a 3-service category
-     instead of one giant row swallowing the whole list. */
-  .booking-service-item { padding: 0.6rem 1rem; flex: 0 1 33.333%; }
+  /* Mobile-only padding tightening on service rows; flex/stretch behavior
+     lives in the base rule and applies at every viewport. */
+  .booking-service-item { padding: 0.6rem 1rem; }
   .bsi-name { font-size: 0.82rem; }
   .bsi-price { font-size: 0.85rem; }
   .bsi-dur { font-size: 0.68rem; }
