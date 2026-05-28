@@ -1,7 +1,7 @@
 import { InlineKeyboard } from 'grammy';
 import * as bookingsRepo from '../data/bookingsRepo.js';
 import { withTransaction } from '../db.js';
-import { blockOverlapsExisting, computeUnavailable } from '../availability.js';
+import { blockOverlapsExisting, computeUnavailable, serviceOverflowsClosing } from '../availability.js';
 import { buildSlotsForISODate } from '../../src/data/booking-config.js';
 import { BUSINESS_HOURS, SLOT_STEP_MIN } from '../../src/data/businessHours.js';
 import { sendBookingReschedule } from '../mail/index.js';
@@ -155,7 +155,7 @@ async function renderDay(ctx, booking, year, month, day, { edit = true } = {}) {
   for (let i = 0; i < grid.length; i++) {
     const s = grid[i];
     if (unavailable.has(s)) continue;
-    if (i + blocks > grid.length) continue;
+    if (serviceOverflowsClosing(i, blocks, grid.length)) continue;
     if (blockOverlapsExisting(s, booking.duration_min, others, iso)) continue;
     valid.push(s);
   }
@@ -244,7 +244,7 @@ async function commitReschedule(ctx, booking, year, month, day, newSlot) {
     await ctx.answerCallbackQuery({ text: 'Slot poza godzinami otwarcia.', show_alert: true });
     return renderDay(ctx, booking, year, month, day);
   }
-  if (startIdx + blocks > grid.length) {
+  if (serviceOverflowsClosing(startIdx, blocks, grid.length)) {
     await ctx.answerCallbackQuery({ text: 'Usługa nie mieści się przed zamknięciem.', show_alert: true });
     return renderDay(ctx, booking, year, month, day);
   }

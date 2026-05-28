@@ -1,5 +1,5 @@
 import { withTransaction } from '../db.js';
-import { computeUnavailableStarts, blockOverlapsExisting } from '../availability.js';
+import { computeUnavailableStarts, blockOverlapsExisting, serviceOverflowsClosing } from '../availability.js';
 import { getBarberIdSet, getServiceById, isBarberLinkedToService } from '../catalog.js';
 import { buildSlotsForISODate } from '../../src/data/booking-config.js';
 import { SLOT_STEP_MIN } from '../../src/data/businessHours.js';
@@ -91,7 +91,7 @@ export default async function bookingsRoutes(fastify) {
         if (grid.length === 0) continue;
         const dayBookings = byDate.get(iso) ?? [];
         let hasFreeStart = false;
-        for (let i = 0; i + blocks <= grid.length; i++) {
+        for (let i = 0; !serviceOverflowsClosing(i, blocks, grid.length); i++) {
           if (!blockOverlapsExisting(grid[i], service.duration_min, dayBookings, iso)) {
             hasFreeStart = true;
             break;
@@ -143,7 +143,7 @@ export default async function bookingsRoutes(fastify) {
       }
       const blocks = Math.ceil(service.duration_min / SLOT_STEP_MIN);
       const startIdx = grid.indexOf(slot);
-      if (startIdx + blocks > grid.length) {
+      if (serviceOverflowsClosing(startIdx, blocks, grid.length)) {
         return reply.code(400).send({ error: 'service_exceeds_hours' });
       }
 

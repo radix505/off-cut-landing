@@ -2,7 +2,7 @@ import { InlineKeyboard } from 'grammy';
 import * as bookingsRepo from '../data/bookingsRepo.js';
 import * as barbersRepo from '../data/barbersRepo.js';
 import { withTransaction } from '../db.js';
-import { computeUnavailable, blockOverlapsExisting } from '../availability.js';
+import { computeUnavailable, blockOverlapsExisting, serviceOverflowsClosing } from '../availability.js';
 import { buildSlotsForISODate } from '../../src/data/booking-config.js';
 import { BUSINESS_HOURS, SLOT_STEP_MIN } from '../../src/data/businessHours.js';
 import {
@@ -231,7 +231,7 @@ async function renderBlockDurationPicker(ctx, barberId, year, month, day, slot) 
   // Compute which durations actually fit and don't overlap.
   const validDurations = BLOCK_DURATIONS.filter((dur) => {
     const blocks = Math.ceil(dur / SLOT_STEP_MIN);
-    if (startIdx + blocks > grid.length) return false;
+    if (serviceOverflowsClosing(startIdx, blocks, grid.length)) return false;
     return !blockOverlapsExisting(slot, dur, bookings, iso);
   });
 

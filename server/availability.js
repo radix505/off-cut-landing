@@ -30,6 +30,13 @@ export function blockOverlapsExisting(newSlot, newDurationMin, existingBookings,
   return false;
 }
 
+// Whether a service occupying `blocks` 10-minute units starting at `startIdx`
+// would extend past the salon's closing time. The grid's last entry represents
+// the closing instant itself, so it is not a usable block.
+export function serviceOverflowsClosing(startIdx, blocks, gridLength) {
+  return startIdx + blocks >= gridLength;
+}
+
 // Start slots where a new booking of `durationMin` cannot begin - either it
 // would overlap an existing booking or run past end-of-day.
 export function computeUnavailableStarts(bookings, isoDate, durationMin) {
@@ -37,7 +44,7 @@ export function computeUnavailableStarts(bookings, isoDate, durationMin) {
   const blocks = Math.ceil(durationMin / SLOT_STEP_MIN);
   const unavailable = new Set();
   for (let i = 0; i < grid.length; i++) {
-    if (i + blocks > grid.length) {
+    if (serviceOverflowsClosing(i, blocks, grid.length)) {
       unavailable.add(grid[i]);
       continue;
     }
