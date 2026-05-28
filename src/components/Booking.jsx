@@ -230,6 +230,7 @@ export default function Booking() {
   }, [service, step]);
 
   const today = new Date(); today.setHours(0, 0, 0, 0);
+  const isAtMinMonth = calYear === today.getFullYear() && calMonth === today.getMonth();
 
   useEffect(() => {
     if (!navState?.preselectedService) return;
@@ -296,7 +297,7 @@ export default function Booking() {
     else submitBooking();
   }
 
-  function prevMonth() { setCalBase(b => { const d = new Date(b); d.setMonth(d.getMonth()-1); return d; }); setDate(null); setSlot(null); }
+  function prevMonth() { if (isAtMinMonth) return; setCalBase(b => { const d = new Date(b); d.setMonth(d.getMonth()-1); return d; }); setDate(null); setSlot(null); }
   function nextMonth() { setCalBase(b => { const d = new Date(b); d.setMonth(d.getMonth()+1); return d; }); setDate(null); setSlot(null); }
 
   function isoFromDay(d) {
@@ -624,7 +625,7 @@ export default function Booking() {
               ) : (
                 <div className="booking-cal">
                   <div className="bcal-header">
-                    <button type="button" className="bcal-nav" onClick={prevMonth}>
+                    <button type="button" className="bcal-nav" onClick={prevMonth} disabled={isAtMinMonth} aria-disabled={isAtMinMonth} aria-label={lang==='pl' ? 'Poprzedni miesiąc' : 'Previous month'}>
                       <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><polyline points="15 18 9 12 15 6"/></svg>
                     </button>
                     <span className="bcal-title">

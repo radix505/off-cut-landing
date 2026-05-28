@@ -679,21 +679,19 @@ section { padding-block: var(--space-section-y); padding-inline: var(--space-sec
 .booking-time-col { display: flex; flex-direction: column; gap: 0.75rem; }
 .booking-time-prompt { display: flex; align-items: center; justify-content: center; height: 100%; min-height: 120px; font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-muted-dark); border: 0.5px dashed rgba(255,255,255,0.1); }
 .bcal-header { display: flex; align-items: center; justify-content: space-between; padding-bottom: 0.8rem; border-bottom: 0.5px solid rgba(255,255,255,0.1); }
-.bcal-nav { background: rgba(255,255,255,0.06); border: 0.5px solid rgba(255,255,255,0.12); color: var(--text-muted-dark); cursor: pointer; padding: 0.7rem 0.9rem; transition: background 0.2s, color 0.2s, border-color 0.2s; display: flex; align-items: center; justify-content: center; }
-.bcal-nav:hover { background: rgba(255,255,255,0.14); border-color: rgba(255,255,255,0.3); color: var(--paper-strong); }
+.bcal-nav { background: rgba(255,255,255,0.06); border: 0.5px solid rgba(255,255,255,0.12); color: var(--text-muted-dark); cursor: pointer; padding: 0.7rem 0.9rem; transition: background 0.2s, color 0.2s, border-color 0.2s, opacity 0.2s; display: flex; align-items: center; justify-content: center; }
+.bcal-nav:not(:disabled):hover { background: rgba(255,255,255,0.14); border-color: rgba(255,255,255,0.3); color: var(--paper-strong); }
+.bcal-nav:disabled { opacity: 0.3; cursor: not-allowed; }
 .bcal-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem; letter-spacing: 0.18em; color: var(--paper-strong); }
 .bcal-daynames { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; margin-bottom: 0.2rem; }
 .bcal-dn { text-align: center; font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted-dark); padding: 0.3rem 0; }
 .bcal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; }
 .bcal-day { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 2px; font-size: 0.82rem; color: #bbb; background: transparent; border: none; cursor: pointer; border-radius: 50%; transition: background 0.15s, color 0.15s; font-family: 'Inter', sans-serif; position: relative; }
-.bcal-day:not(.empty):not(.past):not(.sel):hover { background: rgba(255,255,255,0.1); color: #fff; }
-.bcal-day.today { color: #fff; }
-.bcal-day.today::after { content: ''; position: absolute; bottom: 14%; left: 50%; transform: translateX(-50%); width: 3px; height: 3px; border-radius: 50%; background: var(--color-accent-warm); }
-.bcal-day.past { color: #2e2e2e; cursor: default; }
+.bcal-day:not(.empty):not(.past):not(.today):not(.sel):hover { background: rgba(255,255,255,0.1); color: #fff; }
 .bcal-day.empty { cursor: default; }
-.bcal-day.unavail:not(.sel) { color: #5a3a35; text-decoration: line-through; text-decoration-thickness: 1px; }
+.bcal-day.unavail:not(.sel):not(.today) { color: #5a3a35; text-decoration: line-through; text-decoration-thickness: 1px; }
+.bcal-day.past, .bcal-day.today { color: #2e2e2e; cursor: not-allowed; }
 .bcal-day.sel { background: var(--color-accent-warm); color: #fff; font-weight: 600; }
-.bcal-day.sel.today::after { background: #fff; }
 .booking-slots { display: flex; flex-direction: column; gap: 0.75rem; }
 
 /* Date chip - shown after a day is picked, collapses the calendar */
