@@ -104,6 +104,7 @@ function formatBookingLine(b, { prefix } = { prefix: `#${b.id}` }) {
     `· ${escapeHtml(b.customer_name)}`,
     `· <code>${escapeHtml(b.phone)}</code>`,
   ];
+  if (b.email) parts.push(`· <code>${escapeHtml(b.email)}</code>`);
   return `${head}${parts.join(' ')}`;
 }
 
@@ -148,7 +149,7 @@ export function formatRangeOverview(bookings, headerLabel) {
 }
 
 export function formatBookingCard(b) {
-  return [
+  const lines = [
     `🧾 <b>Rezerwacja #${b.id}</b> - ${formatStatus(b.status)}`,
     ``,
     `📅 <b>${escapeHtml(isoToHumanPl(b.date))}</b> · ⏰ <b>${escapeHtml(b.slot)}</b> (${b.duration_min}min)`,
@@ -156,11 +157,13 @@ export function formatBookingCard(b) {
     `💈 ${escapeHtml(b.service_name ?? b.service_id)}`,
     `👤 ${escapeHtml(b.customer_name)}`,
     `📞 <code>${escapeHtml(b.phone)}</code>`,
-  ].join('\n');
+  ];
+  if (b.email) lines.push(`📧 <code>${escapeHtml(b.email)}</code>`);
+  return lines.join('\n');
 }
 
 export function formatNewBookingNotification(b) {
-  return [
+  const lines = [
     `🔔 <b>Nowa rezerwacja</b>`,
     ``,
     `📅 <b>${escapeHtml(isoToHumanPl(b.date))}</b> · ⏰ <b>${escapeHtml(b.slot)}</b> (${b.duration_min}min)`,
@@ -168,9 +171,10 @@ export function formatNewBookingNotification(b) {
     `💈 ${escapeHtml(b.service_name ?? b.service_id)}`,
     `👤 ${escapeHtml(b.customer_name)}`,
     `📞 <code>${escapeHtml(b.phone)}</code>`,
-    ``,
-    `<i>ID: #${b.id}</i>`,
-  ].join('\n');
+  ];
+  if (b.email) lines.push(`📧 <code>${escapeHtml(b.email)}</code>`);
+  lines.push(``, `<i>ID: #${b.id}</i>`);
+  return lines.join('\n');
 }
 
 export function formatStats(label, stats) {
@@ -267,7 +271,7 @@ export function formatCalendarDayView({ isoDate, barberName, bookings, freeSlots
 }
 
 export function formatRescheduleConfirm(b, newIsoDate, newSlot) {
-  return [
+  const lines = [
     `🔄 <b>Przełożenie rezerwacji #${b.id}</b>`,
     ``,
     `Z: <s>${escapeHtml(isoToHumanPl(b.date))} · ${escapeHtml(b.slot)}</s>`,
@@ -275,7 +279,9 @@ export function formatRescheduleConfirm(b, newIsoDate, newSlot) {
     ``,
     `✂️ ${escapeHtml(b.barber_name)}   👤 ${escapeHtml(b.customer_name)}`,
     `💈 ${escapeHtml(b.service_name ?? b.service_id)}`,
-  ].join('\n');
+  ];
+  if (b.email) lines.push(`📧 <code>${escapeHtml(b.email)}</code>`);
+  return lines.join('\n');
 }
 
 export function formatBlockConfirm({ isoDate, barberName, slot, durationMin }) {

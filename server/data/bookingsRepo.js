@@ -7,7 +7,8 @@ const SELECT_BOOKING_BASE = `
          b.duration_min, b.date, b.slot,
          b.name AS customer_name, b.phone, b.email, b.lang,
          b.status, b.is_block, b.created_at,
-         b.confirmation_email_sent_at, b.received_email_sent_at
+         b.confirmation_email_sent_at, b.received_email_sent_at,
+         b.cancellation_email_sent_at
   FROM bookings b
          JOIN barbers ba ON ba.id = b.barber_id
          LEFT JOIN services s ON s.id = b.service_id
@@ -113,6 +114,13 @@ const SQL_MARK_RECEIVED_EMAIL_SENT = `
   UPDATE bookings
      SET received_email_sent_at = now()
    WHERE id = $1 AND received_email_sent_at IS NULL
+  RETURNING id
+`;
+
+const SQL_MARK_CANCELLATION_EMAIL_SENT = `
+  UPDATE bookings
+     SET cancellation_email_sent_at = now()
+   WHERE id = $1 AND cancellation_email_sent_at IS NULL
   RETURNING id
 `;
 
@@ -235,6 +243,11 @@ export async function markConfirmationEmailSent(id, { client } = {}) {
 
 export async function markReceivedEmailSent(id, { client } = {}) {
   const { rows } = await runner(client).query(SQL_MARK_RECEIVED_EMAIL_SENT, [id]);
+  return rows.length > 0;
+}
+
+export async function markCancellationEmailSent(id, { client } = {}) {
+  const { rows } = await runner(client).query(SQL_MARK_CANCELLATION_EMAIL_SENT, [id]);
   return rows.length > 0;
 }
 

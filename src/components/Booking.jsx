@@ -179,55 +179,58 @@ export default function Booking() {
     return () => ctrl.abort();
   }, [barber?.id, service?.id, calYear, calMonth]);
 
+  // Auto-scroll the page to reveal the wizard's bottom CTA after each step's
+  // selection — but only on phone-class viewports. On desktop the wizard fits
+  // entirely above the fold, so scrolling the page would feel unexpected.
   useEffect(() => {
-    if (step !== 3 || !date) return;
+    if (!isMobile || step !== 3 || !date) return;
     const el = wizardEndRef.current;
     if (!el) return;
     const id = setTimeout(() => {
       el.scrollIntoView({ behavior: 'smooth', block: 'end' });
     }, 120);
     return () => clearTimeout(id);
-  }, [date, step]);
+  }, [date, step, isMobile]);
 
   useEffect(() => {
-    if (step !== 3 || !slot) return;
+    if (!isMobile || step !== 3 || !slot) return;
     const el = wizardEndRef.current;
     if (!el) return;
     const id = requestAnimationFrame(() => {
       el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     });
     return () => cancelAnimationFrame(id);
-  }, [slot, step]);
+  }, [slot, step, isMobile]);
 
   useEffect(() => {
-    if (step !== 1 || !barber) return;
+    if (!isMobile || step !== 1 || !barber) return;
     const el = wizardEndRef.current;
     if (!el) return;
     const id = requestAnimationFrame(() => {
       el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     });
     return () => cancelAnimationFrame(id);
-  }, [barber, step]);
+  }, [barber, step, isMobile]);
 
   useEffect(() => {
-    if (!category || step !== 2) return;
+    if (!isMobile || !category || step !== 2) return;
     const el = wizardEndRef.current;
     if (!el) return;
     const id = requestAnimationFrame(() => {
       el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     });
     return () => cancelAnimationFrame(id);
-  }, [category, step]);
+  }, [category, step, isMobile]);
 
   useEffect(() => {
-    if (step !== 2 || !service) return;
+    if (!isMobile || step !== 2 || !service) return;
     const el = wizardEndRef.current;
     if (!el) return;
     const id = requestAnimationFrame(() => {
       el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     });
     return () => cancelAnimationFrame(id);
-  }, [service, step]);
+  }, [service, step, isMobile]);
 
   const today = new Date(); today.setHours(0, 0, 0, 0);
   const isAtMinMonth = calYear === today.getFullYear() && calMonth === today.getMonth();

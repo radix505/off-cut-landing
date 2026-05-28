@@ -77,16 +77,22 @@ export function buildBookingIcs({
   attendeeName,
   uidDomain = 'offcut.pl',
   sequence = 0,
+  method = 'REQUEST',
 }) {
   const [startH, startM] = slot.split(':').map(Number);
   const end = addMinutes(slot, durationMin);
+  // METHOD:CANCEL with STATUS:CANCELLED + same UID + bumped SEQUENCE is how
+  // RFC 5546 tells calendar clients (Google / Apple / Outlook) to drop the
+  // existing event for that UID. METHOD:REQUEST keeps STATUS:CONFIRMED for
+  // creates and updates.
+  const isCancel = method === 'CANCEL';
 
   const lines = [
     'BEGIN:VCALENDAR',
     'VERSION:2.0',
     'PRODID:-//Off Cut//Booking//PL',
     'CALSCALE:GREGORIAN',
-    'METHOD:REQUEST',
+    `METHOD:${method}`,
     ...VTIMEZONE_EUROPE_WARSAW,
     'BEGIN:VEVENT',
     `UID:offcut-booking-${id}@${uidDomain}`,
@@ -97,7 +103,7 @@ export function buildBookingIcs({
     `DESCRIPTION:${escapeIcs(description)}`,
     `LOCATION:${escapeIcs(location)}`,
     sequence > 0 ? `SEQUENCE:${sequence}` : null,
-    'STATUS:CONFIRMED',
+    isCancel ? 'STATUS:CANCELLED' : 'STATUS:CONFIRMED',
     'TRANSP:OPAQUE',
     `ORGANIZER;CN=${escapeIcs(organizerName)}:mailto:${organizerEmail}`,
     attendeeEmail

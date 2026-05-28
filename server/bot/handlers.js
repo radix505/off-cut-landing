@@ -5,7 +5,7 @@ import {
   formatBookingCard, formatStats,
   todayInWarsaw, addDaysIso, isoToHumanPl, formatStatus,
 } from './format.js';
-import { sendBookingConfirmation } from '../mail/index.js';
+import { sendBookingConfirmation, sendBookingCancellation } from '../mail/index.js';
 
 const ISO_DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 const HTML = { parse_mode: 'HTML' };
@@ -179,10 +179,20 @@ export function registerHandlers(bot) {
       ...HTML,
       reply_markup: bookingKeyboard(after),
     });
-    await ctx.answerCallbackQuery({ text: `Status: ${formatStatus(status)}` });
+    // For confirm and cancel we surface "klient bez maila — zadzwoń" on the
+    // banner when the customer has no email, so the barber knows to fall
+    // back to phone. Other transitions (pending) stay quiet.
+    const needsClientMail = action === 'confirm' || action === 'cancel';
+    const banner = needsClientMail && !after?.email
+      ? `Status: ${formatStatus(status)} · klient bez maila — zadzwoń`
+      : `Status: ${formatStatus(status)}`;
+    await ctx.answerCallbackQuery({ text: banner });
 
-    if (action === 'confirm' && after?.status === 'confirmed') {
+    if (action === 'confirm' && after?.status === 'confirmed' && after?.email) {
       sendBookingConfirmation(after).catch(() => {});
+    }
+    if (action === 'cancel' && after?.status === 'cancelled' && after?.email) {
+      sendBookingCancellation(after).catch(() => {});
     }
   });
 

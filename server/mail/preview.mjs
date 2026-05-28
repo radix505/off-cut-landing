@@ -6,6 +6,7 @@ import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
   buildConfirmationEmail, buildReceivedEmail, buildRescheduleEmail,
+  buildCancellationEmail,
 } from './templates/confirmation.js';
 import { buildBookingIcs } from './ics.js';
 
@@ -32,6 +33,7 @@ const sample = {
 const builders = {
   received: buildReceivedEmail,
   confirmation: buildConfirmationEmail,
+  cancellation: buildCancellationEmail,
 };
 
 for (const [state, build] of Object.entries(builders)) {
@@ -95,5 +97,25 @@ const icsReschedule = buildBookingIcs({
   sequence: Math.floor(Date.now() / 1000),
 });
 writeFileSync(resolve(outDir, 'off-cut-reschedule.ics'), icsReschedule);
+
+// Cancellation ICS: METHOD:CANCEL + STATUS:CANCELLED for the same UID -
+// calendar clients drop the event from the customer's calendar.
+const cancelTpl = buildCancellationEmail({ ...sample, lang: 'pl' });
+const icsCancel = buildBookingIcs({
+  id: sample.id,
+  date: sample.date,
+  slot: sample.slot,
+  durationMin: sample.duration_min,
+  summary: cancelTpl.icsSummary,
+  description: cancelTpl.icsDescription,
+  location: cancelTpl.icsLocation,
+  organizerName: 'Off Cut',
+  organizerEmail: 'rezerwacje@offcutszczecin.pl',
+  attendeeEmail: sample.email,
+  attendeeName: sample.customer_name,
+  sequence: Math.floor(Date.now() / 1000),
+  method: 'CANCEL',
+});
+writeFileSync(resolve(outDir, 'off-cut-cancel.ics'), icsCancel);
 
 console.log(`Wrote previews to ${outDir}`);

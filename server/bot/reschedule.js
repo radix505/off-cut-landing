@@ -99,7 +99,7 @@ async function renderMonth(ctx, booking, year, month, { edit = true } = {}) {
   const text = [
     `🔄 <b>Przełożenie rezerwacji #${booking.id}</b>`,
     `Obecnie: <b>${escapeHtml(isoToHumanPl(booking.date))} · ${escapeHtml(booking.slot)}</b> (${booking.duration_min}min)`,
-    `✂️ ${escapeHtml(booking.barber_name)} · 👤 ${escapeHtml(booking.customer_name)}`,
+    `✂️ ${escapeHtml(booking.barber_name)} · 👤 ${escapeHtml(booking.customer_name)}${booking.email ? ` · 📧 <code>${escapeHtml(booking.email)}</code>` : ''}`,
     ``,
     `📅 <b>${escapeHtml(monthHeaderPl(year, month))}</b> - wybierz nowy dzień`,
     `<i>📍 obecny dzień</i>`,
@@ -196,7 +196,7 @@ async function renderDay(ctx, booking, year, month, day, { edit = true } = {}) {
   const text = [
     `🔄 <b>Przełożenie rezerwacji #${booking.id}</b>`,
     `Obecnie: <b>${escapeHtml(isoToHumanPl(booking.date))} · ${escapeHtml(booking.slot)}</b> (${booking.duration_min}min)`,
-    `✂️ ${escapeHtml(booking.barber_name)} · 👤 ${escapeHtml(booking.customer_name)}`,
+    `✂️ ${escapeHtml(booking.barber_name)} · 👤 ${escapeHtml(booking.customer_name)}${booking.email ? ` · 📧 <code>${escapeHtml(booking.email)}</code>` : ''}`,
     ``,
     `📅 <b>${escapeHtml(isoToHumanPl(iso))}</b>`,
     ...occupancyLines,

@@ -126,12 +126,8 @@ const T = {
     walkInNote: 'Spóźnienie powyżej 10 minut może skrócić wizytę.',
     footerTagline: 'EST. 2019 - PREMIUM GROOMING - SZCZECIN',
     bookingNumber: (id) => `REZERWACJA #${id}`,
-    // Inline preheader (HTML preview hidden text). Carries service + barber
-    // so the notification's 2nd/3rd lines complement the subject's day+time
-    // instead of echoing it.
-    preheader: (svc, barber) => `${svc} u ${barber}.`,
     received: {
-      subjectStatus: 'zgłoszona',
+      subjectStatus: 'Wizyta zapisana',
       eyebrow: 'ZGŁOSZENIE OTRZYMANE',
       sectionNumber: '00',
       slotEyebrow: 'OCZEKUJE NA POTWIERDZENIE',
@@ -145,7 +141,7 @@ const T = {
       footerLegal: 'Otrzymujesz tę wiadomość, ponieważ złożono zgłoszenie rezerwacji w Off Cut.',
     },
     confirmed: {
-      subjectStatus: 'potwierdzona',
+      subjectStatus: 'Wizyta potwierdzona',
       eyebrow: 'WIZYTA POTWIERDZONA',
       sectionNumber: '01',
       slotEyebrow: null,
@@ -159,7 +155,7 @@ const T = {
       footerLegal: 'Otrzymujesz tę wiadomość, ponieważ została potwierdzona Twoja rezerwacja w Off Cut.',
     },
     rescheduled: {
-      subjectStatus: 'przeniesiona',
+      subjectStatus: 'Wizyta przełożona',
       eyebrow: 'WIZYTA PRZENIESIONA',
       sectionNumber: '02',
       // slotEyebrow is computed at render time from opts.oldBooking - the
@@ -174,6 +170,20 @@ const T = {
       needToChangeBody: 'Zadzwoń bezpośrednio do barbershopu. Załatwimy to człowiek z człowiekiem.',
       showOnArrival: 'Przy wejściu wystarczy podać imię. Zalecamy być 5 minut przed czasem.',
       footerLegal: 'Otrzymujesz tę wiadomość, ponieważ Twoja rezerwacja w Off Cut została przełożona na nowy termin.',
+    },
+    cancelled: {
+      subjectStatus: 'Wizyta anulowana',
+      eyebrow: 'WIZYTA ANULOWANA',
+      sectionNumber: '03',
+      slotEyebrow: 'TERMIN ZWOLNIONY',
+      headline: 'Do następnego razu.',
+      intro: (name) => `${name}, Twoja wizyta została anulowana. Termin został zwolniony. Jeśli chcesz umówić się ponownie — zadzwoń lub zarezerwuj online.`,
+      infoCardTitle: 'CHCESZ UMÓWIĆ SIĘ PONOWNIE?',
+      infoCardBody: 'Zarezerwuj nowy termin na off-cut.pl lub zadzwoń. Załączony plik .ics usuwa anulowaną wizytę z Twojego kalendarza.',
+      needToChangeTitle: 'Pomyłka?',
+      needToChangeBody: 'Jeśli anulowanie było błędem, zadzwoń od razu — w miarę możliwości przywrócimy ten sam termin.',
+      showOnArrival: 'Czekamy na Ciebie następnym razem.',
+      footerLegal: 'Otrzymujesz tę wiadomość, ponieważ Twoja rezerwacja w Off Cut została anulowana.',
     },
   },
   en: {
@@ -193,9 +203,8 @@ const T = {
     walkInNote: 'Arriving more than 10 minutes late may shorten the appointment.',
     footerTagline: 'EST. 2019 - PREMIUM GROOMING - SZCZECIN',
     bookingNumber: (id) => `BOOKING #${id}`,
-    preheader: (svc, barber) => `${svc} with ${barber}.`,
     received: {
-      subjectStatus: 'booking received',
+      subjectStatus: 'Booking saved',
       eyebrow: 'BOOKING RECEIVED',
       sectionNumber: '00',
       slotEyebrow: 'AWAITING CONFIRMATION',
@@ -209,7 +218,7 @@ const T = {
       footerLegal: 'You are receiving this because a booking request was submitted at Off Cut.',
     },
     confirmed: {
-      subjectStatus: 'appointment confirmed',
+      subjectStatus: 'Booking confirmed',
       eyebrow: 'APPOINTMENT CONFIRMED',
       sectionNumber: '01',
       slotEyebrow: null,
@@ -223,7 +232,7 @@ const T = {
       footerLegal: 'You are receiving this because a booking under this address has been confirmed at Off Cut.',
     },
     rescheduled: {
-      subjectStatus: 'rescheduled',
+      subjectStatus: 'Booking rescheduled',
       eyebrow: 'APPOINTMENT RESCHEDULED',
       sectionNumber: '02',
       slotEyebrow: null,
@@ -235,6 +244,20 @@ const T = {
       needToChangeBody: 'Call the shop directly. We sort it human to human.',
       showOnArrival: 'Just give your name at the door. We recommend arriving 5 minutes early.',
       footerLegal: 'You are receiving this because your booking at Off Cut has been moved to a new time.',
+    },
+    cancelled: {
+      subjectStatus: 'Booking cancelled',
+      eyebrow: 'APPOINTMENT CANCELLED',
+      sectionNumber: '03',
+      slotEyebrow: 'SLOT RELEASED',
+      headline: 'Until next time.',
+      intro: (name) => `${name}, your appointment has been cancelled and the slot is now released. To book again — call us or reserve online.`,
+      infoCardTitle: 'WANT TO BOOK AGAIN?',
+      infoCardBody: 'Reserve a new slot at off-cut.pl or give us a call. The attached .ics file removes the cancelled appointment from your calendar.',
+      needToChangeTitle: 'Mistake?',
+      needToChangeBody: 'If this cancellation was an accident, call right away — we will try to restore the same slot.',
+      showOnArrival: 'See you next time.',
+      footerLegal: 'You are receiving this because your booking at Off Cut has been cancelled.',
     },
   },
 };
@@ -277,7 +300,8 @@ function buildPlainText(booking, lang, state, { oldBooking = null } = {}) {
       : `PRZENIESIONO Z: ${formatLongDate(oldBooking.date, lang)}, ${oldBooking.slot}`)
     : null;
   const lines = [
-    `OFF CUT — ${s.subjectStatus.toUpperCase()} · ${longDate}, ${booking.slot}`,
+    `OFF CUT · ${s.subjectStatus.toUpperCase()}`,
+    `${longDate}, ${booking.slot} · ${svc}`,
     previouslyLine,
     '',
     s.intro(booking.customer_name),
@@ -329,8 +353,9 @@ function buildHtml(booking, lang, state, { wordmarkMode = 'cid', oldBooking = nu
   const slot = escapeHtml(booking.slot);
   const duration = `${booking.duration_min} ${t.durationSuffix}`;
   const price = booking.service_price_pln ? `${booking.service_price_pln} ${t.priceSuffix}` : null;
-  const preheader = escapeHtml(t.preheader(svc, booking.barber_name));
-  const bookingNumberLabel = escapeHtml(t.bookingNumber(booking.id));
+  // Preheader carries date + time + service so iOS / Gmail show the actionable
+  // "when + what" right under the subject's "Off Cut · Wizyta przełożona".
+  const preheader = escapeHtml(`${formatShortDate(booking.date, lang)}, ${booking.slot} · ${svc}`);
   // Slot lights up only when the booking is "active" (confirmed OR
   // rescheduled). On received state the slot stays in paper-strong so the
   // "00 / ZGŁOSZONE" eyebrow reads as not-yet-active. The colour shift
@@ -410,7 +435,6 @@ function buildHtml(booking, lang, state, { wordmarkMode = 'cid', oldBooking = nu
                   <td align="left" valign="middle" style="line-height:0;">
                     <img src="${wordmarkDarkSrc}" alt="Off Cut" width="180" height="40" style="display:block;border:0;outline:none;text-decoration:none;height:40px;width:180px;max-width:180px;" />
                   </td>
-                  <td align="right" valign="middle" style="font-family:${BODY_STACK};font-size:10px;letter-spacing:0.3em;color:${TEXT_MUTED_LIGHT};font-weight:500;text-transform:uppercase;">${bookingNumberLabel}</td>
                 </tr>
               </table>
             </td>
@@ -620,14 +644,13 @@ function buildEmail(booking, state, opts = {}) {
   const lang = booking.lang === 'en' ? 'en' : 'pl';
   const t = T[lang];
   const s = t[state];
-  // Subject leads with day + time (the only atoms the user can act on at
-  // a glance) and ends with the status word so a stack of three notifications
-  // — received, confirmed, rescheduled — is visually distinct on the first
-  // line. The "Off Cut · " prefix the old subject used is dropped: Gmail
-  // already renders the sender row ("OFF CUT Barbershop Szczecin") above
-  // the subject, so the prefix only stole chars from the truncation budget.
-  const shortDate = formatShortDate(booking.date, lang);
-  const subject = `${shortDate}, ${booking.slot} — ${s.subjectStatus}`;
+  // Subject is "Off Cut · <Wizyta zapisana|potwierdzona|przełożona|...>".
+  // The preheader (rendered in buildHtml) carries the date + time + service
+  // so a notification on iOS / Gmail reads as:
+  //   Off Cut · Wizyta przełożona
+  //   pt 22.05, 18:30 · Strzyżenie + Broda
+  // i.e. brand + intent on line 1, when + what on line 2.
+  const subject = `Off Cut · ${s.subjectStatus}`;
   return {
     subject,
     html: buildHtml(booking, lang, state, opts),
@@ -654,6 +677,30 @@ export function buildConfirmationEmail(booking, opts = {}) {
 
 export function buildReceivedEmail(booking, opts = {}) {
   return buildEmail(booking, 'received', opts);
+}
+
+// Mail #4 in the lifecycle: barber cancelled a booking via the Telegram bot.
+// The hero stays muted (slot in paper-strong, not accent) because the slot is
+// no longer "active". The .ics attachment uses METHOD:CANCEL so calendar
+// clients drop the existing entry for that UID.
+export function buildCancellationEmail(booking, opts = {}) {
+  const lang = booking.lang === 'en' ? 'en' : 'pl';
+  const out = buildEmail(booking, 'cancelled', opts);
+  // Calendar tooling still needs SUMMARY/DESCRIPTION/LOCATION for the CANCEL
+  // event - clients match on UID and drop the entry, but they typically log
+  // the supplied SUMMARY so it remains useful to populate.
+  const summary = lang === 'en'
+    ? `Off Cut - ${pickServiceName(booking, 'en')} with ${booking.barber_name}`
+    : `Off Cut - ${pickServiceName(booking, 'pl')} u ${booking.barber_name}`;
+  const description = lang === 'en'
+    ? `Cancelled\nBarber: ${booking.barber_name}\nService: ${pickServiceName(booking, 'en')}\nAddress: ${ADDRESS_LINE}\nPhone: ${PHONE_DISPLAY}`
+    : `Anulowane\nBarber: ${booking.barber_name}\nUsługa: ${pickServiceName(booking, 'pl')}\nAdres: ${ADDRESS_LINE}\nTelefon: ${PHONE_DISPLAY}`;
+  return {
+    ...out,
+    icsSummary: summary,
+    icsDescription: description,
+    icsLocation: ADDRESS_LINE,
+  };
 }
 
 // Mail #3 in the lifecycle: barber rescheduled an existing booking via the

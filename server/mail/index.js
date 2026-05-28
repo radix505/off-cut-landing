@@ -6,6 +6,7 @@ import {
 } from './resend.js';
 import {
   buildConfirmationEmail, buildReceivedEmail, buildRescheduleEmail,
+  buildCancellationEmail,
   ADDRESS_LINE, PHONE_DISPLAY,
   WORDMARK_DARK_CID, WORDMARK_LIGHT_CID,
 } from './templates/confirmation.js';
@@ -281,6 +282,93 @@ export async function sendBookingReschedule(oldBooking, newBooking, { log = cons
     return { sent: true, messageId: result?.data?.id };
   } catch (err) {
     log.error?.({ id: newBooking.id, err }, 'reschedule email threw');
+    return { sent: false, error: err };
+  }
+}
+
+// Mail #4: barber cancelled a booking via the Telegram bot. DB column
+// `cancellation_email_sent_at` guards against duplicate sends in the
+// cancel -> restore -> cancel sequence (the first cancel reserves the slot;
+// any subsequent cancel for the same booking is a no-op). ICS uses
+// METHOD:CANCEL with bumped SEQUENCE so calendar clients remove the entry.
+export async function sendBookingCancellation(booking, { log = console } = {}) {
+  if (!booking) return { skipped: 'no_booking' };
+  if (booking.is_block) return { skipped: 'block' };
+  if (booking.status !== 'cancelled') return { skipped: 'not_cancelled' };
+  if (!booking.email) return { skipped: 'no_email' };
+  if (booking.cancellation_email_sent_at) return { skipped: 'already_sent' };
+
+  if (!isMailEnabled()) {
+    log.warn?.({ id: booking.id }, 'mail disabled (RESEND_API_KEY or MAIL_FROM missing); skipping cancellation email');
+    return { skipped: 'mail_disabled' };
+  }
+
+  const reserved = await bookingsRepo.markCancellationEmailSent(booking.id);
+  if (!reserved) return { skipped: 'race' };
+
+  const tpl = buildCancellationEmail(booking);
+  const organizerEmail = organizerEmailFromConfig();
+  const sequence = Math.floor(Date.now() / 1000);
+  const ics = buildBookingIcs({
+    id: booking.id,
+    date: booking.date,
+    slot: booking.slot,
+    durationMin: booking.duration_min,
+    summary: tpl.icsSummary,
+    description: tpl.icsDescription,
+    location: tpl.icsLocation,
+    organizerName: ORG_NAME,
+    organizerEmail,
+    attendeeEmail: booking.email,
+    attendeeName: booking.customer_name,
+    sequence,
+    method: 'CANCEL',
+  });
+
+  const payload = {
+    from: mailFromAddress(),
+    to: [booking.email],
+    subject: tpl.subject,
+    html: tpl.html,
+    text: tpl.text,
+    attachments: [
+      ...getWordmarkAttachments(),
+      {
+        filename: 'off-cut.ics',
+        content: Buffer.from(ics, 'utf8'),
+        content_type: 'text/calendar; method=CANCEL; charset=utf-8',
+      },
+    ],
+    headers: {
+      'X-Entity-Ref-ID': `booking-${booking.id}-cancellation`,
+    },
+  };
+  const replyTo = mailReplyTo();
+  if (replyTo) payload.replyTo = replyTo;
+
+  if (isMailDryRun()) {
+    log.info?.({ id: booking.id, to: booking.email, subject: tpl.subject }, 'mail dry-run: would send cancellation');
+    return { sent: false, dryRun: true };
+  }
+
+  const resend = getMailClient();
+  if (!resend) {
+    log.warn?.({ id: booking.id }, 'resend client unavailable; leaving reservation in place');
+    return { skipped: 'client_unavailable' };
+  }
+
+  try {
+    const result = await resend.emails.send(payload, {
+      idempotencyKey: `booking-cancellation:${booking.id}`,
+    });
+    if (result?.error) {
+      log.error?.({ id: booking.id, err: result.error }, 'resend rejected cancellation email');
+      return { sent: false, error: result.error };
+    }
+    log.info?.({ id: booking.id, messageId: result?.data?.id, to: booking.email }, 'cancellation email sent');
+    return { sent: true, messageId: result?.data?.id };
+  } catch (err) {
+    log.error?.({ id: booking.id, err }, 'cancellation email threw');
     return { sent: false, error: err };
   }
 }
