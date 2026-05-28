@@ -145,7 +145,7 @@ const T = {
       sectionNumber: '00',
       slotEyebrow: 'OCZEKUJE NA POTWIERDZENIE',
       headline: 'Zanotowane.',
-      intro: (name) => `${name}, mamy Twoje zgłoszenie. Barber zatwierdzi termin w ciągu kilku godzin. Wtedy dostaniesz drugą wiadomość z plikiem do kalendarza i pełnym potwierdzeniem.`,
+      intro: (name) => `${name}, mamy Twoje zgłoszenie. Barber zatwierdzi termin w ciągu kilku miunt. Wtedy dostaniesz drugą wiadomość z pełnym potwierdzeniem.`,
       infoCardTitle: 'CO DALEJ',
       infoCardBody: 'Czekamy aż barber zatwierdzi termin. Mail z plikiem .ics przyjdzie zaraz po tym.',
       needToChangeTitle: 'Pomyłka?',
@@ -159,29 +159,26 @@ const T = {
       sectionNumber: '01',
       slotEyebrow: null,
       headline: 'Do zobaczenia.',
-      intro: (name) => `${name}, Twoja wizyta jest potwierdzona. Termin i szczegóły poniżej.`,
+      intro: (name) => `${name}, Twoja wizyta została potwierdzona. Termin i szczegóły poniżej.`,
       infoCardTitle: 'DODAJ DO KALENDARZA',
       infoCardBody: 'Plik .ics dołączony do tej wiadomości; otwórz go na telefonie lub w kalendarzu.',
       needToChangeTitle: 'Coś się zmieniło?',
-      needToChangeBody: 'Zadzwoń bezpośrednio do barbershopu. Załatwimy to człowiek z człowiekiem.',
-      showOnArrival: 'Przy wejściu wystarczy podać imię. Zalecamy być 5 minut przed czasem.',
+      needToChangeBody: 'Zadzwoń bezpośrednio do barbershopu.',
+      showOnArrival: 'Zalecamy być 5 minut przed czasem.',
       footerLegal: 'Otrzymujesz tę wiadomość, ponieważ została potwierdzona Twoja rezerwacja w Off Cut.',
     },
     rescheduled: {
       subjectStatus: 'Wizyta przełożona',
       eyebrow: 'WIZYTA PRZENIESIONA',
       sectionNumber: '02',
-      // slotEyebrow is computed at render time from opts.oldBooking - the
-      // "PRZENIESIONO Z: ..." line below the slot is the visual diff between
-      // the old and new appointment.
       slotEyebrow: null,
       headline: 'Nowy termin.',
       intro: (name) => `${name}, Twoja wizyta została przełożona na nowy termin. Pełne szczegóły poniżej.`,
       infoCardTitle: 'ZAKTUALIZUJ KALENDARZ',
       infoCardBody: 'Załączony plik .ics zaktualizuje istniejący wpis w Twoim kalendarzu na nowy termin — wystarczy go otworzyć.',
       needToChangeTitle: 'Coś się zmieniło?',
-      needToChangeBody: 'Zadzwoń bezpośrednio do barbershopu. Załatwimy to człowiek z człowiekiem.',
-      showOnArrival: 'Przy wejściu wystarczy podać imię. Zalecamy być 5 minut przed czasem.',
+      needToChangeBody: 'Zadzwoń bezpośrednio do barbershopu.',
+      showOnArrival: 'Zalecamy być 5 minut przed czasem.',
       footerLegal: 'Otrzymujesz tę wiadomość, ponieważ Twoja rezerwacja w Off Cut została przełożona na nowy termin.',
     },
     cancelled: {
@@ -528,35 +525,20 @@ function buildHtml(booking, lang, state, { wordmarkMode = 'url', oldBooking = nu
                   </td>
                 </tr>
 
-                <!-- CTAs -->
+                <!-- Map CTA (centered, accent fill - the primary visit
+                     action). Call CTA lives below the "Coś się zmieniło?"
+                     copy and stays ghost since it's the secondary path. -->
                 <tr>
-                  <td class="pad-x" style="padding:32px 48px 8px 48px;">
-                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" class="stack-btns">
-                      <tr>
-                        <td align="left" style="padding:0 10px 0 0;">
-                          <!--[if mso]>
-                          <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="${MAP_URL}" style="height:44px;v-text-anchor:middle;width:180px;" arcsize="50%" strokecolor="${INK}" fillcolor="${PAPER_STRONG}">
-                            <w:anchorlock/>
-                            <center style="color:${INK};font-family:Helvetica,Arial,sans-serif;font-size:11px;font-weight:600;letter-spacing:0.25em;text-transform:uppercase;">${escapeHtml(t.mapCta)}</center>
-                          </v:roundrect>
-                          <![endif]-->
-                          <!--[if !mso]><!-- -->
-                          <a href="${MAP_URL}" target="_blank" class="btn-ghost" style="display:inline-block;font-family:${BODY_STACK};font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:${INK};font-weight:600;background:${PAPER_STRONG};border:1px solid ${INK};padding:14px 26px;border-radius:999px;mso-line-height-rule:exactly;">${escapeHtml(t.mapCta)}</a>
-                          <!--<![endif]-->
-                        </td>
-                        <td align="left" style="padding:0;">
-                          <!--[if mso]>
-                          <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="tel:${PHONE_TEL}" style="height:44px;v-text-anchor:middle;width:260px;" arcsize="50%" strokecolor="${ACCENT}" fillcolor="${ACCENT}">
-                            <w:anchorlock/>
-                            <center style="color:${INK};font-family:Helvetica,Arial,sans-serif;font-size:11px;font-weight:600;letter-spacing:0.25em;text-transform:uppercase;">${escapeHtml(t.callCta)} ${escapeHtml(PHONE_DISPLAY)}</center>
-                          </v:roundrect>
-                          <![endif]-->
-                          <!--[if !mso]><!-- -->
-                          <a href="tel:${PHONE_TEL}" target="_blank" class="btn-primary" style="display:inline-block;font-family:${BODY_STACK};font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:${INK};font-weight:600;background:${ACCENT};border:1px solid ${ACCENT};padding:14px 26px;border-radius:999px;box-shadow:0 0 22px 4px ${ACCENT_GLOW};mso-line-height-rule:exactly;">${escapeHtml(t.callCta)} ${escapeHtml(PHONE_DISPLAY)}</a>
-                          <!--<![endif]-->
-                        </td>
-                      </tr>
-                    </table>
+                  <td class="pad-x" align="center" style="padding:32px 48px 8px 48px;text-align:center;">
+                    <!--[if mso]>
+                    <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="${MAP_URL}" style="height:44px;v-text-anchor:middle;width:220px;" arcsize="50%" strokecolor="${ACCENT}" fillcolor="${ACCENT}">
+                      <w:anchorlock/>
+                      <center style="color:${INK};font-family:Helvetica,Arial,sans-serif;font-size:11px;font-weight:600;letter-spacing:0.25em;text-transform:uppercase;">${escapeHtml(t.mapCta)}</center>
+                    </v:roundrect>
+                    <![endif]-->
+                    <!--[if !mso]><!-- -->
+                    <a href="${MAP_URL}" target="_blank" class="btn-primary" style="display:inline-block;font-family:${BODY_STACK};font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:${INK};font-weight:600;background:${ACCENT};border:1px solid ${ACCENT};padding:14px 26px;border-radius:999px;box-shadow:0 0 22px 4px ${ACCENT_GLOW};mso-line-height-rule:exactly;">${escapeHtml(t.mapCta)}</a>
+                    <!--<![endif]-->
                   </td>
                 </tr>
                 <tr>
@@ -582,7 +564,17 @@ function buildHtml(booking, lang, state, { wordmarkMode = 'url', oldBooking = nu
                         <td style="font-family:${BODY_STACK};font-size:14px;line-height:1.7;color:${INK_WEAK};font-weight:300;letter-spacing:0.01em;padding:0 0 18px 0;">${escapeHtml(s.needToChangeBody)}</td>
                       </tr>
                       <tr>
-                        <td style="font-family:${BODY_STACK};font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:${INK};font-weight:600;padding:0 0 0 0;"><a href="tel:${PHONE_TEL}" style="color:${INK};text-decoration:none;border-bottom:1px solid ${ACCENT};padding-bottom:2px;">${escapeHtml(PHONE_DISPLAY)}</a></td>
+                        <td align="center" style="padding:0;text-align:center;">
+                          <!--[if mso]>
+                          <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="tel:${PHONE_TEL}" style="height:44px;v-text-anchor:middle;width:260px;" arcsize="50%" strokecolor="${INK}" fillcolor="${PAPER_STRONG}">
+                            <w:anchorlock/>
+                            <center style="color:${INK};font-family:Helvetica,Arial,sans-serif;font-size:11px;font-weight:600;letter-spacing:0.25em;text-transform:uppercase;">${escapeHtml(t.callCta)} ${escapeHtml(PHONE_DISPLAY)}</center>
+                          </v:roundrect>
+                          <![endif]-->
+                          <!--[if !mso]><!-- -->
+                          <a href="tel:${PHONE_TEL}" target="_blank" class="btn-ghost" style="display:inline-block;font-family:${BODY_STACK};font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:${INK};font-weight:600;background:${PAPER_STRONG};border:1px solid ${INK};padding:14px 26px;border-radius:999px;mso-line-height-rule:exactly;">${escapeHtml(t.callCta)} ${escapeHtml(PHONE_DISPLAY)}</a>
+                          <!--<![endif]-->
+                        </td>
                       </tr>
                     </table>
                   </td>
@@ -615,7 +607,6 @@ function buildHtml(booking, lang, state, { wordmarkMode = 'url', oldBooking = nu
                         <td align="left" valign="middle" style="line-height:0;">
                           <img src="${wordmarkLightSrc}" alt="Off Cut" width="150" height="34" style="display:block;border:0;outline:none;text-decoration:none;height:34px;width:150px;max-width:150px;" />
                         </td>
-                        <td align="right" valign="middle" style="font-family:${BODY_STACK};font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:${TEXT_MUTED_DARK};font-weight:500;">${escapeHtml(t.footerTagline)}</td>
                       </tr>
                     </table>
                   </td>
