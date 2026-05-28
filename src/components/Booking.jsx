@@ -431,7 +431,7 @@ export default function Booking() {
         <div className="booking-success-email">
           <span className="booking-success-email-label">{t('Potwierdzenie na e-mail', 'Confirmation email')}</span>
           <span className="booking-success-email-addr">
-            {email.trim() || t('— podaj e-mail przy następnej rezerwacji', '— add your email at next booking')}
+            {email.trim() || t('- podaj e-mail przy następnej rezerwacji', '- add your email at next booking')}
           </span>
         </div>
         <div className="booking-success-summary">
@@ -659,7 +659,7 @@ export default function Booking() {
                 </div>
               )}
 
-              {/* Time slots — appears once a date is picked */}
+              {/* Time slots - appears once a date is picked */}
               {date ? (
                 <div className="booking-time-col">
                   <div className="bwiz-heading bwiz-heading--slots">

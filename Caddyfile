@@ -1,4 +1,4 @@
-# Caddy v2 — production config for off-cut-landing.
+# Caddy v2 - production config for off-cut-landing.
 #
 # Caddy auto-issues Let's Encrypt certs for every hostname named here,
 # auto-redirects http → https on :80, and serves HTTP/3 on :443/udp.

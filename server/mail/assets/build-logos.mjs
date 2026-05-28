@@ -2,8 +2,8 @@
 // into transparent PNGs for use as inline email attachments.
 //
 // Two variants are produced:
-//   wordmark-dark.png  — ink-coloured, for the paper header
-//   wordmark-light.png — paper-coloured, for the ink footer
+//   wordmark-dark.png  - ink-coloured, for the paper header
+//   wordmark-light.png - paper-coloured, for the ink footer
 //
 // Output lives next to this script. Rerun whenever the font, icon, or
 // composition changes:

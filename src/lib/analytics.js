@@ -3,7 +3,7 @@
 //
 // GTM itself is injected by the inline scripts in index.html (gated on the
 // Vite-time `%VITE_GTM_ID%` placeholder). Consent Mode v2 is defaulted to
-// `denied` inline before GTM loads — see <head> of index.html.
+// `denied` inline before GTM loads - see <head> of index.html.
 //
 // Consumers:
 //   - CookieBanner.jsx → updateConsent('granted' | 'denied') on accept/decline

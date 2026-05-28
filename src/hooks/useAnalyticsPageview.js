@@ -4,7 +4,7 @@ import { trackPageview } from '../lib/analytics';
 
 // Fires a `page_view` dataLayer event on every navigation handled by
 // RouterContext (the custom pushState router). The initial mount counts too
-// — for GTM to register the very first landing, the GA4 Config tag should
+// - for GTM to register the very first landing, the GA4 Config tag should
 // not have its own `send_page_view` flag set; we own the pageviews.
 //
 // Drop it once inside any component below RouterProvider (App.jsx mounts it).

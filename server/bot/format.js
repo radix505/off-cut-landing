@@ -121,7 +121,7 @@ export function formatDayOverview(isoDate, bookings) {
   const lines = [`📅 <b>${escapeHtml(isoToHumanPl(isoDate))}</b>`];
   for (const { name, items } of byBarber.values()) {
     lines.push('');
-    lines.push(`✂️ <b>${escapeHtml(name)}</b> — ${items.length}`);
+    lines.push(`✂️ <b>${escapeHtml(name)}</b> - ${items.length}`);
     for (const b of mergeAdjacentBlocks(items)) lines.push(formatBookingLine(b));
   }
   return lines.join('\n');
@@ -139,7 +139,7 @@ export function formatRangeOverview(bookings, headerLabel) {
   const lines = [`📅 <b>${escapeHtml(headerLabel)}</b>`];
   for (const [date, items] of byDate) {
     lines.push('');
-    lines.push(`<b>${escapeHtml(isoToHumanPl(date))}</b> — ${items.length}`);
+    lines.push(`<b>${escapeHtml(isoToHumanPl(date))}</b> - ${items.length}`);
     for (const b of mergeAdjacentBlocks(items)) {
       lines.push(`${formatBookingLine(b, { prefix: '' })} · ✂️ ${escapeHtml(b.barber_name)}`);
     }
@@ -149,7 +149,7 @@ export function formatRangeOverview(bookings, headerLabel) {
 
 export function formatBookingCard(b) {
   return [
-    `🧾 <b>Rezerwacja #${b.id}</b> — ${formatStatus(b.status)}`,
+    `🧾 <b>Rezerwacja #${b.id}</b> - ${formatStatus(b.status)}`,
     ``,
     `📅 <b>${escapeHtml(isoToHumanPl(b.date))}</b> · ⏰ <b>${escapeHtml(b.slot)}</b> (${b.duration_min}min)`,
     `✂️ ${escapeHtml(b.barber_name)}`,
@@ -192,7 +192,7 @@ export function formatBarbers(barbers) {
   if (barbers.length === 0) return '<i>Brak aktywnych fryzjerów.</i>';
   const lines = ['✂️ <b>Fryzjerzy</b>', ''];
   for (const b of barbers) {
-    lines.push(`#${b.id} · <b>${escapeHtml(b.name)}</b> — ${escapeHtml(b.title_pl)}`);
+    lines.push(`#${b.id} · <b>${escapeHtml(b.name)}</b> - ${escapeHtml(b.title_pl)}`);
   }
   return lines.join('\n');
 }
@@ -201,7 +201,7 @@ export function formatServices(services) {
   if (services.length === 0) return '<i>Brak aktywnych usług.</i>';
   const lines = ['💈 <b>Usługi</b>', ''];
   for (const s of services) {
-    lines.push(`<code>${escapeHtml(s.id)}</code> · <b>${escapeHtml(s.name_pl)}</b> — ${escapeHtml(s.duration_label)} · ${s.price_pln} PLN`);
+    lines.push(`<code>${escapeHtml(s.id)}</code> · <b>${escapeHtml(s.name_pl)}</b> - ${escapeHtml(s.duration_label)} · ${s.price_pln} PLN`);
   }
   return lines.join('\n');
 }
@@ -211,22 +211,22 @@ export function helpMessage() {
     `🤖 <b>Off-Cut Manager Bot</b>`,
     ``,
     `<b>Kalendarz:</b>`,
-    `/calendar — interaktywny kalendarz (przegląd, blokowanie czasu)`,
+    `/calendar - interaktywny kalendarz (przegląd, blokowanie czasu)`,
     ``,
     `<b>Rezerwacje:</b>`,
-    `/today — dziś`,
-    `/tomorrow — jutro`,
-    `/week — następne 7 dni`,
-    `/date YYYY-MM-DD — wybrana data`,
-    `/pending — oczekujące (z przyciskami)`,
-    `/find &lt;imię/telefon&gt; — szukaj`,
-    `/booking &lt;id&gt; — pokaż rezerwację`,
+    `/today - dziś`,
+    `/tomorrow - jutro`,
+    `/week - następne 7 dni`,
+    `/date YYYY-MM-DD - wybrana data`,
+    `/pending - oczekujące (z przyciskami)`,
+    `/find &lt;imię/telefon&gt; - szukaj`,
+    `/booking &lt;id&gt; - pokaż rezerwację`,
     ``,
     `<b>Statystyki:</b>`,
-    `/stats — dziś + 7 dni`,
+    `/stats - dziś + 7 dni`,
     ``,
     `<b>Pomoc:</b>`,
-    `/help — ta wiadomość`,
+    `/help - ta wiadomość`,
   ].join('\n');
 }
 

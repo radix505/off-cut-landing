@@ -1,4 +1,4 @@
-# Off Cut — VPS deployment runbook
+# Off Cut - VPS deployment runbook
 
 Production stack: **Caddy v2 + Fastify/Vite app + Postgres 16 + nightly pg_dump sidecar**, all in `docker-compose.prod.yml`.
 
@@ -29,7 +29,7 @@ off-cut-barbershop.pl       A   <VPS_IP>
 www.off-cut-barbershop.pl   A   <VPS_IP>
 ```
 
-Verify before you start the stack — Let's Encrypt fails fast if a hostname doesn't resolve:
+Verify before you start the stack - Let's Encrypt fails fast if a hostname doesn't resolve:
 
 ```sh
 for h in off-cut-barbershop.pl www.off-cut-barbershop.pl; do
@@ -121,7 +121,7 @@ docker compose -f docker-compose.prod.yml exec backup sh -c \
 ls -lh backups/
 ```
 
-Restore a dump (destructive — drops & recreates objects):
+Restore a dump (destructive - drops & recreates objects):
 
 ```sh
 # Copy the file into the postgres container
@@ -152,7 +152,7 @@ openssl s_client -servername off-cut-barbershop.pl -connect off-cut-barbershop.p
   | openssl x509 -noout -dates
 ```
 
-Cert state lives in the `caddy-data` named volume — back it up if you're nervous about Let's Encrypt rate limits during a recovery (5 duplicate certs/week/account):
+Cert state lives in the `caddy-data` named volume - back it up if you're nervous about Let's Encrypt rate limits during a recovery (5 duplicate certs/week/account):
 
 ```sh
 docker run --rm -v off-cut-landing_caddy-data:/data -v "$PWD/backups":/backups \

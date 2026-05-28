@@ -82,7 +82,7 @@ export function registerHandlers(bot) {
     if (rows.length === 0) {
       return ctx.reply('🎉 Brak oczekujących rezerwacji.', HTML);
     }
-    await sendOverviewWithCards(ctx, `🕒 <b>Oczekujące — ${rows.length}</b>`, rows);
+    await sendOverviewWithCards(ctx, `🕒 <b>Oczekujące - ${rows.length}</b>`, rows);
   });
 
   bot.command('find', async (ctx) => {
@@ -141,7 +141,7 @@ export function registerHandlers(bot) {
     await ctx.answerCallbackQuery();
   });
 
-  // "Nie" — restore the original card keyboard (hideUndo preserved).
+  // "Nie" - restore the original card keyboard (hideUndo preserved).
   bot.callbackQuery(/^bk:kb:(\d+):(0|1)$/, async (ctx) => {
     const id = Number(ctx.match[1]);
     const hideUndo = ctx.match[2] === '1';
@@ -186,7 +186,7 @@ export function registerHandlers(bot) {
     }
   });
 
-  // Tapping a booking in the /calendar day view — open the full card (like /find).
+  // Tapping a booking in the /calendar day view - open the full card (like /find).
   bot.callbackQuery(/^bk:show:(\d+)$/, async (ctx) => {
     const id = Number(ctx.match[1]);
     const b = await bookingsRepo.findById(id);

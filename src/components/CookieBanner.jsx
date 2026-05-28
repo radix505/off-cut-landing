@@ -32,8 +32,8 @@ export default function CookieBanner() {
     <div className="cookie-banner">
       <p className="cookie-banner-text">
         {useT(
-          'Używamy plików cookie do działania strony i — za Twoją zgodą — do anonimowej statystyki ruchu (Google Analytics).',
-          'We use cookies to keep this site running and — with your consent — for anonymous traffic analytics (Google Analytics).',
+          'Używamy plików cookie do działania strony i - za Twoją zgodą - do anonimowej statystyki ruchu (Google Analytics).',
+          'We use cookies to keep this site running and - with your consent - for anonymous traffic analytics (Google Analytics).',
         )}{' '}
         <button className="cookie-banner-link" onClick={() => navigate('/cookies')}>
           {useT('Dowiedz się więcej', 'Learn more')}

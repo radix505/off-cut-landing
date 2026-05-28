@@ -8,8 +8,8 @@ brand
 
 Men in Szczecin and visitors passing through, roughly mid-twenties to mid-forties, who treat grooming as a deliberate act rather than a chore. Two primary contexts:
 
-1. **First-time visitor** — found Off Cut via Google, Instagram, word of mouth, or while walking past. They are weighing whether the place is for them. They scan, judge by atmosphere, and either book or leave within seconds.
-2. **Returning regular** — already convinced. They open the site to rebook with a known barber and want the path back to be short. The hero's "book again with [barber]" affordance exists for them.
+1. **First-time visitor** - found Off Cut via Google, Instagram, word of mouth, or while walking past. They are weighing whether the place is for them. They scan, judge by atmosphere, and either book or leave within seconds.
+2. **Returning regular** - already convinced. They open the site to rebook with a known barber and want the path back to be short. The hero's "book again with [barber]" affordance exists for them.
 
 The audience is bilingual by default. Polish locals expect Polish copy that does not read as translated. English-speaking visitors (transit, expats, tourists) expect parity, not a token toggle.
 

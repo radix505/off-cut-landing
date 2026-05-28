@@ -115,7 +115,7 @@ export default function WireScrollbar() {
       >
         {/* dim base wire */}
         <path ref={baseRef} d={d} stroke={baseColor} strokeWidth="1" strokeLinecap="round" style={{ transition: 'stroke 0.5s' }} />
-        {/* active wire — scroll progress */}
+        {/* active wire - scroll progress */}
         {pathLen > 0 && (
           <path
             d={d}

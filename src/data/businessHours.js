@@ -4,11 +4,11 @@
 //
 // NOTE: this file is imported by both the React app AND the Node server
 // (via src/data/booking-config.js → server/routes/bookings.js). Keep it
-// React-free — no JSX, no .jsx imports — or `node server/index.js` will
+// React-free - no JSX, no .jsx imports - or `node server/index.js` will
 // crash with ERR_UNKNOWN_FILE_EXTENSION.
 
 export const BUSINESS_HOURS = {
-  0: null,                   // Sunday — closed
+  0: null,                   // Sunday - closed
   1: { start: 10, end: 19 }, // Monday
   2: { start: 9,  end: 19 }, // Tuesday
   3: { start: 9,  end: 19 }, // Wednesday
@@ -45,7 +45,7 @@ export const HOURS_DISPLAY = DAYS.map(({ idx, pl, en }) => {
 });
 
 // Compact summary for Map + Booking sidebar.
-// Hand-authored copy — rewrite when the underlying hours change shape.
+// Hand-authored copy - rewrite when the underlying hours change shape.
 // Only open windows are listed; closed days are implied by omission
 // (the Footer + Contact tables render the full week including closures).
 export const HOURS_SUMMARY = [

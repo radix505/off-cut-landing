@@ -31,7 +31,7 @@ export async function startBot({ log } = {}) {
 
   managerIds = parseManagerIds(process.env.TELEGRAM_MANAGER_IDS);
   if (managerIds.size === 0) {
-    logger.warn?.('TELEGRAM_MANAGER_IDS is empty — bot will reject every user');
+    logger.warn?.('TELEGRAM_MANAGER_IDS is empty - bot will reject every user');
   }
 
   bot = new Bot(token);

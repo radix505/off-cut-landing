@@ -7,7 +7,7 @@
 // clients, so the brand line color carries the workshop-tag detail.
 //
 // The OFF CUT wordmark itself is rendered in Let Me Ride (the brand's custom
-// stencil face) and shipped as an inline PNG attachment with a known CID —
+// stencil face) and shipped as an inline PNG attachment with a known CID -
 // the only reliable way to surface a custom typeface across all email
 // clients including Outlook desktop. See server/mail/assets/build-logos.mjs
 // for how the PNG is generated.
@@ -110,10 +110,10 @@ const T = {
     callCta: 'ZADZWOŃ',
     mapCta: 'ZOBACZ NA MAPIE',
     walkInNote: 'Spóźnienie powyżej 10 minut może skrócić wizytę.',
-    footerTagline: 'EST. 2019 — PREMIUM GROOMING — SZCZECIN',
+    footerTagline: 'EST. 2019 - PREMIUM GROOMING - SZCZECIN',
     bookingNumber: (id) => `REZERWACJA #${id}`,
     received: {
-      preheader: (slot, date) => `Mamy Twoje zgłoszenie — ${date}, ${slot}. Czekamy na potwierdzenie barbera.`,
+      preheader: (slot, date) => `Mamy Twoje zgłoszenie - ${date}, ${slot}. Czekamy na potwierdzenie barbera.`,
       subject: 'Wizyta zgłoszona',
       eyebrow: 'ZGŁOSZENIE OTRZYMANE',
       sectionNumber: '00',
@@ -128,7 +128,7 @@ const T = {
       footerLegal: 'Otrzymujesz tę wiadomość, ponieważ złożono zgłoszenie rezerwacji w Off Cut.',
     },
     confirmed: {
-      preheader: (slot, date) => `Wizyta potwierdzona — ${date}, ${slot}. Do zobaczenia w warsztacie.`,
+      preheader: (slot, date) => `Wizyta potwierdzona - ${date}, ${slot}. Do zobaczenia w warsztacie.`,
       subject: 'Wizyta potwierdzona',
       eyebrow: 'WIZYTA POTWIERDZONA',
       sectionNumber: '01',
@@ -159,10 +159,10 @@ const T = {
     callCta: 'CALL THE SHOP',
     mapCta: 'OPEN MAP',
     walkInNote: 'Arriving more than 10 minutes late may shorten the appointment.',
-    footerTagline: 'EST. 2019 — PREMIUM GROOMING — SZCZECIN',
+    footerTagline: 'EST. 2019 - PREMIUM GROOMING - SZCZECIN',
     bookingNumber: (id) => `BOOKING #${id}`,
     received: {
-      preheader: (slot, date) => `Booking received — ${date}, ${slot}. Waiting for the barber to confirm.`,
+      preheader: (slot, date) => `Booking received - ${date}, ${slot}. Waiting for the barber to confirm.`,
       subject: 'Booking received',
       eyebrow: 'BOOKING RECEIVED',
       sectionNumber: '00',
@@ -177,7 +177,7 @@ const T = {
       footerLegal: 'You are receiving this because a booking request was submitted at Off Cut.',
     },
     confirmed: {
-      preheader: (slot, date) => `Appointment confirmed — ${date}, ${slot}. See you at the workshop.`,
+      preheader: (slot, date) => `Appointment confirmed - ${date}, ${slot}. See you at the workshop.`,
       subject: 'Appointment confirmed',
       eyebrow: 'APPOINTMENT CONFIRMED',
       sectionNumber: '01',
@@ -220,7 +220,7 @@ function buildPlainText(booking, lang, state) {
   const svc = pickServiceName(booking, lang);
   const longDate = formatLongDate(booking.date, lang);
   const lines = [
-    `OFF CUT — ${s.subject.toUpperCase()}`,
+    `OFF CUT - ${s.subject.toUpperCase()}`,
     '',
     s.intro(booking.customer_name),
     '',
@@ -239,7 +239,7 @@ function buildPlainText(booking, lang, state) {
     '',
     s.showOnArrival,
     '',
-    '— Off Cut, Szczecin',
+    '- Off Cut, Szczecin',
     t.footerTagline,
   ].filter((line) => line !== null);
   return lines.join('\n');
@@ -275,7 +275,7 @@ function buildHtml(booking, lang, state, { wordmarkMode = 'cid' } = {}) {
   // visual story of the booking lifecycle.
   const slotColor = isConfirmed ? ACCENT : PAPER_STRONG;
 
-  // Detail row — workshop tag layout: small uppercase label on the left,
+  // Detail row - workshop tag layout: small uppercase label on the left,
   // value in larger body type on the right, hairline rule beneath.
   const detailRow = (label, value, opts = {}) => `
     <tr>
@@ -291,7 +291,7 @@ function buildHtml(booking, lang, state, { wordmarkMode = 'cid' } = {}) {
   <meta name="x-apple-disable-message-reformatting" />
   <meta name="color-scheme" content="light only" />
   <meta name="supported-color-schemes" content="light" />
-  <title>${escapeHtml(`${t.subjectPrefix} — ${t.subjectConfirmed}`)}</title>
+  <title>${escapeHtml(`${t.subjectPrefix} - ${t.subjectConfirmed}`)}</title>
   <!--[if mso]>
   <style>
     .display { font-family: 'Arial Narrow', Impact, sans-serif !important; }
@@ -547,7 +547,7 @@ function buildEmail(booking, state, opts = {}) {
   const t = T[lang];
   const s = t[state];
   const longDate = formatLongDate(booking.date, lang);
-  const subject = `${t.subjectPrefix} · ${s.subject} — ${longDate}, ${booking.slot}`;
+  const subject = `${t.subjectPrefix} · ${s.subject} - ${longDate}, ${booking.slot}`;
   return {
     subject,
     html: buildHtml(booking, lang, state, opts),
@@ -559,8 +559,8 @@ export function buildConfirmationEmail(booking, opts = {}) {
   const lang = booking.lang === 'en' ? 'en' : 'pl';
   const out = buildEmail(booking, 'confirmed', opts);
   const summary = lang === 'en'
-    ? `Off Cut — ${pickServiceName(booking, 'en')} with ${booking.barber_name}`
-    : `Off Cut — ${pickServiceName(booking, 'pl')} u ${booking.barber_name}`;
+    ? `Off Cut - ${pickServiceName(booking, 'en')} with ${booking.barber_name}`
+    : `Off Cut - ${pickServiceName(booking, 'pl')} u ${booking.barber_name}`;
   const description = lang === 'en'
     ? `Barber: ${booking.barber_name}\nService: ${pickServiceName(booking, 'en')}\nDuration: ${booking.duration_min} min\nAddress: ${ADDRESS_LINE}\nPhone: ${PHONE_DISPLAY}`
     : `Barber: ${booking.barber_name}\nUsługa: ${pickServiceName(booking, 'pl')}\nCzas: ${booking.duration_min} min\nAdres: ${ADDRESS_LINE}\nTelefon: ${PHONE_DISPLAY}`;

@@ -6,7 +6,7 @@ import { useIsDark } from '../hooks/useIsDark';
 
 const content = {
   pl: {
-    eyebrow: 'Off Cut — Barbershop',
+    eyebrow: 'Off Cut - Barbershop',
     title: 'Polityka cookies',
     updated: 'Ostatnia aktualizacja: 1 maja 2025',
     sections: [
@@ -16,7 +16,7 @@ const content = {
       },
       {
         heading: '2. Jakie pliki cookie stosujemy?',
-        body: `Używamy dwóch kategorii plików cookie.\n\nNiezbędne (zawsze aktywne):\n• zapamiętanie wybranego języka strony (PL / EN),\n• prawidłowe działanie formularza rezerwacji,\n• zapewnienie bezpieczeństwa sesji,\n• zapamiętanie Twojej decyzji w bannerze cookie.\n\nAnalityczne (tylko po Twojej akceptacji w bannerze):\n• Google Analytics 4 — anonimowa statystyka ruchu (które strony są popularne, jak goście trafiają na naszą stronę).\n\nDopóki nie klikniesz „Akceptuję" w bannerze, żadne pliki analityczne się nie zapisują. Tryb Google Consent Mode v2 utrzymuje analytics_storage i ad_storage w stanie „denied" do momentu uzyskania Twojej zgody.\n\nNie stosujemy plików marketingowych ani remarketingowych. Nie używamy Meta Pixela.`,
+        body: `Używamy dwóch kategorii plików cookie.\n\nNiezbędne (zawsze aktywne):\n• zapamiętanie wybranego języka strony (PL / EN),\n• prawidłowe działanie formularza rezerwacji,\n• zapewnienie bezpieczeństwa sesji,\n• zapamiętanie Twojej decyzji w bannerze cookie.\n\nAnalityczne (tylko po Twojej akceptacji w bannerze):\n• Google Analytics 4 - anonimowa statystyka ruchu (które strony są popularne, jak goście trafiają na naszą stronę).\n\nDopóki nie klikniesz „Akceptuję" w bannerze, żadne pliki analityczne się nie zapisują. Tryb Google Consent Mode v2 utrzymuje analytics_storage i ad_storage w stanie „denied" do momentu uzyskania Twojej zgody.\n\nNie stosujemy plików marketingowych ani remarketingowych. Nie używamy Meta Pixela.`,
       },
       {
         heading: '3. Czas przechowywania',
@@ -28,7 +28,7 @@ const content = {
       },
       {
         heading: '5. Zgoda na pliki cookie',
-        body: `Pliki niezbędne instalujemy bez odrębnej zgody — są one konieczne do działania strony. Pliki analityczne (Google Analytics) instalujemy wyłącznie po Twojej wyraźnej akceptacji w bannerze cookie. Możesz cofnąć zgodę w dowolnym momencie usuwając dane przeglądarki dla tej domeny — banner pojawi się ponownie i pozwoli Ci wybrać inną opcję.`,
+        body: `Pliki niezbędne instalujemy bez odrębnej zgody - są one konieczne do działania strony. Pliki analityczne (Google Analytics) instalujemy wyłącznie po Twojej wyraźnej akceptacji w bannerze cookie. Możesz cofnąć zgodę w dowolnym momencie usuwając dane przeglądarki dla tej domeny - banner pojawi się ponownie i pozwoli Ci wybrać inną opcję.`,
       },
       {
         heading: '6. Zmiany polityki',
@@ -41,7 +41,7 @@ const content = {
     ],
   },
   en: {
-    eyebrow: 'Off Cut — Barbershop',
+    eyebrow: 'Off Cut - Barbershop',
     title: 'Cookie Policy',
     updated: 'Last updated: 1 May 2025',
     sections: [
@@ -51,7 +51,7 @@ const content = {
       },
       {
         heading: '2. What cookies do we use?',
-        body: `We use two categories of cookies.\n\nStrictly necessary (always on):\n• remember your chosen language preference (PL / EN),\n• keep the booking form working,\n• maintain session security,\n• remember your choice in the cookie banner.\n\nAnalytics (only after you click Accept):\n• Google Analytics 4 — anonymous traffic statistics (which pages are popular, how visitors arrive).\n\nUntil you click "Accept" in the banner, no analytics cookies are written. Google Consent Mode v2 keeps analytics_storage and ad_storage in the "denied" state until you grant consent.\n\nWe do not use marketing or remarketing cookies. We do not use Meta Pixel.`,
+        body: `We use two categories of cookies.\n\nStrictly necessary (always on):\n• remember your chosen language preference (PL / EN),\n• keep the booking form working,\n• maintain session security,\n• remember your choice in the cookie banner.\n\nAnalytics (only after you click Accept):\n• Google Analytics 4 - anonymous traffic statistics (which pages are popular, how visitors arrive).\n\nUntil you click "Accept" in the banner, no analytics cookies are written. Google Consent Mode v2 keeps analytics_storage and ad_storage in the "denied" state until you grant consent.\n\nWe do not use marketing or remarketing cookies. We do not use Meta Pixel.`,
       },
       {
         heading: '3. Storage duration',
@@ -63,7 +63,7 @@ const content = {
       },
       {
         heading: '5. Consent',
-        body: `Strictly necessary cookies are installed without separate consent — they are essential for the site to function. Analytics cookies (Google Analytics) are only installed after you click Accept in the cookie banner. You can withdraw consent at any time by clearing your browser data for this domain — the banner will reappear and let you choose differently.`,
+        body: `Strictly necessary cookies are installed without separate consent - they are essential for the site to function. Analytics cookies (Google Analytics) are only installed after you click Accept in the cookie banner. You can withdraw consent at any time by clearing your browser data for this domain - the banner will reappear and let you choose differently.`,
       },
       {
         heading: '6. Policy updates',

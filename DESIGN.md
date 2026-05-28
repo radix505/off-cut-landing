@@ -177,12 +177,12 @@ A two-surface palette with one accent. Restrained on the spectrum of color strat
 ### Hierarchy
 
 - **Brand** (Let Me Ride 400, `clamp(22px, min(5vw, 8vh), 64px)`, `letter-spacing: 0.08em`): wordmark only. Splash screen, nav logo. Never used for content.
-- **Display Hero** (Bebas Neue 400, `clamp(72px, 11vw, 132px)`, `line-height: 0.88`, `letter-spacing: 0.02em`): the hero `THE / SHARP / ART` lockup. The middle line is `-webkit-text-stroke: 1px rgba(255,255,255,0.7)` outline-only — the system's signature display detail. Never reused for non-hero content.
+- **Display Hero** (Bebas Neue 400, `clamp(72px, 11vw, 132px)`, `line-height: 0.88`, `letter-spacing: 0.02em`): the hero `THE / SHARP / ART` lockup. The middle line is `-webkit-text-stroke: 1px rgba(255,255,255,0.7)` outline-only - the system's signature display detail. Never reused for non-hero content.
 - **Display Section** (Bebas Neue 400, `clamp(36px, 5vw, 60px)`, `line-height: 1`, `letter-spacing: 0.04em`): every section title (`Co robimy`, `Załoga`, `Co mówią klienci`, `Umów wizytę`). Always paired with a tracked section number above (`01 / USŁUGI`).
 - **Title** (Bebas Neue 400, `1.1–1.6rem`, `letter-spacing: 0.05–0.12em`): service names, barber names, prices, calendar month. The condensed all-caps voice for inline emphasis.
 - **Body** (Inter 300, `clamp(0.875rem, 0.82rem + 0.3vw, 1rem)`, `line-height: 1.6–1.7`, `letter-spacing: 0.02–0.04em`): all running text. Capped at `--measure: 70ch` for legal content and booking prose. Never below weight 300; never above 500 except for inverted text on ink.
 - **Label** (Inter 500, `0.72rem`, `letter-spacing: 0.20–0.25em`, uppercase): every CTA, button, nav link, eyebrow, "back" button. The system's primary affordance language.
-- **Micro-label** (Inter 400, `0.65–0.70rem`, `letter-spacing: 0.25–0.35em`, uppercase): metadata. Section numbers, "EST. 2019 — PREMIUM GROOMING", barber subtitles, prices-page row dur. The smallest type in the system, gets the widest tracking.
+- **Micro-label** (Inter 400, `0.65–0.70rem`, `letter-spacing: 0.25–0.35em`, uppercase): metadata. Section numbers, "EST. 2019 - PREMIUM GROOMING", barber subtitles, prices-page row dur. The smallest type in the system, gets the widest tracking.
 
 ### Named Rules
 
@@ -221,7 +221,7 @@ The system has three variants. All share `letter-spacing: 0.20–0.25em`, all-ca
 - **Shape.** Square. `border-radius: 0`. Never rounded.
 - **Primary** (`btn-primary`): Off Cut Orange fill (`#E85A2A`) on ink-strong text. Padding `1rem 2.2rem`. Carries a deliberate diagonal sheen via `linear-gradient(115deg, transparent 30%, rgba(255,255,255,0.45) 50%, transparent 70%)` that sweeps left-to-right on hover (`background-position` transition over 0.7s with `cubic-bezier(0.4, 0, 0.2, 1)`). Hover also lifts the surface 2px (`translateY(-2px)`) and brightens the orange to `#ff6a3a`. The sheen is the only sanctioned ornamental moment in the system; it is not reusable.
 - **Ghost** (`btn-ghost`): transparent background, 0.5px text-muted-dark border, text-muted-dark label. Hover swaps both border and text to paper-strong. Used as the secondary alongside primary in the hero.
-- **Nav Book** (`nav-book`): inverted — paper-strong fill on ink text. Hover inverts to transparent on paper-strong border. The desktop nav's primary CTA. Mobile gets `nav-book-mobile`, a transparent ghost variant.
+- **Nav Book** (`nav-book`): inverted - paper-strong fill on ink text. Hover inverts to transparent on paper-strong border. The desktop nav's primary CTA. Mobile gets `nav-book-mobile`, a transparent ghost variant.
 - **Page Back** (`page-back-btn`): solid paper-strong on ink text, fixed top-left, ≤44px tall. Used on full-page sub-routes (`/prices`, `/blog`, `/cookies`).
 
 ### Cards
@@ -242,13 +242,13 @@ The system has three variants. All share `letter-spacing: 0.20–0.25em`, all-ca
 
 The booking wizard is the system's input vocabulary.
 
-- **Calendar Day** (`bcal-day`): `aspect-ratio: 1`, circular (`border-radius: 50%` is the only place radius leaves zero), `font-family: Inter`, `font-size: 0.82rem`. Default state has no border. Hover lifts to `rgba(255,255,255,0.1)`. Selected state fills with `var(--color-accent-warm)`. Today gets a 3px accent-warm dot bottom-centre, never a ring. Past days are dimmed to `#2e2e2e` and `cursor: default` — they are not interactive, they are visible history.
+- **Calendar Day** (`bcal-day`): `aspect-ratio: 1`, circular (`border-radius: 50%` is the only place radius leaves zero), `font-family: Inter`, `font-size: 0.82rem`. Default state has no border. Hover lifts to `rgba(255,255,255,0.1)`. Selected state fills with `var(--color-accent-warm)`. Today gets a 3px accent-warm dot bottom-centre, never a ring. Past days are dimmed to `#2e2e2e` and `cursor: default` - they are not interactive, they are visible history.
 - **Time Wheel** (`btime-wheel`): an Apple-style picker with `scroll-snap-type: y mandatory`, 220px tall, masked top and bottom by linear-gradient mask images (`-webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 28%, #000 72%, transparent 100%)`). Items are 44px tall (the touch floor). Centred item is the selected slot. The mask is the affordance; no separate selection ring needed.
 - **Progress Step** (`bpstep`): a 26px-circle dot (1px border, no fill at default; paper-strong fill when active; rgba(255,255,255,0.2) fill when done) above a tracked 0.7rem uppercase label. The circle changes, the label changes colour, the spacing stays.
 
 ### Navigation
 
-- **Top Nav**: fixed, full-width, `padding: 0.85rem 3rem 0.85rem 1.2rem`. Initial state is `rgba(10,10,10,0.35)` with `backdrop-filter: blur(10px)` (one of the three sanctioned blur uses). Scrolled state collapses to `rgba(10,10,10,0.96)` and removes the blur. Logo icon scales to `0.68` when scrolled — a subtle tightening, not a vanish.
+- **Top Nav**: fixed, full-width, `padding: 0.85rem 3rem 0.85rem 1.2rem`. Initial state is `rgba(10,10,10,0.35)` with `backdrop-filter: blur(10px)` (one of the three sanctioned blur uses). Scrolled state collapses to `rgba(10,10,10,0.96)` and removes the blur. Logo icon scales to `0.68` when scrolled - a subtle tightening, not a vanish.
 - **Nav Links**: `font-size: 0.72rem`, `letter-spacing: 0.20em`, uppercase, default colour `oklch(78% 0.006 40)` (a warm grey on dark). Active link gets a 3px dot indicator below the text, centred. Hover swaps to paper-strong.
 - **Lang Switch**: PL/EN buttons with a single hairline separator. Touch targets ≥36px on coarse pointers.
 
@@ -258,9 +258,9 @@ Three custom patterns earn documentation because they carry the brand.
 
 1. **Lang Splash** (`#lang-splash`): a full-viewport diagonal split (clip-path polygons), dark on the left, light on the right, with the Off Cut wordmark centred and applying `mix-blend-mode: difference` so it auto-inverts across the seam. On phones the split rotates to horizontal. The split-and-crash exit animation is the only place in the system that uses rotate transforms on logos. Mandatory on every visit; never gated on stored preference (per user feedback memory).
 2. **Marquee** (`marquee-section`): horizontal scroller with Bebas Neue 0.95rem items, 0.30em tracked, paired with 3px dot separators. 16s linear loop, `transform: translateX(0 → -50%)`. Bordered top and bottom with 0.5px hairlines on `#e0ddd6`. Reads as a workshop banner, not a ticker.
-3. **Reviews Brick Wall**: column-major bottom-up brick-drop on viewport reveal, `--step: 70ms` per cell, `--fall-duration: 0.7s`. Decorative background only — `pointer-events: none`. The centred overlay carries the title, the 5.0 score, and the only clickable affordances. The grid resizes responsively via `ResizeObserver`-backed `useGridDims`.
+3. **Reviews Brick Wall**: column-major bottom-up brick-drop on viewport reveal, `--step: 70ms` per cell, `--fall-duration: 0.7s`. Decorative background only - `pointer-events: none`. The centred overlay carries the title, the 5.0 score, and the only clickable affordances. The grid resizes responsively via `ResizeObserver`-backed `useGridDims`.
 4. **Scissors Cut Transition** (`scissors-overlay`): a horizontal scissors-mover crosses the viewport while a hairline rule draws underneath it (`scaleX(0) → 1` over 0.88s). Used as a page transition between routes. The blades open and close on a 0.22s loop. This is the system's signature motion; nothing else is allowed to move scissors.
-5. **Hero Vertical Year** (`hero-year`): `writing-mode: vertical-rl`, `letter-spacing: 0.30em`, "EST. 2019 — PREMIUM GROOMING". Reads as a workshop nameplate fixed to the wall.
+5. **Hero Vertical Year** (`hero-year`): `writing-mode: vertical-rl`, `letter-spacing: 0.30em`, "EST. 2019 - PREMIUM GROOMING". Reads as a workshop nameplate fixed to the wall.
 
 ## 6. Do's and Don'ts
 

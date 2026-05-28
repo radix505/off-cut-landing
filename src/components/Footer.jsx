@@ -46,7 +46,7 @@ export default function Footer() {
           </div>
           <div className="footer-pro-logo-sub">Barbershop</div>
           <div className="footer-pro-scissors"><ScissorsIcon /></div>
-          <p className="footer-pro-tagline">{useT('Premium Barbershop — Zał. 2019', 'Premium Barbershop — Est. 2019')}</p>
+          <p className="footer-pro-tagline">{useT('Premium Barbershop - Zał. 2019', 'Premium Barbershop - Est. 2019')}</p>
           <div className="footer-pro-socials">
             <a href="https://www.instagram.com/off_cut_barbershop/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="footer-pro-social">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">

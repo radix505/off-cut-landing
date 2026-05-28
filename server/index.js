@@ -40,7 +40,7 @@ fastify.get('/api/health', async () => {
 if (isProd) {
   const distRoot = resolve(here, '..', 'dist');
   if (!existsSync(distRoot)) {
-    fastify.log.error({ distRoot }, 'dist/ not found — run `npm run build` before starting in production');
+    fastify.log.error({ distRoot }, 'dist/ not found - run `npm run build` before starting in production');
     process.exit(1);
   }
   await fastify.register(fastifyStatic, { root: distRoot, wildcard: false });

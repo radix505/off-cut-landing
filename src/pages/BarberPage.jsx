@@ -11,7 +11,7 @@ export default function BarberPage() {
   const { barbers, loading } = useCatalog();
 
   const matched = crewSlug ? barbers.find((b) => b.slug === crewSlug) : null;
-  // A given slug with no match means the barber is inactive/hidden or unknown —
+  // A given slug with no match means the barber is inactive/hidden or unknown -
   // don't fall back to another barber; send the visitor back to the crew list.
   const notFound = !loading && barbers.length > 0 && Boolean(crewSlug) && !matched;
 
@@ -74,7 +74,7 @@ export default function BarberPage() {
             </div>
             <div className="barber-page-placeholder-block">
               <span className="barber-page-placeholder-label">
-                {useT('Zdjęcia / galeria — wkrótce', 'Photos / gallery — coming soon')}
+                {useT('Zdjęcia / galeria - wkrótce', 'Photos / gallery - coming soon')}
               </span>
             </div>
           </div>

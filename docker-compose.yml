@@ -36,7 +36,7 @@ services:
       - "5173:5173"   # Vite dev server (open this URL in the browser)
       - "3001:3001"   # Fastify API (Vite proxies /api/* here)
     volumes:
-      - .:/app:cached         # live source — HMR picks up changes
+      - .:/app:cached         # live source - HMR picks up changes
       - /app/node_modules     # mask host node_modules with container-installed deps
     command: npm run dev:all
 

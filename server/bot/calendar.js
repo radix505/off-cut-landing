@@ -208,7 +208,7 @@ async function renderBlockSlotPicker(ctx, barberId, year, month, day) {
   kb.text('⟵ Wróć', `cal:d:${barberId}:${year}:${month}:${day}`);
 
   const text = [
-    `🚫 <b>Zablokuj czas — wybierz początek</b>`,
+    `🚫 <b>Zablokuj czas - wybierz początek</b>`,
     ``,
     `📅 <b>${escapeHtml(barber.name)}</b> · ${escapeHtml(iso)}`,
   ].join('\n');

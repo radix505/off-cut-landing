@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.jsx'
 
-// Always land at the top on page refresh — disable the browser's automatic
+// Always land at the top on page refresh - disable the browser's automatic
 // scroll restoration and force position 0 before React mounts.
 if ('scrollRestoration' in window.history) {
   window.history.scrollRestoration = 'manual'

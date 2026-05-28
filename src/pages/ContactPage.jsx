@@ -52,7 +52,7 @@ export default function ContactPage() {
           {/* Two-column info grid */}
           <div className="contact-page-grid">
 
-            {/* LEFT — location + contact details + social */}
+            {/* LEFT - location + contact details + social */}
             <div className="contact-page-col">
               <div className="contact-item">
                 <div className="contact-label">{useT('Adres', 'Address')}</div>
@@ -100,7 +100,7 @@ export default function ContactPage() {
               </div>
             </div>
 
-            {/* RIGHT — hours + CTA */}
+            {/* RIGHT - hours + CTA */}
             <div className="contact-page-col">
               <div className="contact-item">
                 <div className="contact-label">{useT('Godziny otwarcia', 'Opening Hours')}</div>

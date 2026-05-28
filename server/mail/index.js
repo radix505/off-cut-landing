@@ -14,7 +14,7 @@ import * as bookingsRepo from '../data/bookingsRepo.js';
 const here = dirname(fileURLToPath(import.meta.url));
 
 // Inline-image attachments for the OFF CUT wordmark, loaded once at module
-// init. Built by `node server/mail/assets/build-logos.mjs` — re-run that if
+// init. Built by `node server/mail/assets/build-logos.mjs` - re-run that if
 // the brand mark ever changes.
 let wordmarkAttachments = null;
 function getWordmarkAttachments() {
@@ -53,7 +53,7 @@ function organizerEmailFromConfig() {
   return m?.[1] ?? from ?? ICS_ORGANIZER_EMAIL_FALLBACK;
 }
 
-// Send the booking confirmation. Safe to call multiple times — the DB guard
+// Send the booking confirmation. Safe to call multiple times - the DB guard
 // (markConfirmationEmailSent) and Resend's Idempotency-Key both prevent
 // duplicate deliveries.
 export async function sendBookingConfirmation(booking, { log = console } = {}) {
@@ -139,7 +139,7 @@ export async function sendBookingConfirmation(booking, { log = console } = {}) {
 
 // Fire-and-forget "we received your booking" email. Sent immediately after
 // POST /api/bookings succeeds, before the manager has confirmed. No ICS
-// attachment — the calendar file only goes out with the confirmation mail
+// attachment - the calendar file only goes out with the confirmation mail
 // once the barber has actually committed to the slot.
 export async function sendBookingReceived(booking, { log = console } = {}) {
   if (!booking) return { skipped: 'no_booking' };

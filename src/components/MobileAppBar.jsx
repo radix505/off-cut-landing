@@ -55,7 +55,7 @@ export default function MobileAppBar() {
     // Chrome for iOS includes "CriOS" in its UA string.
     // translateZ(0) creates the GPU compositing layer Safari needs to prevent
     // elastic-scroll detachment, but it BREAKS Chrome's fixed-position tracking
-    // during URL-bar animation — making the bar "fly". Never apply it for Chrome.
+    // during URL-bar animation - making the bar "fly". Never apply it for Chrome.
     const isChromeIOS = /CriOS/i.test(navigator.userAgent);
 
     if (!isChromeIOS) {

@@ -6,7 +6,7 @@ import { useIsDark } from '../hooks/useIsDark';
 
 const content = {
   pl: {
-    eyebrow: 'Off Cut — Barbershop',
+    eyebrow: 'Off Cut - Barbershop',
     title: 'Polityka prywatności',
     updated: 'Ostatnia aktualizacja: 1 maja 2025',
     sections: [
@@ -20,7 +20,7 @@ const content = {
       },
       {
         heading: '3. Cel i podstawa prawna przetwarzania',
-        body: `Twoje dane przetwarzamy w celu:\n• realizacji rezerwacji wizyty — podstawa prawna: art. 6 ust. 1 lit. b RODO (wykonanie umowy),\n• kontaktu w celu potwierdzenia lub zmiany wizyty — podstawa prawna: art. 6 ust. 1 lit. b RODO,\n• ewentualnego dochodzenia roszczeń — podstawa prawna: art. 6 ust. 1 lit. f RODO (prawnie uzasadniony interes Administratora).`,
+        body: `Twoje dane przetwarzamy w celu:\n• realizacji rezerwacji wizyty - podstawa prawna: art. 6 ust. 1 lit. b RODO (wykonanie umowy),\n• kontaktu w celu potwierdzenia lub zmiany wizyty - podstawa prawna: art. 6 ust. 1 lit. b RODO,\n• ewentualnego dochodzenia roszczeń - podstawa prawna: art. 6 ust. 1 lit. f RODO (prawnie uzasadniony interes Administratora).`,
       },
       {
         heading: '4. Okres przechowywania danych',
@@ -28,7 +28,7 @@ const content = {
       },
       {
         heading: '5. Odbiorcy danych',
-        body: `Twoje dane nie są sprzedawane ani udostępniane podmiotom trzecim w celach marketingowych. Mogą być przekazywane wyłącznie podmiotom świadczącym usługi techniczne niezbędne do działania strony (hosting, serwer aplikacji) — wyłącznie w zakresie koniecznym i na podstawie umów powierzenia przetwarzania danych.`,
+        body: `Twoje dane nie są sprzedawane ani udostępniane podmiotom trzecim w celach marketingowych. Mogą być przekazywane wyłącznie podmiotom świadczącym usługi techniczne niezbędne do działania strony (hosting, serwer aplikacji) - wyłącznie w zakresie koniecznym i na podstawie umów powierzenia przetwarzania danych.`,
       },
       {
         heading: '6. Twoje prawa',
@@ -45,7 +45,7 @@ const content = {
     ],
   },
   en: {
-    eyebrow: 'Off Cut — Barbershop',
+    eyebrow: 'Off Cut - Barbershop',
     title: 'Privacy Policy',
     updated: 'Last updated: 1 May 2025',
     sections: [
@@ -59,7 +59,7 @@ const content = {
       },
       {
         heading: '3. Purpose and legal basis',
-        body: `We process your data for the following purposes:\n• to process your appointment booking — legal basis: Art. 6(1)(b) GDPR (performance of a contract),\n• to contact you to confirm or reschedule your visit — legal basis: Art. 6(1)(b) GDPR,\n• to pursue or defend legal claims where necessary — legal basis: Art. 6(1)(f) GDPR (legitimate interest).`,
+        body: `We process your data for the following purposes:\n• to process your appointment booking - legal basis: Art. 6(1)(b) GDPR (performance of a contract),\n• to contact you to confirm or reschedule your visit - legal basis: Art. 6(1)(b) GDPR,\n• to pursue or defend legal claims where necessary - legal basis: Art. 6(1)(f) GDPR (legitimate interest).`,
       },
       {
         heading: '4. Data retention',
@@ -67,7 +67,7 @@ const content = {
       },
       {
         heading: '5. Data recipients',
-        body: `Your data is not sold or shared with third parties for marketing purposes. It may be shared only with technical service providers necessary for the operation of this website (hosting, application server) — solely to the extent necessary and under data processing agreements.`,
+        body: `Your data is not sold or shared with third parties for marketing purposes. It may be shared only with technical service providers necessary for the operation of this website (hosting, application server) - solely to the extent necessary and under data processing agreements.`,
       },
       {
         heading: '6. Your rights',

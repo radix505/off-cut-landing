@@ -26,7 +26,7 @@ function samplePath(xPct, vw, rem) {
   return { xPx: (clamped / 100) * vw, yRem, angle };
 }
 
-// Document-relative offsetTop — only changes on resize, not on scroll
+// Document-relative offsetTop - only changes on resize, not on scroll
 function getDocTop(el) {
   let top = 0, node = el;
   while (node) { top += node.offsetTop; node = node.offsetParent; }
@@ -46,7 +46,7 @@ export default function ScrollScissors() {
     let lastScrollY = window.scrollY;
     let bladeState  = false; // track to avoid unnecessary DOM writes
 
-    // Cached layout values — only refreshed on resize
+    // Cached layout values - only refreshed on resize
     let barbersDocTop = 0;
     let vw  = window.innerWidth;
     let vh  = window.innerHeight;
@@ -79,7 +79,7 @@ export default function ScrollScissors() {
       lastScrollY = scrollY;
 
       const offset  = 5 * rem;
-      // Viewport Y of barbers section top — no getBoundingClientRect needed
+      // Viewport Y of barbers section top - no getBoundingClientRect needed
       const rectTop = barbersDocTop - scrollY;
       const isVisible = rectTop <= vh && rectTop >= -offset;
 

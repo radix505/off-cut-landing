@@ -41,7 +41,7 @@ const SQL_COUNT_ALL = `SELECT COUNT(*)::int AS n FROM services`;
 const SQL_COUNT_LEGACY_NAME_EN = `
   SELECT COUNT(*)::int AS n
   FROM services
-  WHERE name_en LIKE '% — %'
+  WHERE name_en LIKE '% - %'
 `;
 
 const SQL_INSERT_SERVICE = `

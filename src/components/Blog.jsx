@@ -22,8 +22,8 @@ export default function Blog() {
       <div className="blog-coming-wrap reveal">
         <p className="blog-coming-text">
           {useT(
-            'Wkrótce — artykuły o rzemieślnictwie, stylu i kulturze barberskiej.',
-            'Coming soon — articles on craft, style, and barbershop culture.'
+            'Wkrótce - artykuły o rzemieślnictwie, stylu i kulturze barberskiej.',
+            'Coming soon - articles on craft, style, and barbershop culture.'
           )}
         </p>
         {submitted ? (
