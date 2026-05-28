@@ -297,10 +297,15 @@ const BODY_STACK = "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helv
 
 // Invisible padding appended to the preheader so Gmail / Apple Mail run out
 // of preview budget inside the hidden block instead of pulling body content
-// ("REZERWACJA #35 Do zobaczenia. ŚRODA 10 CZERWCA 13:40 Radek…") into the
-// inbox preview. 60 pairs ≈ 180 chars of inert width, well beyond what any
-// known client samples.
-const PREHEADER_PADDING = '&nbsp;&zwnj;'.repeat(60);
+// ("Zanotowane. PIĄTEK 29 MAJA 16:30 OCZEKUJE NA …") into the inbox preview.
+//
+// `&nbsp;` alone collapses to a single space in some extractors; alternating
+// with `&zwnj;` (zero-width non-joiner, U+200C) and `&#847;` (combining
+// grapheme joiner, U+034F) gives each triplet 3 "real" Unicode codepoints
+// that don't collapse, while still being invisible to the human eye. We need
+// to overflow Gmail iOS's preview budget (~120 visible chars) so 180 triplets
+// = ~540 codepoints, comfortably beyond what any known mobile client samples.
+const PREHEADER_PADDING = '&zwnj;&nbsp;&#847;'.repeat(180);
 
 function buildPlainText(booking, lang, state, { oldBooking = null } = {}) {
   const t = T[lang];
@@ -374,16 +379,18 @@ function buildHtml(booking, lang, state, { wordmarkMode = 'url', oldBooking = nu
   const slot = escapeHtml(booking.slot);
   const duration = `${booking.duration_min} ${t.durationSuffix}`;
   const price = booking.service_price_pln ? `${booking.service_price_pln} ${t.priceSuffix}` : null;
-  // Preheader carries date + time on one line and the service name on the
-  // next so the iOS / Gmail notification reads as a three-line stack:
-  //   Off Cut · Wizyta przełożona      <- subject
-  //   Piątek 29.05, 16:00              <- preheader line 1
-  //   Strzyżenie męskie włosy długie   <- preheader line 2
-  // <br/> survives the inbox preview extractor in most clients (iOS Mail,
-  // Apple Mail, Gmail mobile) - those that flatten it just show one line,
-  // which is still readable.
-  const preheaderDateSlot = `${formatShortDate(booking.date, lang)}, ${booking.slot}`;
-  const preheader = `${escapeHtml(preheaderDateSlot)}<br/>${escapeHtml(svc)}`;
+  // Preheader carries date + time on line 1 and the service name on line 2
+  // so the iOS / Gmail notification reads as a three-line stack:
+  //   Off Cut · Wizyta zapisana        <- subject
+  //   Piątek 29.05, 16:30              <- preheader line 1
+  //   Trymowanie Brody                 <- preheader line 2
+  // `<br/>` inside a single hidden div is stripped by Gmail iOS - it joins
+  // the two segments with a space. The only reliable cross-client way to
+  // force the line break is to render each segment as its own display:none
+  // block, which extractors treat as a paragraph boundary. See the two
+  // `preheader-segment` divs further down in the template.
+  const preheaderLine1 = escapeHtml(`${formatShortDate(booking.date, lang)}, ${booking.slot}`);
+  const preheaderLine2 = escapeHtml(svc);
   // Slot lights up only when the booking is "active" (confirmed OR
   // rescheduled). On received state the slot stays in paper-strong so the
   // "00 / ZGŁOSZONE" eyebrow reads as not-yet-active. The colour shift
@@ -445,8 +452,15 @@ function buildHtml(booking, lang, state, { wordmarkMode = 'url', oldBooking = nu
 </head>
 <body class="body" style="margin:0;padding:0;background:${PAPER};-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;">
 
-  <!-- Preheader (hidden, shown in inbox preview) -->
-  <div style="display:none;font-size:1px;line-height:1px;max-height:0;max-width:0;opacity:0;overflow:hidden;mso-hide:all;color:${PAPER};">${preheader}${PREHEADER_PADDING}</div>
+  <!-- Preheader (hidden, shown in inbox preview / push notification).
+       Each segment is its own block so Gmail iOS / Apple Mail extract them
+       as separate paragraphs and render the notification on two lines:
+         "Piątek 29.05, 16:30"
+         "Trymowanie Brody"
+       The third block flushes body content out of the preview budget. -->
+  <div class="preheader-segment" style="display:none;font-size:1px;line-height:1px;max-height:0;max-width:0;opacity:0;overflow:hidden;mso-hide:all;color:${PAPER};">${preheaderLine1}</div>
+  <div class="preheader-segment" style="display:none;font-size:1px;line-height:1px;max-height:0;max-width:0;opacity:0;overflow:hidden;mso-hide:all;color:${PAPER};">${preheaderLine2}</div>
+  <div style="display:none;font-size:1px;line-height:1px;max-height:0;max-width:0;opacity:0;overflow:hidden;mso-hide:all;color:${PAPER};">${PREHEADER_PADDING}</div>
 
   <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" bgcolor="${PAPER}" style="background:${PAPER};">
     <tr>
