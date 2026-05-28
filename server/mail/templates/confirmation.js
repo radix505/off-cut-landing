@@ -106,11 +106,19 @@ function formatShortDate(iso, lang) {
   return `${capFirst(DOW_PL[dow])} ${dd}.${mm}`;
 }
 
-// Big "WTOREK 22 MAJA" lockup for the hero stamp.
-function formatHeroDate(iso, lang) {
-  const { m, d, dow } = parts(iso);
-  if (lang === 'en') return `${DOW_EN[dow].toUpperCase()} ${d} ${MONTHS_EN[m - 1].toUpperCase()}`;
-  return `${DOW_PL[dow].toUpperCase()} ${d} ${MONTHS_PL[m - 1].toUpperCase()}`;
+// Hero stamp is stacked on three lines: weekday / day-month / hour.
+// Helpers return each piece separately so the template can render them as
+// independent <tr> rows in the ink band.
+function formatHeroWeekday(iso, lang) {
+  const { dow } = parts(iso);
+  return lang === 'en' ? DOW_EN[dow].toUpperCase() : DOW_PL[dow].toUpperCase();
+}
+
+function formatHeroDayMonth(iso, lang) {
+  const { m, d } = parts(iso);
+  return lang === 'en'
+    ? `${d} ${MONTHS_EN[m - 1].toUpperCase()}`
+    : `${d} ${MONTHS_PL[m - 1].toUpperCase()}`;
 }
 
 function pickServiceName(booking, lang) {
@@ -373,7 +381,8 @@ function buildHtml(booking, lang, state, { wordmarkMode = 'url', oldBooking = nu
   const wordmarkLightSrc = resolveWordmark('light');
   const svc = pickServiceName(booking, lang);
   const longDate = formatLongDate(booking.date, lang);
-  const heroDate = formatHeroDate(booking.date, lang);
+  const heroWeekday = formatHeroWeekday(booking.date, lang);
+  const heroDayMonth = formatHeroDayMonth(booking.date, lang);
   const customerName = escapeHtml(booking.customer_name);
   const barberName = escapeHtml(booking.barber_name);
   const serviceName = escapeHtml(svc);
@@ -441,7 +450,7 @@ function buildHtml(booking, lang, state, { wordmarkMode = 'url', oldBooking = nu
                           </v:roundrect>
                           <![endif]-->
                           <!--[if !mso]><!-- -->
-                          <a href="tel:${PHONE_TEL}" target="_blank" class="btn-ghost" style="display:inline-block;font-family:${BODY_STACK};font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:${INK};font-weight:600;background:${PAPER_STRONG};background-image:linear-gradient(${PAPER_STRONG},${PAPER_STRONG});border:1px solid ${INK};padding:14px 26px;border-radius:999px;mso-line-height-rule:exactly;">${escapeHtml(t.callCta)} ${escapeHtml(PHONE_DISPLAY)}</a>
+                          <a href="tel:${PHONE_TEL}" target="_blank" class="btn-ghost" style="display:inline-block;font-family:${BODY_STACK};font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:${INK};font-weight:600;background:${PAPER_STRONG};border:1px solid ${INK};padding:14px 26px;border-radius:999px;mso-line-height-rule:exactly;">${escapeHtml(t.callCta)} ${escapeHtml(PHONE_DISPLAY)}</a>
                           <!--<![endif]-->
                         </td>
                       </tr>
@@ -455,8 +464,8 @@ function buildHtml(booking, lang, state, { wordmarkMode = 'url', oldBooking = nu
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="x-apple-disable-message-reformatting" />
-  <meta name="color-scheme" content="light dark" />
-  <meta name="supported-color-schemes" content="light dark" />
+  <meta name="color-scheme" content="only light" />
+  <meta name="supported-color-schemes" content="light" />
   <title>${escapeHtml(`Off Cut - ${s.subjectStatus}`)}</title>
   <!--[if mso]>
   <style>
@@ -480,29 +489,22 @@ function buildHtml(booking, lang, state, { wordmarkMode = 'url', oldBooking = nu
       .stack-btns td { display:block !important; width:100% !important; padding:0 0 12px 0 !important; }
       .stack-btns a { display:block !important; width:100% !important; box-sizing:border-box !important; }
     }
-    /* Dark-mode strategy: "paper card on ink canvas".
-       The brand simply does not survive inversion - ink text on auto-inverted
-       paper looks negative-photo broken. So we keep every element inside the
-       600px card in its light-mode colors, but flip the outer body + the
-       full-width wrapper table to ink. The result is a brand-correct paper
-       card sitting on a dark canvas, which blends with Gmail's dark chrome
-       and stops burning eyes at night.
-       Specificity trick: table[width="100%"] is more specific than the
-       generic [style*="background:#f5f3ef"] attribute selector so the outer
-       wrapper darkens while the inner .container card stays paper. */
+    /* Force-light mode. Apple Mail and Outlook.com partially auto-invert
+       emails in dark mode unless told not to. We re-declare every brand
+       color (paper / paper-strong / ink / muted / accent) with !important
+       under the dark-mode media query so the light palette holds. Gmail
+       iOS ignores all of this and will still partial-invert - that is an
+       accepted client limitation. Mirrored under [data-ogsc] / [data-ogsb]
+       for Gmail Android. */
     @media (prefers-color-scheme: dark) {
-      body, body[style] { background:${INK} !important; }
-      table[width="100%"][bgcolor="${PAPER}"],
-      table[width="100%"][style*="background:${PAPER}"] { background-color:${INK} !important; background:${INK} !important; }
-      /* Re-pin every interior element to its light-mode value so partial
-         auto-invert can't recolor them. */
-      table.container,
-      [bgcolor="${PAPER}"]:not([width="100%"]),
-      [style*="background:${PAPER}"]:not([width="100%"]) { background-color:${PAPER} !important; background:${PAPER} !important; }
+      body, body[style] { background:${PAPER} !important; }
+      [bgcolor="${PAPER}"],
+      [style*="background:${PAPER}"] { background-color:${PAPER} !important; background:${PAPER} !important; }
       [bgcolor="${PAPER_STRONG}"],
       [style*="background:${PAPER_STRONG}"] { background-color:${PAPER_STRONG} !important; background:${PAPER_STRONG} !important; }
       [bgcolor="${INK}"],
       [style*="background:${INK}"] { background-color:${INK} !important; background:${INK} !important; }
+      [style*="background:${ACCENT}"] { background-color:${ACCENT} !important; background:${ACCENT} !important; }
       [style*="color:${INK}"] { color:${INK} !important; }
       [style*="color:${INK_WEAK}"] { color:${INK_WEAK} !important; }
       [style*="color:${TEXT_MUTED_LIGHT}"] { color:${TEXT_MUTED_LIGHT} !important; }
@@ -510,17 +512,15 @@ function buildHtml(booking, lang, state, { wordmarkMode = 'url', oldBooking = nu
       [style*="color:${PAPER_STRONG}"] { color:${PAPER_STRONG} !important; }
       [style*="color:${TEXT_MUTED_DARK}"] { color:${TEXT_MUTED_DARK} !important; }
     }
-    /* Gmail Android dark-mode hook - mirror of the @media block above. */
-    [data-ogsc] body { background:${INK} !important; }
-    [data-ogsc] table[width="100%"][bgcolor="${PAPER}"],
-    [data-ogsc] table[width="100%"][style*="background:${PAPER}"] { background-color:${INK} !important; background:${INK} !important; }
-    [data-ogsc] table.container,
-    [data-ogsc] [bgcolor="${PAPER}"]:not([width="100%"]),
-    [data-ogsc] [style*="background:${PAPER}"]:not([width="100%"]) { background-color:${PAPER} !important; background:${PAPER} !important; }
+    /* Gmail Android dark-mode hook. */
+    [data-ogsc] body { background:${PAPER} !important; }
+    [data-ogsc] [bgcolor="${PAPER}"],
+    [data-ogsc] [style*="background:${PAPER}"] { background-color:${PAPER} !important; background:${PAPER} !important; }
     [data-ogsc] [bgcolor="${PAPER_STRONG}"],
     [data-ogsc] [style*="background:${PAPER_STRONG}"] { background-color:${PAPER_STRONG} !important; background:${PAPER_STRONG} !important; }
     [data-ogsc] [bgcolor="${INK}"],
     [data-ogsc] [style*="background:${INK}"] { background-color:${INK} !important; background:${INK} !important; }
+    [data-ogsc] [style*="background:${ACCENT}"] { background-color:${ACCENT} !important; background:${ACCENT} !important; }
     [data-ogsc] [style*="color:${INK}"] { color:${INK} !important; }
     [data-ogsc] [style*="color:${INK_WEAK}"] { color:${INK_WEAK} !important; }
     [data-ogsc] [style*="color:${TEXT_MUTED_LIGHT}"] { color:${TEXT_MUTED_LIGHT} !important; }
@@ -537,15 +537,15 @@ function buildHtml(booking, lang, state, { wordmarkMode = 'url', oldBooking = nu
   <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" bgcolor="${PAPER}" style="background:${PAPER};">
     <tr>
       <td align="center" style="padding:32px 16px 48px 16px;">
-        <table role="presentation" class="container" cellpadding="0" cellspacing="0" border="0" width="600" style="width:600px;max-width:600px;background:${PAPER};background-image:linear-gradient(${PAPER},${PAPER});">
+        <table role="presentation" class="container" cellpadding="0" cellspacing="0" border="0" width="600" style="width:600px;max-width:600px;background:${PAPER};">
           <tr>
             <td class="pad-x" align="center" style="padding:8px 8px 28px 8px;text-align:center;">
               <img src="${wordmarkDarkSrc}" alt="Off Cut" width="260" height="60" style="display:inline-block;border:0;outline:none;text-decoration:none;height:60px;width:260px;max-width:260px;" />
             </td>
           </tr>
           <tr>
-            <td bgcolor="${INK}" style="background:${INK};background-image:linear-gradient(${INK},${INK});padding:0;">
-              <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" bgcolor="${INK}" style="background:${INK};background-image:linear-gradient(${INK},${INK});">
+            <td bgcolor="${INK}" style="background:${INK};padding:0;">
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" bgcolor="${INK}" style="background:${INK};">
                 <tr>
                   <td class="pad-x" style="padding:52px 48px 48px 48px;">
 
@@ -565,7 +565,10 @@ function buildHtml(booking, lang, state, { wordmarkMode = 'url', oldBooking = nu
                         <td align="left" class="display hero-headline" style="font-family:${DISPLAY_STACK};font-size:84px;line-height:0.88;letter-spacing:0.02em;color:${PAPER_STRONG};font-weight:400;text-transform:uppercase;padding:0 0 28px 0;">${escapeHtml(s.headline)}</td>
                       </tr>
                       <tr>
-                        <td align="left" class="display hero-date" style="font-family:${DISPLAY_STACK};font-size:54px;line-height:1;letter-spacing:0.04em;color:${PAPER_STRONG};font-weight:400;text-transform:uppercase;padding:0 0 6px 0;${isCancelled ? 'text-decoration:line-through;' : ''}">${escapeHtml(heroDate)}</td>
+                        <td align="left" class="display hero-date" style="font-family:${DISPLAY_STACK};font-size:54px;line-height:1;letter-spacing:0.04em;color:${PAPER_STRONG};font-weight:400;text-transform:uppercase;padding:0 0 6px 0;${isCancelled ? 'text-decoration:line-through;' : ''}">${escapeHtml(heroWeekday)}</td>
+                      </tr>
+                      <tr>
+                        <td align="left" class="display hero-date" style="font-family:${DISPLAY_STACK};font-size:54px;line-height:1;letter-spacing:0.04em;color:${PAPER_STRONG};font-weight:400;text-transform:uppercase;padding:0 0 6px 0;${isCancelled ? 'text-decoration:line-through;' : ''}">${escapeHtml(heroDayMonth)}</td>
                       </tr>
                       <tr>
                         <td align="left" class="display" style="font-family:${DISPLAY_STACK};font-size:54px;line-height:1;letter-spacing:0.06em;color:${slotColor};font-weight:400;text-transform:uppercase;padding:0 0 0 0;${isCancelled ? 'text-decoration:line-through;' : ''}">${slot}</td>
@@ -581,8 +584,8 @@ function buildHtml(booking, lang, state, { wordmarkMode = 'url', oldBooking = nu
             </td>
           </tr>
           <tr>
-            <td bgcolor="${PAPER}" style="background:${PAPER};background-image:linear-gradient(${PAPER},${PAPER});padding:0;">
-              <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" bgcolor="${PAPER}" style="background:${PAPER};background-image:linear-gradient(${PAPER},${PAPER});">
+            <td bgcolor="${PAPER}" style="background:${PAPER};padding:0;">
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" bgcolor="${PAPER}" style="background:${PAPER};">
                 <tr>
                   <td class="pad-x" style="padding:40px 48px 8px 48px;font-family:${BODY_STACK};font-size:15px;line-height:1.7;color:${INK_WEAK};font-weight:300;letter-spacing:0.01em;">
                     ${escapeHtml(s.intro(customerName))}
@@ -615,13 +618,13 @@ function buildHtml(booking, lang, state, { wordmarkMode = 'url', oldBooking = nu
                     </v:roundrect>
                     <![endif]-->
                     <!--[if !mso]><!-- -->
-                    <a href="${MAP_URL}" target="_blank" class="btn-primary" style="display:inline-block;font-family:${BODY_STACK};font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:${INK};font-weight:600;background:${ACCENT};background-image:linear-gradient(${ACCENT},${ACCENT});border:1px solid ${ACCENT};padding:14px 26px;border-radius:999px;box-shadow:0 0 22px 4px ${ACCENT_GLOW};mso-line-height-rule:exactly;">${escapeHtml(t.mapCta)}</a>
+                    <a href="${MAP_URL}" target="_blank" class="btn-primary" style="display:inline-block;font-family:${BODY_STACK};font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:${INK};font-weight:600;background:${ACCENT};border:1px solid ${ACCENT};padding:14px 26px;border-radius:999px;box-shadow:0 0 22px 4px ${ACCENT_GLOW};mso-line-height-rule:exactly;">${escapeHtml(t.mapCta)}</a>
                     <!--<![endif]-->
                   </td>
                 </tr>`}
                 <tr>
                   <td class="pad-x" style="padding:28px 48px 0 48px;">
-                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="border:1px solid ${LINE_PAPER};background:${PAPER_STRONG};background-image:linear-gradient(${PAPER_STRONG},${PAPER_STRONG});">
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="border:1px solid ${LINE_PAPER};background:${PAPER_STRONG};">
                       <tr>
                         <td style="padding:18px 22px 18px 22px;font-family:${BODY_STACK};font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:${TEXT_MUTED_LIGHT};font-weight:500;">${escapeHtml(s.infoCardTitle)}</td>
                       </tr>
@@ -649,8 +652,8 @@ function buildHtml(booking, lang, state, { wordmarkMode = 'url', oldBooking = nu
           </tr>
 
           <tr>
-            <td bgcolor="${INK}" style="background:${INK};background-image:linear-gradient(${INK},${INK});padding:0;">
-              <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" bgcolor="${INK}" style="background:${INK};background-image:linear-gradient(${INK},${INK});">
+            <td bgcolor="${INK}" style="background:${INK};padding:0;">
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" bgcolor="${INK}" style="background:${INK};">
                 <tr>
                   <td class="pad-x" align="center" style="padding:44px 48px 16px 48px;border-top:1px solid ${LINE_INK};text-align:center;">
                     <img src="${wordmarkLightSrc}" alt="Off Cut" width="260" height="60" style="display:inline-block;border:0;outline:none;text-decoration:none;height:60px;width:260px;max-width:260px;" />
