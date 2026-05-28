@@ -441,7 +441,7 @@ function buildHtml(booking, lang, state, { wordmarkMode = 'url', oldBooking = nu
                           </v:roundrect>
                           <![endif]-->
                           <!--[if !mso]><!-- -->
-                          <a href="tel:${PHONE_TEL}" target="_blank" class="btn-ghost" style="display:inline-block;font-family:${BODY_STACK};font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:${INK};font-weight:600;background:${PAPER_STRONG};border:1px solid ${INK};padding:14px 26px;border-radius:999px;mso-line-height-rule:exactly;">${escapeHtml(t.callCta)} ${escapeHtml(PHONE_DISPLAY)}</a>
+                          <a href="tel:${PHONE_TEL}" target="_blank" class="btn-ghost" style="display:inline-block;font-family:${BODY_STACK};font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:${INK};font-weight:600;background:${PAPER_STRONG};background-image:linear-gradient(${PAPER_STRONG},${PAPER_STRONG});border:1px solid ${INK};padding:14px 26px;border-radius:999px;mso-line-height-rule:exactly;">${escapeHtml(t.callCta)} ${escapeHtml(PHONE_DISPLAY)}</a>
                           <!--<![endif]-->
                         </td>
                       </tr>
@@ -537,15 +537,15 @@ function buildHtml(booking, lang, state, { wordmarkMode = 'url', oldBooking = nu
   <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" bgcolor="${PAPER}" style="background:${PAPER};">
     <tr>
       <td align="center" style="padding:32px 16px 48px 16px;">
-        <table role="presentation" class="container" cellpadding="0" cellspacing="0" border="0" width="600" style="width:600px;max-width:600px;background:${PAPER};">
+        <table role="presentation" class="container" cellpadding="0" cellspacing="0" border="0" width="600" style="width:600px;max-width:600px;background:${PAPER};background-image:linear-gradient(${PAPER},${PAPER});">
           <tr>
             <td class="pad-x" align="center" style="padding:8px 8px 28px 8px;text-align:center;">
               <img src="${wordmarkDarkSrc}" alt="Off Cut" width="260" height="60" style="display:inline-block;border:0;outline:none;text-decoration:none;height:60px;width:260px;max-width:260px;" />
             </td>
           </tr>
           <tr>
-            <td bgcolor="${INK}" style="background:${INK};padding:0;">
-              <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" bgcolor="${INK}" style="background:${INK};">
+            <td bgcolor="${INK}" style="background:${INK};background-image:linear-gradient(${INK},${INK});padding:0;">
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" bgcolor="${INK}" style="background:${INK};background-image:linear-gradient(${INK},${INK});">
                 <tr>
                   <td class="pad-x" style="padding:52px 48px 48px 48px;">
 
@@ -581,8 +581,8 @@ function buildHtml(booking, lang, state, { wordmarkMode = 'url', oldBooking = nu
             </td>
           </tr>
           <tr>
-            <td bgcolor="${PAPER}" style="background:${PAPER};padding:0;">
-              <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" bgcolor="${PAPER}" style="background:${PAPER};">
+            <td bgcolor="${PAPER}" style="background:${PAPER};background-image:linear-gradient(${PAPER},${PAPER});padding:0;">
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" bgcolor="${PAPER}" style="background:${PAPER};background-image:linear-gradient(${PAPER},${PAPER});">
                 <tr>
                   <td class="pad-x" style="padding:40px 48px 8px 48px;font-family:${BODY_STACK};font-size:15px;line-height:1.7;color:${INK_WEAK};font-weight:300;letter-spacing:0.01em;">
                     ${escapeHtml(s.intro(customerName))}
@@ -615,13 +615,13 @@ function buildHtml(booking, lang, state, { wordmarkMode = 'url', oldBooking = nu
                     </v:roundrect>
                     <![endif]-->
                     <!--[if !mso]><!-- -->
-                    <a href="${MAP_URL}" target="_blank" class="btn-primary" style="display:inline-block;font-family:${BODY_STACK};font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:${INK};font-weight:600;background:${ACCENT};border:1px solid ${ACCENT};padding:14px 26px;border-radius:999px;box-shadow:0 0 22px 4px ${ACCENT_GLOW};mso-line-height-rule:exactly;">${escapeHtml(t.mapCta)}</a>
+                    <a href="${MAP_URL}" target="_blank" class="btn-primary" style="display:inline-block;font-family:${BODY_STACK};font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:${INK};font-weight:600;background:${ACCENT};background-image:linear-gradient(${ACCENT},${ACCENT});border:1px solid ${ACCENT};padding:14px 26px;border-radius:999px;box-shadow:0 0 22px 4px ${ACCENT_GLOW};mso-line-height-rule:exactly;">${escapeHtml(t.mapCta)}</a>
                     <!--<![endif]-->
                   </td>
                 </tr>`}
                 <tr>
                   <td class="pad-x" style="padding:28px 48px 0 48px;">
-                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="border:1px solid ${LINE_PAPER};background:${PAPER_STRONG};">
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="border:1px solid ${LINE_PAPER};background:${PAPER_STRONG};background-image:linear-gradient(${PAPER_STRONG},${PAPER_STRONG});">
                       <tr>
                         <td style="padding:18px 22px 18px 22px;font-family:${BODY_STACK};font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:${TEXT_MUTED_LIGHT};font-weight:500;">${escapeHtml(s.infoCardTitle)}</td>
                       </tr>
@@ -649,8 +649,8 @@ function buildHtml(booking, lang, state, { wordmarkMode = 'url', oldBooking = nu
           </tr>
 
           <tr>
-            <td bgcolor="${INK}" style="background:${INK};padding:0;">
-              <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" bgcolor="${INK}" style="background:${INK};">
+            <td bgcolor="${INK}" style="background:${INK};background-image:linear-gradient(${INK},${INK});padding:0;">
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" bgcolor="${INK}" style="background:${INK};background-image:linear-gradient(${INK},${INK});">
                 <tr>
                   <td class="pad-x" align="center" style="padding:44px 48px 16px 48px;border-top:1px solid ${LINE_INK};text-align:center;">
                     <img src="${wordmarkLightSrc}" alt="Off Cut" width="260" height="60" style="display:inline-block;border:0;outline:none;text-decoration:none;height:60px;width:260px;max-width:260px;" />
