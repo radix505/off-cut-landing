@@ -455,8 +455,8 @@ function buildHtml(booking, lang, state, { wordmarkMode = 'url', oldBooking = nu
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="x-apple-disable-message-reformatting" />
-  <meta name="color-scheme" content="light only" />
-  <meta name="supported-color-schemes" content="light" />
+  <meta name="color-scheme" content="light dark" />
+  <meta name="supported-color-schemes" content="light dark" />
   <title>${escapeHtml(`Off Cut - ${s.subjectStatus}`)}</title>
   <!--[if mso]>
   <style>
@@ -480,6 +480,51 @@ function buildHtml(booking, lang, state, { wordmarkMode = 'url', oldBooking = nu
       .stack-btns td { display:block !important; width:100% !important; padding:0 0 12px 0 !important; }
       .stack-btns a { display:block !important; width:100% !important; box-sizing:border-box !important; }
     }
+    /* Dark-mode palette. The brand is already ink-on-paper; in dark mode we
+       flip the paper surfaces to near-ink and re-tone the dark text to a
+       paper-ish off-white. Hero and footer ink bands stay as they are.
+       We target by attribute substring instead of refactoring every cell
+       so the same template renders in both modes with no inline changes.
+       Apple Mail, iOS Mail, Gmail iOS app and modern Gmail web honour
+       prefers-color-scheme; Gmail Android uses the [data-ogsc] hook. */
+    @media (prefers-color-scheme: dark) {
+      body, body[style] { background:#0e0e0e !important; }
+      /* Paper surfaces -> dark surfaces */
+      [bgcolor="#f5f3ef"],
+      [style*="background:#f5f3ef"],
+      [style*="background: #f5f3ef"] { background-color:#161616 !important; background:#161616 !important; }
+      [bgcolor="#fcfaf6"],
+      [style*="background:#fcfaf6"],
+      [style*="background: #fcfaf6"] { background-color:#1f1f1f !important; background:#1f1f1f !important; }
+      /* Ink-on-paper text -> paper-on-ink text */
+      [style*="color:#0a0a0a"]:not([href^="tel:"]):not([href^="http"]) { color:#f0ede5 !important; }
+      [style*="color:#4a463f"] { color:#b8b3a8 !important; }
+      [style*="color:#7a766f"] { color:#9a968f !important; }
+      /* Hairlines on paper -> subtle dark borders */
+      [style*="border:1px solid #ddd9d0"],
+      [style*="border-bottom:1px solid #ddd9d0"] { border-color:#2a2a2a !important; }
+      [style*="border:1px solid #e8e5df"],
+      [style*="border-bottom:1px solid #e8e5df"] { border-color:#262626 !important; }
+      /* CTA buttons: keep accent button as-is (baby blue works on dark);
+         flip the ghost (call) button so its paper fill + ink border become
+         dark fill + paper border. */
+      a.btn-ghost { background:#1f1f1f !important; border-color:#f0ede5 !important; color:#f0ede5 !important; }
+    }
+    /* Gmail Android exposes dark mode through a data attribute on body
+       instead of prefers-color-scheme. Mirror the rules. */
+    [data-ogsc] body, u + .body[data-ogsc] { background:#0e0e0e !important; }
+    [data-ogsc] [bgcolor="#f5f3ef"],
+    [data-ogsc] [style*="background:#f5f3ef"] { background-color:#161616 !important; background:#161616 !important; }
+    [data-ogsc] [bgcolor="#fcfaf6"],
+    [data-ogsc] [style*="background:#fcfaf6"] { background-color:#1f1f1f !important; background:#1f1f1f !important; }
+    [data-ogsc] [style*="color:#0a0a0a"]:not([href^="tel:"]):not([href^="http"]) { color:#f0ede5 !important; }
+    [data-ogsc] [style*="color:#4a463f"] { color:#b8b3a8 !important; }
+    [data-ogsc] [style*="color:#7a766f"] { color:#9a968f !important; }
+    [data-ogsc] [style*="border:1px solid #ddd9d0"],
+    [data-ogsc] [style*="border-bottom:1px solid #ddd9d0"] { border-color:#2a2a2a !important; }
+    [data-ogsc] [style*="border:1px solid #e8e5df"],
+    [data-ogsc] [style*="border-bottom:1px solid #e8e5df"] { border-color:#262626 !important; }
+    [data-ogsc] a.btn-ghost { background:#1f1f1f !important; border-color:#f0ede5 !important; color:#f0ede5 !important; }
   </style>
 </head>
 <body class="body" style="margin:0;padding:0;background:${PAPER};-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;">
