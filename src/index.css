@@ -579,7 +579,7 @@ section { padding-block: var(--space-section-y); padding-inline: var(--space-sec
 
 /* Step 1 – Barbers */
 .booking-barbers-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; }
-@media (max-width: 480px) {
+@media (max-width: 400px) {
   .booking-barbers-grid { grid-template-columns: 1fr; }
   .booking-barber-card { flex-direction: row; justify-content: flex-start; gap: 1rem; padding: 0.85rem 1rem; }
   .booking-barber-av { width: 48px; height: 48px; }
@@ -672,8 +672,14 @@ section { padding-block: var(--space-section-y); padding-inline: var(--space-sec
    between 769-900px viewports because it's only ~340px wide there. */
 .booking-step-body--dt { display: grid; grid-template-columns: 1fr; gap: 1.5rem; align-items: start; }
 @container wizard (min-width: 480px) {
-  .booking-step-body--dt { grid-template-columns: 1fr 1fr; }
+  .booking-step-body--dt { grid-template-columns: 1fr 1fr; align-items: stretch; }
   .booking-step-body--dt.booking-step-body--dt-collapsed { grid-template-columns: 1fr; }
+  /* Side-by-side: time wheel stretches to match calendar height. Track padding
+     uses cqh so the scroll-snap centering keeps working at any wheel height
+     (padding = wheelHeight/2 - itemHeight/2; JS scrollTop = idx * 44 stays valid). */
+  .booking-step-body--dt:not(.booking-step-body--dt-collapsed) .booking-time-col { height: 100%; }
+  .booking-step-body--dt:not(.booking-step-body--dt-collapsed) .btime-wheel { flex: 1; height: auto; min-height: 220px; }
+  .booking-step-body--dt:not(.booking-step-body--dt-collapsed) .btime-wheel .btime-wheel-track { padding: calc(50cqh - 22px) 0; }
 }
 .booking-cal { display: flex; flex-direction: column; gap: 0.75rem; background: rgba(255,255,255,0.04); border: 0.5px solid rgba(255,255,255,0.12); padding: 1.4rem; }
 .booking-time-col { display: flex; flex-direction: column; gap: 0.75rem; }
@@ -713,7 +719,7 @@ section { padding-block: var(--space-section-y); padding-inline: var(--space-sec
 .booking-date-chip:hover .booking-date-chip-change { color: var(--paper-strong); border-color: rgba(255,255,255,0.3); }
 
 /* Apple-style time wheel picker */
-.btime-wheel { position: relative; height: 220px; }
+.btime-wheel { position: relative; height: 220px; container-type: size; container-name: timewheel; }
 .btime-wheel-scroller {
   height: 100%;
   overflow-y: scroll;
@@ -1117,7 +1123,10 @@ body.nav-drawer-is-open .mobile-app-bar { opacity: 0; pointer-events: none; }
   .booking-layout { grid-template-columns: 1fr; gap: 2.5rem; }
   .booking-text p { max-width: 100%; }
   .booking-info-row { flex-wrap: wrap; gap: 1.5rem; }
-  .booking-wizard { padding: 1.5rem 1.5rem 0; }
+  /* Pin wizard to fixed pixel heights so real iOS Chrome (where dvh shrinks
+     with the URL bar) and DevTools mobile emulation (where dvh = full viewport)
+     render the same vertical budget. */
+  .booking-wizard { padding: 1.5rem 1.5rem 0; min-height: 420px; max-height: 580px; }
   .booking-wizard-nav { padding-bottom: 1.5rem; }
   .booking-barbers-grid { gap: 0.5rem; }
   .booking-categories-grid { gap: 0.5rem; grid-template-columns: 1fr; }
@@ -1134,7 +1143,7 @@ body.nav-drawer-is-open .mobile-app-bar { opacity: 0; pointer-events: none; }
   /* Booking subpage - match specificity of the desktop overrides */
   .booking-page-wrap .booking-section { padding-top: 6rem; }
   .booking-page-wrap .booking-layout { grid-template-columns: 1fr; gap: 2rem; }
-  .booking-page-wrap .booking-wizard { min-height: unset; max-height: clamp(380px, calc(100svh - 10.5rem), 680px); max-height: clamp(380px, calc(100dvh - 10.5rem), 680px); padding: 1.5rem 1.5rem 0; order: -1; }
+  .booking-page-wrap .booking-wizard { min-height: unset; max-height: 600px; padding: 1.5rem 1.5rem 0; order: -1; }
   .booking-page-wrap .booking-wizard-nav { padding-bottom: 1.5rem; }
   .booking-page-wrap .booking-text { order: 0; }
 
@@ -1198,6 +1207,11 @@ body.nav-drawer-is-open .mobile-app-bar { opacity: 0; pointer-events: none; }
 }
 
 @media (max-width: 480px) {
+  /* Sidestep the `container-type: size` + `cqh` chain on mobile: keep the wheel
+     at its base 220px so its appearance doesn't ride on the wizard/calendar
+     height. Desktop side-by-side stretch (in @container wizard) is unaffected. */
+  .booking-step-body--dt .btime-wheel { height: 220px; flex: none; }
+  .booking-step-body--dt .btime-wheel .btime-wheel-track { padding: 88px 0; }
   .hero-title { font-size: clamp(64px, 23vw, 96px); }
   .footer-pro-inner { grid-template-columns: 1fr; }
   .footer-col { border-right: none; border-bottom: 0.5px solid #1a1a1a; padding: 1.5rem 1.2rem; }
