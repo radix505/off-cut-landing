@@ -424,8 +424,8 @@ export default function Booking() {
         <div className="booking-success-title">{t('Rezerwacja wysłana!','Booking Sent!')}</div>
         <p className="booking-success-text">
           {t(
-            'Termin trafił do nas. Mail z potwierdzeniem zgłoszenia jest już w drodze; drugi wyślemy z plikiem do kalendarza, jak tylko barber zatwierdzi rezerwację.',
-            'Your booking is in. We\'ve just sent a confirmation that it was received; a second email with a calendar file will follow as soon as the barber approves it.',
+            'Mamy to! Mail z potwierdzeniem rezerwacji jest już w drodze.',
+            'We\'ve got it! Your booking confirmation email is on its way.',
           )}
         </p>
         <div className="booking-success-email">
