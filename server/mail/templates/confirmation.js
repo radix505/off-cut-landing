@@ -50,6 +50,16 @@ const SITE_URL = 'https://off-cut.pl';
 const INSTAGRAM_URL = 'https://www.instagram.com/off_cut_barbershop/';
 const FACEBOOK_URL = 'https://www.facebook.com/offcutbarbershopszczecin';
 
+// Wordmark images are served as hosted PNGs at <SITE>/email/wordmark-*.png.
+// Gmail strips `cid:` references that aren't perfectly multipart/related, so
+// hosted HTTPS URLs are the only reliable cross-client approach. The PNGs
+// live in `public/email/` (committed) and Vite copies them into `dist/email/`
+// at build time; fastify-static serves them in production. Override via
+// MAIL_ASSETS_BASE_URL if a CDN is added later.
+function wordmarkBaseUrl() {
+  return process.env.MAIL_ASSETS_BASE_URL ?? `${SITE_URL}/email`;
+}
+
 const DOW_PL = ['niedziela', 'poniedziałek', 'wtorek', 'środa', 'czwartek', 'piątek', 'sobota'];
 const DOW_EN = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 const MONTHS_PL = ['stycznia', 'lutego', 'marca', 'kwietnia', 'maja', 'czerwca',
@@ -78,19 +88,22 @@ function formatLongDate(iso, lang) {
   return `${DOW_PL[dow]}, ${d} ${MONTHS_PL[m - 1]} ${y}`;
 }
 
-// Tight format for the subject line so the day + time clear iOS's ~40-char
-// notification budget. PL: "śr 10.06", EN: "Wed 10 Jun".
-const DOW_SHORT_PL = ['ndz', 'pon', 'wt', 'śr', 'czw', 'pt', 'sob'];
-const DOW_SHORT_EN = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+// Notification format - full day name capitalized + DD.MM (PL) or DD MMM (EN).
+// Lives on the second visible line of the inbox / iOS notification, paired
+// with the slot time. Examples: "Piątek 29.05" (PL), "Friday 29 May" (EN).
 const MONTHS_SHORT_EN = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
   'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
+function capFirst(s) {
+  return s ? s[0].toUpperCase() + s.slice(1) : s;
+}
+
 function formatShortDate(iso, lang) {
   const { m, d, dow } = parts(iso);
-  if (lang === 'en') return `${DOW_SHORT_EN[dow]} ${d} ${MONTHS_SHORT_EN[m - 1]}`;
+  if (lang === 'en') return `${DOW_EN[dow]} ${d} ${MONTHS_SHORT_EN[m - 1]}`;
   const dd = String(d).padStart(2, '0');
   const mm = String(m).padStart(2, '0');
-  return `${DOW_SHORT_PL[dow]} ${dd}.${mm}`;
+  return `${capFirst(DOW_PL[dow])} ${dd}.${mm}`;
 }
 
 // Big "WTOREK 22 MAJA" lockup for the hero stamp.
@@ -163,7 +176,7 @@ const T = {
       // the old and new appointment.
       slotEyebrow: null,
       headline: 'Nowy termin.',
-      intro: (name) => `${name}, Twoja wizyta została przełożona na nowy termin. Stary termin nie obowiązuje — pełne szczegóły poniżej.`,
+      intro: (name) => `${name}, Twoja wizyta została przełożona na nowy termin. Pełne szczegóły poniżej.`,
       infoCardTitle: 'ZAKTUALIZUJ KALENDARZ',
       infoCardBody: 'Załączony plik .ics zaktualizuje istniejący wpis w Twoim kalendarzu na nowy termin — wystarczy go otworzyć.',
       needToChangeTitle: 'Coś się zmieniło?',
@@ -327,7 +340,7 @@ function buildPlainText(booking, lang, state, { oldBooking = null } = {}) {
   return lines.join('\n');
 }
 
-function buildHtml(booking, lang, state, { wordmarkMode = 'cid', oldBooking = null } = {}) {
+function buildHtml(booking, lang, state, { wordmarkMode = 'url', oldBooking = null } = {}) {
   const t = T[lang];
   const s = t[state];
   // Slot lights up in ACCENT once the appointment is "active" - both the
@@ -335,15 +348,23 @@ function buildHtml(booking, lang, state, { wordmarkMode = 'cid', oldBooking = nu
   // customer can show up at. Received still shows paper-strong (not yet
   // active).
   const isActive = state === 'confirmed' || state === 'rescheduled';
-  // Resolve wordmark refs. CID for real mail (Resend attaches the PNGs),
-  // data: URL for static HTML previews so the same image appears on disk.
+  // Resolve wordmark refs. Three modes:
+  //   'url'  - hosted HTTPS image (production default; works in Gmail/Apple/Outlook)
+  //   'data' - base64 data URL so file:// HTML previews render off disk
+  //   'cid'  - inline CID attachment (legacy; Gmail strips broken cid: refs)
   const dataUrls = wordmarkMode === 'data' ? loadWordmarkDataUrls() : null;
-  const wordmarkDarkSrc = wordmarkMode === 'data'
-    ? (dataUrls?.dark ?? '')
-    : `cid:${WORDMARK_DARK_CID}`;
-  const wordmarkLightSrc = wordmarkMode === 'data'
-    ? (dataUrls?.light ?? '')
-    : `cid:${WORDMARK_LIGHT_CID}`;
+  const base = wordmarkBaseUrl();
+  const resolveWordmark = (which) => {
+    if (wordmarkMode === 'data') {
+      return dataUrls?.[which] ?? '';
+    }
+    if (wordmarkMode === 'cid') {
+      return `cid:${which === 'dark' ? WORDMARK_DARK_CID : WORDMARK_LIGHT_CID}`;
+    }
+    return `${base}/wordmark-${which}.png`;
+  };
+  const wordmarkDarkSrc = resolveWordmark('dark');
+  const wordmarkLightSrc = resolveWordmark('light');
   const svc = pickServiceName(booking, lang);
   const longDate = formatLongDate(booking.date, lang);
   const heroDate = formatHeroDate(booking.date, lang);
@@ -353,9 +374,16 @@ function buildHtml(booking, lang, state, { wordmarkMode = 'cid', oldBooking = nu
   const slot = escapeHtml(booking.slot);
   const duration = `${booking.duration_min} ${t.durationSuffix}`;
   const price = booking.service_price_pln ? `${booking.service_price_pln} ${t.priceSuffix}` : null;
-  // Preheader carries date + time + service so iOS / Gmail show the actionable
-  // "when + what" right under the subject's "Off Cut · Wizyta przełożona".
-  const preheader = escapeHtml(`${formatShortDate(booking.date, lang)}, ${booking.slot} · ${svc}`);
+  // Preheader carries date + time on one line and the service name on the
+  // next so the iOS / Gmail notification reads as a three-line stack:
+  //   Off Cut · Wizyta przełożona      <- subject
+  //   Piątek 29.05, 16:00              <- preheader line 1
+  //   Strzyżenie męskie włosy długie   <- preheader line 2
+  // <br/> survives the inbox preview extractor in most clients (iOS Mail,
+  // Apple Mail, Gmail mobile) - those that flatten it just show one line,
+  // which is still readable.
+  const preheaderDateSlot = `${formatShortDate(booking.date, lang)}, ${booking.slot}`;
+  const preheader = `${escapeHtml(preheaderDateSlot)}<br/>${escapeHtml(svc)}`;
   // Slot lights up only when the booking is "active" (confirmed OR
   // rescheduled). On received state the slot stays in paper-strong so the
   // "00 / ZGŁOSZONE" eyebrow reads as not-yet-active. The colour shift

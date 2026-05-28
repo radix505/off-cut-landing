@@ -1,6 +1,3 @@
-import { readFileSync } from 'node:fs';
-import { dirname, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
 import {
   getMailClient, isMailEnabled, mailFromAddress, mailReplyTo, isMailDryRun,
 } from './resend.js';
@@ -8,41 +5,14 @@ import {
   buildConfirmationEmail, buildReceivedEmail, buildRescheduleEmail,
   buildCancellationEmail,
   ADDRESS_LINE, PHONE_DISPLAY,
-  WORDMARK_DARK_CID, WORDMARK_LIGHT_CID,
 } from './templates/confirmation.js';
 import { buildBookingIcs } from './ics.js';
 import * as bookingsRepo from '../data/bookingsRepo.js';
 
-const here = dirname(fileURLToPath(import.meta.url));
-
-// Inline-image attachments for the OFF CUT wordmark, loaded once at module
-// init. Built by `node server/mail/assets/build-logos.mjs` - re-run that if
-// the brand mark ever changes.
-let wordmarkAttachments = null;
-function getWordmarkAttachments() {
-  if (wordmarkAttachments) return wordmarkAttachments;
-  try {
-    const dark = readFileSync(resolve(here, 'assets', 'wordmark-dark.png'));
-    const light = readFileSync(resolve(here, 'assets', 'wordmark-light.png'));
-    wordmarkAttachments = [
-      {
-        filename: 'offcut-wordmark.png',
-        content: dark,
-        content_type: 'image/png',
-        content_id: WORDMARK_DARK_CID,
-      },
-      {
-        filename: 'offcut-wordmark-light.png',
-        content: light,
-        content_type: 'image/png',
-        content_id: WORDMARK_LIGHT_CID,
-      },
-    ];
-  } catch {
-    wordmarkAttachments = [];
-  }
-  return wordmarkAttachments;
-}
+// The OFF CUT wordmark is now hosted at <SITE>/email/wordmark-*.png and
+// referenced by HTTPS URL in the template - inline CID attachments were
+// stripped silently by Gmail and showed a broken image icon. See
+// public/email/ for the served PNGs and confirmation.js for the URL resolver.
 
 const ORG_NAME = 'Off Cut';
 const ICS_ORGANIZER_EMAIL_FALLBACK = 'rezerwacje@offcutszczecin.pl';
@@ -98,7 +68,6 @@ export async function sendBookingConfirmation(booking, { log = console } = {}) {
     html: tpl.html,
     text: tpl.text,
     attachments: [
-      ...getWordmarkAttachments(),
       {
         filename: 'off-cut.ics',
         content: Buffer.from(ics, 'utf8'),
@@ -164,7 +133,7 @@ export async function sendBookingReceived(booking, { log = console } = {}) {
     subject: tpl.subject,
     html: tpl.html,
     text: tpl.text,
-    attachments: [...getWordmarkAttachments()],
+    attachments: [],
     headers: {
       'X-Entity-Ref-ID': `booking-${booking.id}-received`,
     },
@@ -245,7 +214,6 @@ export async function sendBookingReschedule(oldBooking, newBooking, { log = cons
     html: tpl.html,
     text: tpl.text,
     attachments: [
-      ...getWordmarkAttachments(),
       {
         filename: 'off-cut.ics',
         content: Buffer.from(ics, 'utf8'),
@@ -332,7 +300,6 @@ export async function sendBookingCancellation(booking, { log = console } = {}) {
     html: tpl.html,
     text: tpl.text,
     attachments: [
-      ...getWordmarkAttachments(),
       {
         filename: 'off-cut.ics',
         content: Buffer.from(ics, 'utf8'),
