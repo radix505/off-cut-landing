@@ -306,7 +306,7 @@ export default function Booking() {
   function pickDay(d) {
     if (!d) return;
     const picked = new Date(calYear, calMonth, d);
-    if (picked < today) return;
+    if (picked <= today) return;
     if (BUSINESS_HOURS[picked.getDay()] == null) return;
     setDate(picked); setSlot(null);
     if (isMobile) setCalOpen(false);
@@ -643,7 +643,7 @@ export default function Booking() {
                         key={i}
                         className={`bcal-day${!d?' empty':''}${d&&isPast(d)?' past':''}${isToday(d)?' today':''}${isSelected(d)?' sel':''}${(!isPast(d)&&(isFullyBooked(d)||isClosed(d)))?' unavail':''}`}
                         onClick={() => pickDay(d)}
-                        disabled={!d || isPast(d) || isClosed(d)}
+                        disabled={!d || isPast(d) || isToday(d) || isClosed(d)}
                         title={isClosed(d) ? (lang==='pl' ? 'Zamknięte' : 'Closed') : isFullyBooked(d) ? (lang==='pl' ? 'Brak wolnych terminów' : 'No slots available') : undefined}
                       >{d||''}</button>
                     ))}

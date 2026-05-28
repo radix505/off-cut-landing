@@ -76,6 +76,7 @@ export function buildBookingIcs({
   attendeeEmail,
   attendeeName,
   uidDomain = 'offcut.pl',
+  sequence = 0,
 }) {
   const [startH, startM] = slot.split(':').map(Number);
   const end = addMinutes(slot, durationMin);
@@ -95,6 +96,7 @@ export function buildBookingIcs({
     `SUMMARY:${escapeIcs(summary)}`,
     `DESCRIPTION:${escapeIcs(description)}`,
     `LOCATION:${escapeIcs(location)}`,
+    sequence > 0 ? `SEQUENCE:${sequence}` : null,
     'STATUS:CONFIRMED',
     'TRANSP:OPAQUE',
     `ORGANIZER;CN=${escapeIcs(organizerName)}:mailto:${organizerEmail}`,

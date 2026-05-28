@@ -1,9 +1,12 @@
-// Render received + confirmation emails (PL + EN) to ./artifacts/mail-preview/
-// for design review. Run with: `node server/mail/preview.mjs`.
+// Render received + confirmation + reschedule emails (PL + EN) to
+// ./artifacts/mail-preview/ for design review.
+// Run with: `node server/mail/preview.mjs`.
 import { writeFileSync, mkdirSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { buildConfirmationEmail, buildReceivedEmail } from './templates/confirmation.js';
+import {
+  buildConfirmationEmail, buildReceivedEmail, buildRescheduleEmail,
+} from './templates/confirmation.js';
 import { buildBookingIcs } from './ics.js';
 
 const here = dirname(fileURLToPath(import.meta.url));
@@ -42,6 +45,22 @@ for (const [state, build] of Object.entries(builders)) {
   }
 }
 
+// Reschedule mail (#3) needs both the old and new appointment rows so the
+// template can render the "PRZENIESIONO Z" diff line.
+const oldBookingSample = {
+  ...sample,
+  date: '2026-05-18',
+  slot: '14:00',
+};
+for (const lang of ['pl', 'en']) {
+  const newSample = { ...sample, lang };
+  const oldSample = { ...oldBookingSample, lang };
+  const tpl = buildRescheduleEmail(newSample, oldSample, { wordmarkMode: 'data' });
+  writeFileSync(resolve(outDir, `reschedule-${lang}.html`), tpl.html);
+  writeFileSync(resolve(outDir, `reschedule-${lang}.txt`), tpl.text);
+  console.log(`${'reschedule'.padEnd(12)} ${lang.toUpperCase()} subject: ${tpl.subject}`);
+}
+
 const tpl = buildConfirmationEmail({ ...sample, lang: 'pl' });
 const ics = buildBookingIcs({
   id: sample.id,
@@ -57,4 +76,24 @@ const ics = buildBookingIcs({
   attendeeName: sample.customer_name,
 });
 writeFileSync(resolve(outDir, 'off-cut.ics'), ics);
+
+// Reschedule ICS: same UID as the confirmation .ics above, but with a
+// bumped SEQUENCE and new date/slot - exactly what production sends.
+const rescheduleTpl = buildRescheduleEmail({ ...sample, lang: 'pl' }, { ...oldBookingSample, lang: 'pl' });
+const icsReschedule = buildBookingIcs({
+  id: sample.id,
+  date: sample.date,
+  slot: sample.slot,
+  durationMin: sample.duration_min,
+  summary: rescheduleTpl.icsSummary,
+  description: rescheduleTpl.icsDescription,
+  location: rescheduleTpl.icsLocation,
+  organizerName: 'Off Cut',
+  organizerEmail: 'rezerwacje@offcutszczecin.pl',
+  attendeeEmail: sample.email,
+  attendeeName: sample.customer_name,
+  sequence: Math.floor(Date.now() / 1000),
+});
+writeFileSync(resolve(outDir, 'off-cut-reschedule.ics'), icsReschedule);
+
 console.log(`Wrote previews to ${outDir}`);

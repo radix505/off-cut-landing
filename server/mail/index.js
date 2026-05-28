@@ -5,7 +5,8 @@ import {
   getMailClient, isMailEnabled, mailFromAddress, mailReplyTo, isMailDryRun,
 } from './resend.js';
 import {
-  buildConfirmationEmail, buildReceivedEmail, ADDRESS_LINE, PHONE_DISPLAY,
+  buildConfirmationEmail, buildReceivedEmail, buildRescheduleEmail,
+  ADDRESS_LINE, PHONE_DISPLAY,
   WORDMARK_DARK_CID, WORDMARK_LIGHT_CID,
 } from './templates/confirmation.js';
 import { buildBookingIcs } from './ics.js';
@@ -193,6 +194,93 @@ export async function sendBookingReceived(booking, { log = console } = {}) {
     return { sent: true, messageId: result?.data?.id };
   } catch (err) {
     log.error?.({ id: booking.id, err }, 'received email threw');
+    return { sent: false, error: err };
+  }
+}
+
+// Mail #3: barber rescheduled an appointment via the Telegram bot. Caller
+// passes `oldBooking` (pre-update row, used to render the "PRZENIESIONO Z"
+// diff line) and `newBooking` (refreshed post-update row with the new
+// date/slot). No DB reservation - dedup is delegated to Resend via an
+// idempotency key tied to `{id}:{newDate}:{newSlot}`, which gives natural
+// "same destination = same email, new destination = new email" semantics
+// across legitimate repeat reschedules.
+export async function sendBookingReschedule(oldBooking, newBooking, { log = console } = {}) {
+  if (!newBooking) return { skipped: 'no_booking' };
+  if (newBooking.is_block) return { skipped: 'block' };
+  if (newBooking.status === 'cancelled') return { skipped: 'cancelled' };
+  if (!newBooking.email) return { skipped: 'no_email' };
+
+  if (!isMailEnabled()) {
+    log.warn?.({ id: newBooking.id }, 'mail disabled (RESEND_API_KEY or MAIL_FROM missing); skipping reschedule email');
+    return { skipped: 'mail_disabled' };
+  }
+
+  const tpl = buildRescheduleEmail(newBooking, oldBooking);
+  const organizerEmail = organizerEmailFromConfig();
+  // Monotonic sequence so the calendar event for this UID is treated as an
+  // update (every reschedule advances). RFC 5545 only requires SEQUENCE to
+  // increase; the absolute value doesn't matter.
+  const sequence = Math.floor(Date.now() / 1000);
+  const ics = buildBookingIcs({
+    id: newBooking.id,
+    date: newBooking.date,
+    slot: newBooking.slot,
+    durationMin: newBooking.duration_min,
+    summary: tpl.icsSummary,
+    description: tpl.icsDescription,
+    location: tpl.icsLocation,
+    organizerName: ORG_NAME,
+    organizerEmail,
+    attendeeEmail: newBooking.email,
+    attendeeName: newBooking.customer_name,
+    sequence,
+  });
+
+  const payload = {
+    from: mailFromAddress(),
+    to: [newBooking.email],
+    subject: tpl.subject,
+    html: tpl.html,
+    text: tpl.text,
+    attachments: [
+      ...getWordmarkAttachments(),
+      {
+        filename: 'off-cut.ics',
+        content: Buffer.from(ics, 'utf8'),
+        content_type: 'text/calendar; method=REQUEST; charset=utf-8',
+      },
+    ],
+    headers: {
+      'X-Entity-Ref-ID': `booking-${newBooking.id}-reschedule`,
+    },
+  };
+  const replyTo = mailReplyTo();
+  if (replyTo) payload.replyTo = replyTo;
+
+  if (isMailDryRun()) {
+    log.info?.({ id: newBooking.id, to: newBooking.email, subject: tpl.subject }, 'mail dry-run: would send reschedule');
+    return { sent: false, dryRun: true };
+  }
+
+  const resend = getMailClient();
+  if (!resend) {
+    log.warn?.({ id: newBooking.id }, 'resend client unavailable; skipping reschedule email');
+    return { skipped: 'client_unavailable' };
+  }
+
+  try {
+    const result = await resend.emails.send(payload, {
+      idempotencyKey: `booking-reschedule:${newBooking.id}:${newBooking.date}:${newBooking.slot}`,
+    });
+    if (result?.error) {
+      log.error?.({ id: newBooking.id, err: result.error }, 'resend rejected reschedule email');
+      return { sent: false, error: result.error };
+    }
+    log.info?.({ id: newBooking.id, messageId: result?.data?.id, to: newBooking.email }, 'reschedule email sent');
+    return { sent: true, messageId: result?.data?.id };
+  } catch (err) {
+    log.error?.({ id: newBooking.id, err }, 'reschedule email threw');
     return { sent: false, error: err };
   }
 }

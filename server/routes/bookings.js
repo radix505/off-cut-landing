@@ -86,7 +86,7 @@ export default async function bookingsRoutes(fastify) {
 
       for (let d = 1; d <= lastDay; d++) {
         const iso = `${year}-${mm}-${String(d).padStart(2, '0')}`;
-        if (iso < today) continue;
+        if (iso <= today) continue;
         const grid = buildSlotsForISODate(iso);
         if (grid.length === 0) continue;
         const dayBookings = byDate.get(iso) ?? [];
@@ -133,7 +133,7 @@ export default async function bookingsRoutes(fastify) {
         return reply.code(422).send({ error: 'barber_service_mismatch' });
       }
 
-      if (date < todayInWarsaw()) {
+      if (date <= todayInWarsaw()) {
         return reply.code(400).send({ error: 'date_in_past' });
       }
 

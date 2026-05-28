@@ -4,6 +4,7 @@ import { withTransaction } from '../db.js';
 import { blockOverlapsExisting, computeUnavailable } from '../availability.js';
 import { buildSlotsForISODate } from '../../src/data/booking-config.js';
 import { BUSINESS_HOURS, SLOT_STEP_MIN } from '../../src/data/businessHours.js';
+import { sendBookingReschedule } from '../mail/index.js';
 import { bookingKeyboard } from './handlers.js';
 import {
   formatBookingCard,
@@ -276,7 +277,25 @@ async function commitReschedule(ctx, booking, year, month, day, newSlot) {
   }
 
   const refreshed = await bookingsRepo.findById(booking.id);
-  await ctx.answerCallbackQuery({ text: 'Przeniesiono ✓' });
+
+  // The customer's mental model is anchored to the old time - whether the
+  // booking was pending or already confirmed, they expected something else.
+  // Notify them so they don't show up at the wrong hour. If we don't have
+  // an email on file the barber needs to fall back to phone, so surface
+  // that on the manager's banner instead of staying silent.
+  const hasEmail = Boolean(refreshed?.email);
+  const bannerText = hasEmail
+    ? 'Przeniesiono ✓'
+    : 'Przeniesiono ✓ · klient bez maila — zadzwoń';
+  await ctx.answerCallbackQuery({ text: bannerText });
+
+  if (hasEmail) {
+    // Fire-and-forget; matches the pattern used for confirmation mail in
+    // handlers.js. `booking` still holds the pre-update date/slot so the
+    // template can render the "PRZENIESIONO Z" diff line.
+    sendBookingReschedule(booking, refreshed).catch(() => {});
+  }
+
   return renderBookingCard(ctx, refreshed, { edit: true });
 }
 

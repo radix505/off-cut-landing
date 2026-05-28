@@ -158,6 +158,23 @@ const T = {
       showOnArrival: 'Przy wejściu wystarczy podać imię. Zalecamy być 5 minut przed czasem.',
       footerLegal: 'Otrzymujesz tę wiadomość, ponieważ została potwierdzona Twoja rezerwacja w Off Cut.',
     },
+    rescheduled: {
+      subjectStatus: 'przeniesiona',
+      eyebrow: 'WIZYTA PRZENIESIONA',
+      sectionNumber: '02',
+      // slotEyebrow is computed at render time from opts.oldBooking - the
+      // "PRZENIESIONO Z: ..." line below the slot is the visual diff between
+      // the old and new appointment.
+      slotEyebrow: null,
+      headline: 'Nowy termin.',
+      intro: (name) => `${name}, Twoja wizyta została przełożona na nowy termin. Stary termin nie obowiązuje — pełne szczegóły poniżej.`,
+      infoCardTitle: 'ZAKTUALIZUJ KALENDARZ',
+      infoCardBody: 'Załączony plik .ics zaktualizuje istniejący wpis w Twoim kalendarzu na nowy termin — wystarczy go otworzyć.',
+      needToChangeTitle: 'Coś się zmieniło?',
+      needToChangeBody: 'Zadzwoń bezpośrednio do barbershopu. Załatwimy to człowiek z człowiekiem.',
+      showOnArrival: 'Przy wejściu wystarczy podać imię. Zalecamy być 5 minut przed czasem.',
+      footerLegal: 'Otrzymujesz tę wiadomość, ponieważ Twoja rezerwacja w Off Cut została przełożona na nowy termin.',
+    },
   },
   en: {
     labels: {
@@ -205,6 +222,20 @@ const T = {
       showOnArrival: 'Just give your name at the door. We recommend arriving 5 minutes early.',
       footerLegal: 'You are receiving this because a booking under this address has been confirmed at Off Cut.',
     },
+    rescheduled: {
+      subjectStatus: 'rescheduled',
+      eyebrow: 'APPOINTMENT RESCHEDULED',
+      sectionNumber: '02',
+      slotEyebrow: null,
+      headline: 'New date.',
+      intro: (name) => `${name}, your appointment has been moved to a new time. The previous slot no longer applies — full details below.`,
+      infoCardTitle: 'UPDATE YOUR CALENDAR',
+      infoCardBody: 'The attached .ics file will update your existing calendar entry to the new time — just open it.',
+      needToChangeTitle: 'Something changed?',
+      needToChangeBody: 'Call the shop directly. We sort it human to human.',
+      showOnArrival: 'Just give your name at the door. We recommend arriving 5 minutes early.',
+      footerLegal: 'You are receiving this because your booking at Off Cut has been moved to a new time.',
+    },
   },
 };
 
@@ -235,13 +266,19 @@ const BODY_STACK = "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helv
 // known client samples.
 const PREHEADER_PADDING = '&nbsp;&zwnj;'.repeat(60);
 
-function buildPlainText(booking, lang, state) {
+function buildPlainText(booking, lang, state, { oldBooking = null } = {}) {
   const t = T[lang];
   const s = t[state];
   const svc = pickServiceName(booking, lang);
   const longDate = formatLongDate(booking.date, lang);
+  const previouslyLine = (state === 'rescheduled' && oldBooking)
+    ? (lang === 'en'
+      ? `PREVIOUSLY: ${formatLongDate(oldBooking.date, lang)}, ${oldBooking.slot}`
+      : `PRZENIESIONO Z: ${formatLongDate(oldBooking.date, lang)}, ${oldBooking.slot}`)
+    : null;
   const lines = [
     `OFF CUT — ${s.subjectStatus.toUpperCase()} · ${longDate}, ${booking.slot}`,
+    previouslyLine,
     '',
     s.intro(booking.customer_name),
     '',
@@ -266,10 +303,14 @@ function buildPlainText(booking, lang, state) {
   return lines.join('\n');
 }
 
-function buildHtml(booking, lang, state, { wordmarkMode = 'cid' } = {}) {
+function buildHtml(booking, lang, state, { wordmarkMode = 'cid', oldBooking = null } = {}) {
   const t = T[lang];
   const s = t[state];
-  const isConfirmed = state === 'confirmed';
+  // Slot lights up in ACCENT once the appointment is "active" - both the
+  // initial confirmation and any subsequent reschedule represent a slot the
+  // customer can show up at. Received still shows paper-strong (not yet
+  // active).
+  const isActive = state === 'confirmed' || state === 'rescheduled';
   // Resolve wordmark refs. CID for real mail (Resend attaches the PNGs),
   // data: URL for static HTML previews so the same image appears on disk.
   const dataUrls = wordmarkMode === 'data' ? loadWordmarkDataUrls() : null;
@@ -290,11 +331,23 @@ function buildHtml(booking, lang, state, { wordmarkMode = 'cid' } = {}) {
   const price = booking.service_price_pln ? `${booking.service_price_pln} ${t.priceSuffix}` : null;
   const preheader = escapeHtml(t.preheader(svc, booking.barber_name));
   const bookingNumberLabel = escapeHtml(t.bookingNumber(booking.id));
-  // Slot lights up only when the booking is confirmed. On received state the
-  // slot stays in paper-strong so the "00 / ZGŁOSZONE" eyebrow reads as
-  // not-yet-active. The colour shift between mail #1 and mail #2 is the
-  // visual story of the booking lifecycle.
-  const slotColor = isConfirmed ? ACCENT : PAPER_STRONG;
+  // Slot lights up only when the booking is "active" (confirmed OR
+  // rescheduled). On received state the slot stays in paper-strong so the
+  // "00 / ZGŁOSZONE" eyebrow reads as not-yet-active. The colour shift
+  // between mail #1 and mail #2/#3 is the visual story of the booking
+  // lifecycle.
+  const slotColor = isActive ? ACCENT : PAPER_STRONG;
+
+  // For the reschedule mail, the eyebrow under the slot carries the visual
+  // diff: "PRZENIESIONO Z: <old long date>, <old slot>". For other states
+  // we use the static slotEyebrow defined in the copy table.
+  let slotEyebrowText = s.slotEyebrow;
+  if (state === 'rescheduled' && oldBooking) {
+    const oldLong = formatLongDate(oldBooking.date, lang);
+    slotEyebrowText = lang === 'en'
+      ? `PREVIOUSLY: ${oldLong}, ${oldBooking.slot}`
+      : `PRZENIESIONO Z: ${oldLong}, ${oldBooking.slot}`;
+  }
 
   // Detail row - workshop tag layout: small uppercase label on the left,
   // value in larger body type on the right, hairline rule beneath.
@@ -393,8 +446,8 @@ function buildHtml(booking, lang, state, { wordmarkMode = 'cid' } = {}) {
                       <tr>
                         <td align="left" class="display" style="font-family:${DISPLAY_STACK};font-size:54px;line-height:1;letter-spacing:0.06em;color:${slotColor};font-weight:400;text-transform:uppercase;padding:0 0 0 0;">${slot}</td>
                       </tr>
-                      ${s.slotEyebrow ? `<tr>
-                        <td align="left" style="font-family:${BODY_STACK};font-size:10px;letter-spacing:0.35em;text-transform:uppercase;color:${TEXT_MUTED_DARK};font-weight:500;padding:14px 0 0 0;">${escapeHtml(s.slotEyebrow)}</td>
+                      ${slotEyebrowText ? `<tr>
+                        <td align="left" style="font-family:${BODY_STACK};font-size:10px;letter-spacing:0.35em;text-transform:uppercase;color:${TEXT_MUTED_DARK};font-weight:500;padding:14px 0 0 0;">${escapeHtml(slotEyebrowText)}</td>
                       </tr>` : ''}
                     </table>
 
@@ -568,8 +621,8 @@ function buildEmail(booking, state, opts = {}) {
   const t = T[lang];
   const s = t[state];
   // Subject leads with day + time (the only atoms the user can act on at
-  // a glance) and ends with the status word so a stack of two notifications
-  // — received followed by confirmed — is visually distinct on the first
+  // a glance) and ends with the status word so a stack of three notifications
+  // — received, confirmed, rescheduled — is visually distinct on the first
   // line. The "Off Cut · " prefix the old subject used is dropped: Gmail
   // already renders the sender row ("OFF CUT Barbershop Szczecin") above
   // the subject, so the prefix only stole chars from the truncation budget.
@@ -578,7 +631,7 @@ function buildEmail(booking, state, opts = {}) {
   return {
     subject,
     html: buildHtml(booking, lang, state, opts),
-    text: buildPlainText(booking, lang, state),
+    text: buildPlainText(booking, lang, state, opts),
   };
 }
 
@@ -601,6 +654,27 @@ export function buildConfirmationEmail(booking, opts = {}) {
 
 export function buildReceivedEmail(booking, opts = {}) {
   return buildEmail(booking, 'received', opts);
+}
+
+// Mail #3 in the lifecycle: barber rescheduled an existing booking via the
+// Telegram bot. `newBooking` is the post-update row (with the new date/slot);
+// `oldBooking` carries the pre-update date/slot so the template can render
+// the "PRZENIESIONO Z" diff line below the hero slot.
+export function buildRescheduleEmail(newBooking, oldBooking, opts = {}) {
+  const lang = newBooking.lang === 'en' ? 'en' : 'pl';
+  const out = buildEmail(newBooking, 'rescheduled', { ...opts, oldBooking });
+  const summary = lang === 'en'
+    ? `Off Cut - ${pickServiceName(newBooking, 'en')} with ${newBooking.barber_name}`
+    : `Off Cut - ${pickServiceName(newBooking, 'pl')} u ${newBooking.barber_name}`;
+  const description = lang === 'en'
+    ? `Barber: ${newBooking.barber_name}\nService: ${pickServiceName(newBooking, 'en')}\nDuration: ${newBooking.duration_min} min\nAddress: ${ADDRESS_LINE}\nPhone: ${PHONE_DISPLAY}`
+    : `Barber: ${newBooking.barber_name}\nUsługa: ${pickServiceName(newBooking, 'pl')}\nCzas: ${newBooking.duration_min} min\nAdres: ${ADDRESS_LINE}\nTelefon: ${PHONE_DISPLAY}`;
+  return {
+    ...out,
+    icsSummary: summary,
+    icsDescription: description,
+    icsLocation: ADDRESS_LINE,
+  };
 }
 
 export { ADDRESS_LINE, PHONE_DISPLAY };
