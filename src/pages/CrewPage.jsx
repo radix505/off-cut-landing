@@ -25,7 +25,6 @@ export default function CrewPage() {
         <div className="crew-page-header">
           <div className="crew-page-header-text">
             <h1 className="crew-page-title">{useT('Meet\nthe\nCrew', 'Meet\nthe\nCrew')}</h1>
-            <p className="crew-page-sub">{useT('Każdy z nas wnosi coś wyjątkowego. Razem tworzymy Off Cut.', 'Each of us brings something unique. Together we are Off Cut.')}</p>
           </div>
           <div className="crew-page-grid">
             {barbers.map((b) => (

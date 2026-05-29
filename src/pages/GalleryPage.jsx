@@ -74,7 +74,6 @@ export default function GalleryPage() {
           {useT('Wróć', 'Back')}
         </button>
         <h1 className="blog-page-title">{useT('Galeria\nPrac', 'Our\nWork')}</h1>
-        <p className="blog-page-sub">{useT('Każde cięcie to historia. Oto nasze rzemiosło.', "Every cut tells a story. Here's our craft.")}</p>
       </div>
 
       <section className="gallery-page-section">

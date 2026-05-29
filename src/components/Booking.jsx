@@ -418,12 +418,6 @@ export default function Booking() {
 
   return (
     <section id="booking" className="booking-section" ref={ref}>
-      <div className="section-header">
-        <div>
-          <div className="section-number">{t('05 / REZERWACJA','05 / BOOKING')}</div>
-        </div>
-      </div>
-
       {submitted ? (
       <div key="success" className="booking-success">
         <div className="booking-success-icon">✓</div>

@@ -92,12 +92,6 @@ export default function PricePage() {
           {useT('Wróć', 'Back')}
         </button>
         <h1 className="blog-page-title">{useT('Usługi', 'Services')}</h1>
-        <p className="blog-page-sub">
-          {useT(
-            'Wszystkie usługi w jednym miejscu. Czas i cena - bez niespodzianek.',
-            'All services in one place. Time and price - no surprises.'
-          )}
-        </p>
         <div className="prices-hero-cta">
           <button className="btn-primary" onClick={() => navigate('/booking')}>
             {useT('Zarezerwuj wizytę', 'Book an appointment')}
